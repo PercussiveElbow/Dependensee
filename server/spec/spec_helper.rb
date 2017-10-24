@@ -17,6 +17,7 @@ require 'support/factory_girl'
 require 'support/controller_spec_helper'
 require 'support/req_spec_helper'
 
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
 

@@ -37,7 +37,11 @@ class ProjectsController < ApplicationController
   end
 
   def find_project_by_id
-    @project = Project.find(params[:id])
+    begin
+      @project = Project.find(params[:id])
+    rescue
+      Raise CustomException::NotFound, MsgConstants::NOT_FOUND
+    end
   end
 
 end

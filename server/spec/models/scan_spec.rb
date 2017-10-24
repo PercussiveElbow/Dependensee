@@ -1,5 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Scan, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it { should belong_to(:project) }
+  it { should have_many(:dependencies).dependent(:destroy) }
 end

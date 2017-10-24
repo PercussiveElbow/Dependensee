@@ -4,6 +4,6 @@ FactoryGirl.define do
     version { Faker::Number.digit }
     language { Faker::Lorem::word }
     raw { Faker::Lorem::word } #this should be replaced with fake gemfile contents or similar
-    project_id nil
+    scan_id nil
   end
 end

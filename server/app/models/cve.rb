@@ -7,5 +7,6 @@ class Cve < ActiveRecord::Base
   #   sync_with_transaction_state
   #   read_attribute(self.class.primary_key)
   # end
+  validates_presence_of :dependency_name,:date,:desc, :cvss2
 
 end

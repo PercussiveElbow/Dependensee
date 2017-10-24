@@ -34,7 +34,7 @@ class ScansController < ApplicationController
   private
 
   def scans_params
-    # params.permit(:name, :language, :raw, :version, :raw)
+    params.permit(:source)
   end
 
   def get_project_by_id
@@ -42,6 +42,11 @@ class ScansController < ApplicationController
   end
 
   def set_project_scan
-    @scan = @project.scans.find_by!(id: params[:id]) if @project
+    begin
+      @scan = @project.scans.find_by!(id: params[:id]) if @project
+    rescue
+      Raise CustomException::NotFound, MsgConstants::NOT_FOUND
+    end
   end
+
 end

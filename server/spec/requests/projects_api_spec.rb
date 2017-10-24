@@ -43,7 +43,7 @@ RSpec.describe 'projects API', type: :request do
         end
 
         it 'returns a not found message' do
-          expect(response.body).to match("{\"message\":\"Couldn't find Project with 'id'=100\"}")
+          expect(response.body).to include("Couldn't find Project")
         end
       end
   end

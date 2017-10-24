@@ -4,7 +4,6 @@
 class Scanner
 
   def initialize
-    @vulnlist = Array.new
   end
 
 end
