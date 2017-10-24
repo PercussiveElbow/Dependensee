@@ -14,8 +14,17 @@ class UploadController < ApplicationController
     end
 
     $db.update?
-    @vulnlist = GemfileScanner::new(specs).scan_all_gems(nil)
-    response = {message: MsgConstants::GEMFILE_UPLOADED +  specs.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND}
+    @vuln_list = GemfileScanner::new(specs).scan_all_gems
+
+    #TODO REPLACE WITH PROPER IMPLEMENTATION
+    total=0
+    for k,v in @vuln_list do total+=v.length end
+    @vuln_list.delete_if { |k, v| v.empty? }
+
+    scan = @project.scans.create!(:source => headers['source'])
+    for spec in specs do scan.dependencies.create(name: spec.name, version: spec.version, language: 'ruby', raw: spec) end
+
+    response = {type: MsgConstants::GEMFILE_UPLOADED, dependencies:  specs.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  { vulnerability_list: @vuln_list.to_json }}
     json_response(response, :created)
   end
 
@@ -25,6 +34,11 @@ class UploadController < ApplicationController
     rescue
       Raise CustomException::NotFound, MsgConstants::NOT_FOUND
     end
+  end
+
+
+  def upload_headers
+    headers.permit(:source)
   end
 
 

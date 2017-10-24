@@ -8,6 +8,8 @@ class MsgConstants
   ACC_CREATED='Account created'
   ACC_NO_CREATED='Account not created'
   EXP_TOKEN='Token expired'
-  GEMFILE_UPLOADED='Gemfile Uploaded: '
+  GEMFILE_UPLOADED='Ruby Gemfile'
   DEPENDENCIES_FOUND='Dependencies found'
+  VULNERABILITIES_FOUND='Vulnerabilities found'
+
 end
