@@ -17,7 +17,7 @@ class GemVersionLogic
 
   def self.is_unaffected(gem_ver, safe_ver) #replace with switch, add pess case too
     if safe_ver.include? ',' #case for a between
-      print('Analysis failed, fix this') #fix
+      print('Analysis failed, fix this') # TODO FIX
       return false
     end
     if safe_ver.include? '<' ##There's no nice way to do >=, should really
