@@ -66,7 +66,7 @@
       <div class="md-toolbar-container">
         <h2 class="md-title">Projects</h2>
   
-        <md-button class="md-fab md-mini">
+        <md-button @click=create_project class="md-fab md-mini">
           <md-icon>add</md-icon>
         </md-button>
       </div>
@@ -74,9 +74,6 @@
   </md-whiteframe>
   
   <main class="main-content">
-
-
-
 
     <md-list class="md-double-line">
   <md-list-item v-for="item in items">
@@ -93,7 +90,6 @@
           <md-icon>info</md-icon>
         </md-button>
   </md-list-item>
-
 
     </md-list>
   </main>
@@ -112,20 +108,30 @@
     methods: {
 
     poll_projects:  function () {
-      var auth_key = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1MDg5NzIzNjl9.aDBgFJW640H2fK90IIEOrpacqVhUrQVw_ndV-s2qZak'
+      var auth_key = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1MDkwNTkxMjl9.7PNirrIAwQLtdi8uJ9Fw4EKt_PGfSb78kVyTBp8CBK0'
 
       this.$http.get('http://localhost:3000/projects/', { headers: {'Authorization': auth_key}}).then(response => {
         this.items = response.body
       }, response => {
     });
+   },
+
+   create_project: function() {
+      var auth_key = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1MDkwNTkxMjl9.7PNirrIAwQLtdi8uJ9Fw4EKt_PGfSb78kVyTBp8CBK0'
+
+          var formCreds = new FormData();
+          formCreds.append('name', 'NewProject');
+          formCreds.append('language','Ruby');
+
+          this.$http.post('http://localhost:3000/projects/', formCreds, {headers: {'Authorization': auth_key}}, (data) => {
+        });
+          this.poll_projects();
    }
 
   },
   created: function () {
-      console.log('test');
       this.poll_projects();
-
-      setInterval(function () {this.poll_projects();}.bind(this), 5000); 
+      setInterval(function () {this.poll_projects();}.bind(this), 600000); 
     }
 }
 </script>
