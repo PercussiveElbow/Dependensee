@@ -76,6 +76,8 @@
   <main class="main-content">
 
 
+
+
     <md-list class="md-double-line">
   <md-list-item v-for="item in items">
    <md-avatar md-theme="orange" class="md-avatar-icon md-primary">
@@ -102,19 +104,30 @@
 <script>
   export default {
     name: 'Projects',
-    data() {
-  return {
-    items: []
-  }
-  }, created() {
-    var auth_key = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1MDg5NzIzNjl9.aDBgFJW640H2fK90IIEOrpacqVhUrQVw_ndV-s2qZak'
-     this.$http.get('http://localhost:3000/projects/', { headers: {'Authorization': auth_key}}).then(response => {
-      this.items = response.body;
+  data: function () {
+    return {
+      items: []
+    }
+  },
+    methods: {
+
+    poll_projects:  function () {
+      var auth_key = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1MDg5NzIzNjl9.aDBgFJW640H2fK90IIEOrpacqVhUrQVw_ndV-s2qZak'
+
+      this.$http.get('http://localhost:3000/projects/', { headers: {'Authorization': auth_key}}).then(response => {
+        this.items = response.body
       }, response => {
-        
-      });
- }
-  }
+    });
+   }
+
+  },
+  created: function () {
+      console.log('test');
+      this.poll_projects();
+
+      setInterval(function () {this.poll_projects();}.bind(this), 5000); 
+    }
+}
 </script>
 
 
