@@ -38,7 +38,7 @@
             <md-list-item @click="$refs.sidebar.toggle()">
         <md-icon>warning</md-icon> <span>Vulnerabilities</span>
       </md-list-item>
-      
+
       <md-list-item @click="$refs.sidebar.toggle()">
         <md-icon>autorenew</md-icon> <span>Quick Scan</span>
       </md-list-item>
@@ -74,6 +74,8 @@
   </md-whiteframe>
   
   <main class="main-content">
+
+
     <md-list class="md-double-line">
   <md-list-item v-for="item in items">
    <md-avatar md-theme="orange" class="md-avatar-icon md-primary">
@@ -81,8 +83,8 @@
         </md-avatar>
 
         <div class="md-list-text-container">
-          <span>{{ item.message }}</span>
-          <p>{{ item.date }}</p>
+          <span>[{{ item.id }}] {{item.name}}</span>
+          <p>{{ item.language }}</p>
         </div>
 
         <md-button class="md-icon-button md-list-action">
@@ -102,17 +104,16 @@
     name: 'Projects',
     data() {
   return {
-    text: 'Hello world',
-    projects: 'Hello bold new world!',
-    isDisabledAttr: false,
-     items: [
-      { message: 'Project 1', date: '1st Nov' },
-      { message: 'Project 2', date: '2nd Nov' },
-      { message: 'Project 3', date: '3rd Nov' },
-      { message: 'Project 4', date: '4th Nov'}
-    ]
+    items: []
   }
-}
+  }, created() {
+    var auth_key = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1MDg5NzIzNjl9.aDBgFJW640H2fK90IIEOrpacqVhUrQVw_ndV-s2qZak'
+     this.$http.get('http://localhost:3000/projects/', { headers: {'Authorization': auth_key}}).then(response => {
+      this.items = response.body;
+      }, response => {
+        
+      });
+ }
   }
 </script>
 
