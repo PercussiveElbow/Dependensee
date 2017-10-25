@@ -42,7 +42,7 @@ class DependenciesController < ApplicationController
   end
 
   def set_project_dependency
-    @dependency = @scan.dependencies.find(id: params[:id]) if @scan
+    @dependency = @scan.dependencies.find(params[:id]) if @scan
   end
 
   def get_scan_by_id

@@ -43,7 +43,7 @@ class ScansController < ApplicationController
 
   def set_project_scan
     begin
-      @scan = @project.scans.find(id: params[:id]) if @project
+      @scan = @project.scans.find(params[:id]) if @project
     rescue
       Raise CustomException::NotFound, MsgConstants::NOT_FOUND
     end
