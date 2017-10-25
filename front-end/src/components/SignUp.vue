@@ -9,9 +9,7 @@
     <br/>
     <input v-model="creds.password_confirm" placeholder="Password Confirmation">
     <br/>
-    <button v-on:click=signup>
-      Sign Up
-    </button>
+	<md-button class="md-raised md-primary" v-on:click=signup>Sign up</md-button>
 
   </div>
 </template>
