@@ -8,11 +8,7 @@ class UploadController < ApplicationController
 
 
   def create
-    specs = GemfileParser::load_from_post(request.raw_post).load_specs
-    if specs.empty?
-      raise EmptyDependencyException.new('No gems found in your POST body.')
-    end
-
+    specs = gemfile_decode
     $db.update?
     @vuln_list = GemfileScanner::new(specs).scan_all_gems
 
@@ -44,6 +40,20 @@ class UploadController < ApplicationController
 
   def validate
 
+  end
+
+  def what_language?
+    # if language == 'ruby' do
+
+    # end
+  end
+
+  def gemfile_decode
+    specs = GemfileParser::load_from_post(request.raw_post).load_specs
+    if specs.empty?
+      raise EmptyDependencyException.new('No gems found in your POST body.')
+    end
+    specs
   end
 
 end

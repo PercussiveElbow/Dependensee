@@ -15,8 +15,8 @@ class ScansController < ApplicationController
 
   # POST /projects/:project_id/scans
   def create
-    @project.scans.create!(scans_params)
-    json_response(@project, :created)
+    @scan = @project.scans.create!(scans_params)
+    json_response(@scan, :created)
   end
 
   # PUT /projects/:project_id/scans/:id

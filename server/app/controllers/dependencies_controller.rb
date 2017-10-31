@@ -15,8 +15,8 @@ class DependenciesController < ApplicationController
 
   # POST /projects/:project_id/scans/
   def create
-    @scan.dependencies.create!(dependency_params)
-    json_response(@scan, :created)
+    @dependency = @scan.dependencies.create!(dependency_params)
+    json_response(@dependency, :created)
   end
 
   # PUT /projects/:project_id/scans/:scan_id/dependencies/:dependency_id

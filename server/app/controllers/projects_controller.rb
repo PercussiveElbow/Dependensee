@@ -10,7 +10,7 @@ class ProjectsController < ApplicationController
   # POST /projects
   def create
     @project = current_user.projects.create!(whitelist)
-    json_response(current_user.projects.create!(whitelist), :created)
+    json_response(@project, :created)
   end
 
   # GET /projects/:id
