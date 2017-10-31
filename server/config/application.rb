@@ -12,6 +12,8 @@ require "action_cable/engine"
 # require "sprockets/railtie"
 require "rails/test_unit/railtie"
 require_relative '../app/lib/gem/gemfile_db'
+require_relative '../app/lib/maven/maven_db'
+
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -29,6 +31,7 @@ module Untitled1
       end
     end
 
+    SecureHeaders::Configuration.default
 
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid
@@ -48,7 +51,9 @@ module Untitled1
     if defined?(Rails::Server)
       config.after_initialize do
         # Clone the RubyCVE Git Repo
-        $db = GemfileDB::new(Random.rand(100).to_s)
+        $ruby_db = GemfileDB::new(Random.rand(100).to_s)
+        #Clone Maven/Pip CVE Git Repo
+        # $maven_pip_db = MavenAndPipDB::new(Random.rand(100).to_s)
       end
     end
 

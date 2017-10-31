@@ -1,4 +1,4 @@
-# app/lib/message.rb
+# app/lib/MsgConstants.rb
 class MsgConstants
   NOT_FOUND='Not found'
   INVALID_CREDS='Invalid credentials'
@@ -11,5 +11,18 @@ class MsgConstants
   GEMFILE_UPLOADED='Ruby Gemfile'
   DEPENDENCIES_FOUND='Dependencies found'
   VULNERABILITIES_FOUND='Vulnerabilities found'
+  LOGGED_ON='Logged on. New Token generated'
 
+
+  # Gem Scanning
+  CHECKING_GEM = 'Checking gem: '
+  GEM_VERSION = 'Gem version: '
+  PATCHED_VERSION = ' Patched version: '
+  ERROR_NOT_FOUND = 'Error. Gemfile not found in: '
+
+  # Results
+  SAFE_PATCHED = '               ✔ Safe, patched.'
+  SAFE_UNAFFECTED = '               ✔ Safe, unaffected.'
+  VULNERABILITY_FOUND = '               ✘ Vulnerability: '
+  NO_VULN_FOUND = '          No vulnerabilities found'
 end

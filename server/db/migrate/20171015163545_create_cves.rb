@@ -1,7 +1,7 @@
-class CreateCves < ActiveRecord::Migration[5.1]
+class CreateRubyCves < ActiveRecord::Migration[5.1]
   def change
     enable_extension 'pgcrypto'
-    create_table :cves, id: :uuid do |t|
+    create_table :ruby_cves, id: :uuid do |t|
       t.string :dependency_name
       t.string :date
       t.string :desc

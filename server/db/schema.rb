@@ -16,18 +16,6 @@ ActiveRecord::Schema.define(version: 20171031141531) do
   enable_extension "plpgsql"
   enable_extension "pgcrypto"
 
-  create_table "cves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "dependency_name"
-    t.string "date"
-    t.string "desc"
-    t.string "cvss2"
-    t.string "cve_id"
-    t.text "patched_versions", default: [], array: true
-    t.text "unaffected_versions", default: [], array: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "dependencies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "language"
@@ -44,6 +32,18 @@ ActiveRecord::Schema.define(version: 20171031141531) do
     t.boolean "active"
     t.string "language"
     t.string "owner"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ruby_cves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "dependency_name"
+    t.string "date"
+    t.string "desc"
+    t.string "cvss2"
+    t.string "cve_id"
+    t.text "patched_versions", default: [], array: true
+    t.text "unaffected_versions", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -1,7 +1,7 @@
 require 'git'
 require 'yaml'
 require 'fileutils'
-require_relative '../../models/cve'
+require_relative '../../models/ruby_cve'
 
 class GemfileDB
 
@@ -40,11 +40,11 @@ class GemfileDB
         if yaml['cve'].nil?
           #osvdb deal with these later
         else
-          Cve::new(:dependency_name => yaml['gem'], :cve_id => yaml['cve'], :date => yaml['date'], :desc => yaml['description'], :cvss2 => yaml['cvss_v2'], :unaffected_versions => yaml['unaffected_versions'].to_a, :patched_versions => yaml['patched_versions'].to_a).save! if Cve.where(["cve_id = ?", yaml['cve'].to_s]).empty?
+          RubyCve::new(:dependency_name => yaml['gem'], :cve_id => yaml['cve'], :date => yaml['date'], :desc => yaml['description'], :cvss2 => yaml['cvss_v2'], :unaffected_versions => yaml['unaffected_versions'].to_a, :patched_versions => yaml['patched_versions'].to_a).save! if RubyCve.where(["cve_id = ?", yaml['cve'].to_s]).empty?
         end
       end
 
-      cve_list = Cve.where(["dependency_name = ?", 'actionpack'])
+      cve_list = RubyCve.where(["dependency_name = ?", 'actionpack'])
 
       cve_list.each do |cve|
         cve

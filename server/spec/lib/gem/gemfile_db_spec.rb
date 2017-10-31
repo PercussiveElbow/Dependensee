@@ -12,7 +12,7 @@ RSpec.describe GemfileDB do
     end
 
     def common_cve_load(gemname, expected)
-      cves = Cve.where(["dependency_name = ?", gemname])
+      cves = RubyCve.where(["dependency_name = ?", gemname])
       loaded_cves = Array.new
       cves.each{
           |cve| loaded_cves.push(cve.id)
@@ -34,7 +34,7 @@ RSpec.describe GemfileDB do
     end
 
     it 'should not load non existing' do
-      expect(Cve.where(["dependency_name = ?", 'ewigjreaiojoirge']).empty?).to eql(true)
+      expect(RubyCve.where(["dependency_name = ?", 'ewigjreaiojoirge']).empty?).to eql(true)
     end
 
     after(:all) do

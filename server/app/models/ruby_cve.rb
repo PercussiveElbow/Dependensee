@@ -1,5 +1,4 @@
-class Cve < ActiveRecord::Base
-
+class RubyCve < ActiveRecord::Base
   # validates_presence_of :cve_id
   self.primary_key = :cve_id
   #

@@ -9,7 +9,7 @@ class UploadController < ApplicationController
 
   def create
     specs = gemfile_decode
-    $db.update?
+    $ruby_db.update?
     @vuln_list = GemfileScanner::new(specs).scan_all_gems
 
     #TODO REPLACE WITH PROPER IMPLEMENTATION

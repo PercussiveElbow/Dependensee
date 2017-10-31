@@ -2,25 +2,11 @@ require_relative 'gemfile_parser'
 require_relative 'gemfile_db'
 require_relative 'gem_version_logic'
 require_relative '../common/vulnerability'
-# require_relative '../common/report'
-# require_relative 'gemfile_updater'
 require_relative '../common/scanner'
+require_relative '../msg_constants'
 
 
 class GemfileScanner < Scanner
-
-  #TODO MOVE TO CONSTANTS
-  # General
-  CHECKING_GEM = 'Checking gem: '
-  GEM_VERSION = 'Gem version: '
-  PATCHED_VERSION = ' Patched version: '
-
-  # Results
-  SAFE_PATCHED = '               ✔ Safe, patched.'
-  SAFE_UNAFFECTED = '               ✔ Safe, unaffected.'
-  VULNERABILITY_FOUND = '               ✘ Vulnerability: '
-  NO_VULN_FOUND = '          No vulnerabilities found for gem in DB'
-  ERROR_NOT_FOUND = 'Error. Gemfile not found in: '
 
   def initialize(specs)
     super()
@@ -30,23 +16,16 @@ class GemfileScanner < Scanner
   def scan_all_gems
     vuln_hash = {}
     @specs.each do |spec|
-      vuln_hash[spec.instance_variable_get('@name').to_s] = []
-      print("\n\n" + CHECKING_GEM + spec.instance_variable_get('@name').to_s)
+      spec_name = spec.instance_variable_get('@name').to_s
+      vuln_hash[spec_name] = []
+      print("\n\n" + MsgConstants::CHECKING_GEM + spec_name)
       gem_ver=spec.instance_variable_get('@version').instance_variable_get('@version')
-      cve_list = Cve.where(["dependency_name = ?", spec.instance_variable_get('@name').to_s])
-      cve_list.each do |cve|
+      RubyCve.where(["dependency_name = ?", spec_name]).each do |cve|
           print("\n" + '          -CVE' + cve.cve_id)
-          # Use this messy gsub stuff until i can figure out why this field isn't storing as array
-          unless check_unaffected_vers(gem_ver,cve.unaffected_versions.gsub('"','').gsub('[','').gsub(']','').split(','))
-            needed_patches = get_needed_patches(gem_ver, cve.patched_versions.gsub('"','').gsub('[','').gsub(']','').split(','))
-            unless needed_patches.nil?
-              #need to check for dupes here
-              # vuln_hash[spec.instance_variable_get('@name').to_s] << (Vulnerability::new(gem_ver, needed_patches , cve.attributes))
-              vuln_hash[spec.instance_variable_get('@name').to_s].push({'Vulnerability' => Vulnerability::new(gem_ver, needed_patches , cve.attributes)})
-              print cve.cve_id + 'VULN FOUND!!!'
-            end
+          unless check_unaffected_vers(gem_ver,cve.unaffected_versions)
+            needed_patches = get_needed_patches(gem_ver, cve.patched_versions)
+            vuln_hash[spec_name].push({'Vulnerability' => Vulnerability::new(gem_ver, needed_patches , cve.attributes)})   unless needed_patches.nil?
           end
-      # else print("\n" + NO_VULN_FOUND)
       end
     end
     vuln_hash
@@ -63,13 +42,13 @@ class GemfileScanner < Scanner
         end
 
         if GemVersionLogic::is_above_patched_ver(gem_version, patched_version)
-          print "\n" + SAFE_PATCHED ; return nil
+          print "\n" + MsgConstants::SAFE_PATCHED ; return nil
         else
           needed_patches.push(patched_version)
         end
       end
       needed_patches.each do |vuln|
-        print "\n" + VULNERABILITY_FOUND + GEM_VERSION + gem_version.to_s + PATCHED_VERSION + vuln.to_s + ' '
+        print "\n" + MsgConstants::VULNERABILITY_FOUND + MsgConstants::GEM_VERSION + gem_version.to_s + MsgConstants::PATCHED_VERSION + vuln.to_s + ' '
       end
     end
     needed_patches
@@ -79,7 +58,7 @@ class GemfileScanner < Scanner
     unless unaffected_vers.nil? or gem_version.nil?
       unaffected_vers.each do |safe_ver|
         if GemVersionLogic::is_unaffected(gem_version, safe_ver)
-          print  "\n" + SAFE_UNAFFECTED
+          print  "\n" + MsgConstants::SAFE_UNAFFECTED
           return true
         end
       end

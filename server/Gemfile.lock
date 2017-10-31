@@ -135,6 +135,8 @@ GEM
       rspec-support (~> 3.6.0)
     rspec-support (3.6.0)
     ruby_dep (1.5.0)
+    secure_headers (5.0.1)
+      useragent (>= 0.15.0)
     shoulda-matchers (3.1.2)
       activesupport (>= 4.0.0)
     simplecov (0.15.1)
@@ -158,6 +160,7 @@ GEM
     thread_safe (0.3.6)
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
+    useragent (0.16.8)
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
@@ -180,6 +183,7 @@ DEPENDENCIES
   rails (~> 5.1.4)
   rspec
   rspec-rails (~> 3.5)
+  secure_headers
   shoulda-matchers (~> 3.1)
   simplecov
   spring
