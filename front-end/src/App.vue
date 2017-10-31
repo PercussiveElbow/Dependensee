@@ -1,18 +1,20 @@
 <template>
   <div id="app">
 <!--     <img src="./assets/logo.png">
- -->    <Projects/>
+ -->    <Login/>
   </div>
 </template>
 
 <script>
 import SignUp from './components/SignUp.vue'
+import Login from './components/Login.vue'
 import Projects from './components/Projects.vue'
+import ProjectList from './components/ProjectList.vue'
 
 export default {
   name: 'app',
   components: {
-    Projects
+    Login
   }
 }
 </script>

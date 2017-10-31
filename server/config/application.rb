@@ -13,6 +13,7 @@ require "action_cable/engine"
 require "rails/test_unit/railtie"
 require_relative '../app/lib/gem/gemfile_db'
 require_relative '../app/lib/maven/maven_db'
+require_relative '../app/lib/exploit/exploit_db'
 
 
 # Require the gems listed in Gemfile, including any gems
@@ -50,10 +51,18 @@ module Untitled1
 
     if defined?(Rails::Server)
       config.after_initialize do
+        ran_int = Random.rand(100)
+        ran_int = '1'
+
+        print "\n======CLONING DATABASES======\n"
         # Clone the RubyCVE Git Repo
-        $ruby_db = GemfileDB::new(Random.rand(100).to_s)
-        #Clone Maven/Pip CVE Git Repo
-        # $maven_pip_db = MavenAndPipDB::new(Random.rand(100).to_s)
+        $ruby_db = GemfileDB::new(ran_int)
+        # Clone Maven/Pip CVE Git Repo
+        $maven_pip_db = MavenAndPipDB::new(ran_int)
+        # Clone exploit DB
+        $exploit_db = ExploitDB::new(ran_int)
+        print "======DONE CLONING     ======\n\n"
+
       end
     end
 

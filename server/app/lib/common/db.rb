@@ -8,7 +8,7 @@ class DB
 
   def initialize(root_location,db_name,log_name,url)
     @log_name = log_name
-    root_location  = '/tmp/' + db_name + '/' + root_location
+    root_location  = '/tmp/dependensee/' + root_location
     FileUtils.mkdir_p(root_location) unless Dir.exist?(root_location)
     @db_location=root_location + '/' + db_name + '/'
     if !File.directory?(@db_location)
@@ -34,6 +34,5 @@ class DB
     end
     needs_save
   end
-
 
 end
