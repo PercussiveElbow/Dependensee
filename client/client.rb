@@ -65,10 +65,19 @@ def post(language,body)
   request.body = body.join
   request['Authorization'] = AUTH_KEY
   resp = http.request(request)
+  output(resp)
+end
+
+def output(resp)
   print "Scan completed. Scan id: #{JSON[resp.body]['scan_id']}\n"
   print "Scan completed. Dependencies found: #{JSON[resp.body]['dependencies']}\n"
   print "Scan completed. Vulnerabilities found: #{JSON[resp.body]['vunerability_count']}\n"
-  print "Scan completed. Vulnerabilities: #{JSON[resp.body]['vulnerabilities']}\n"
+  print "Scan completed. Vulnerabilities: \n"
+  for dependency,vulns in JSON.parse(JSON[resp.body]['vulnerabilities'])
+    for vuln in vulns
+      print "Dependency #{dependency} has vulnerability. CVE ID: #{vuln['cve']}\n"
+    end
+  end
 end
 
 
