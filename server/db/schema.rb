@@ -10,32 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171021193632) do
+ActiveRecord::Schema.define(version: 20171031141531) do
 
-  create_table "cves", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+  enable_extension "pgcrypto"
+
+  create_table "cves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "dependency_name"
-    t.string "cve_id"
     t.string "date"
     t.string "desc"
     t.string "cvss2"
-    t.string "patched_versions"
-    t.string "unaffected_versions"
+    t.string "cve_id"
+    t.text "patched_versions", default: [], array: true
+    t.text "unaffected_versions", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "dependencies", force: :cascade do |t|
+  create_table "dependencies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "language"
     t.string "version"
     t.string "raw"
-    t.integer "scan_id"
+    t.uuid "scan_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["scan_id"], name: "index_dependencies_on_scan_id"
   end
 
-  create_table "projects", force: :cascade do |t|
+  create_table "projects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.boolean "active"
     t.string "language"
@@ -44,16 +48,16 @@ ActiveRecord::Schema.define(version: 20171021193632) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "scans", force: :cascade do |t|
+  create_table "scans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "date"
     t.string "source"
-    t.integer "project_id"
+    t.uuid "project_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["project_id"], name: "index_projects_on_scan_id"
+    t.index ["project_id"], name: "index_scans_on_project_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "email"
     t.string "password_digest"
@@ -61,4 +65,6 @@ ActiveRecord::Schema.define(version: 20171021193632) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "dependencies", "scans"
+  add_foreign_key "scans", "projects"
 end

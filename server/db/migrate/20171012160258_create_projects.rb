@@ -1,6 +1,8 @@
 class CreateProjects < ActiveRecord::Migration[5.1]
   def change
-    create_table :projects do |t|
+    enable_extension 'pgcrypto'
+
+    create_table :projects, id: :uuid do |t|
       t.string :name
       t.boolean :active
       t.string :language
