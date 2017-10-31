@@ -24,7 +24,7 @@ class GemfileScanner < Scanner
           print("\n" + '          -CVE' + cve.cve_id)
           unless check_unaffected_vers(gem_ver,cve.unaffected_versions)
             needed_patches = get_needed_patches(gem_ver, cve.patched_versions)
-            vuln_hash[spec_name].push({'Vulnerability' => Vulnerability::new(gem_ver, needed_patches , cve.attributes)})   unless needed_patches.nil?
+            vuln_hash[spec_name].push( Vulnerability::new(gem_ver,needed_patches,cve.cve_id))   unless needed_patches.nil?
           end
       end
     end

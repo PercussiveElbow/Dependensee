@@ -20,7 +20,7 @@ class UploadController < ApplicationController
     scan = @project.scans.create!(:source => headers['source'])
     for spec in specs do scan.dependencies.create(name: spec.name, version: spec.version, language: 'ruby', raw: spec) end
 
-    response = {type: MsgConstants::GEMFILE_UPLOADED, dependencies:  specs.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  { vulnerability_list: @vuln_list.to_json }}
+    response = JSON.pretty_generate({type: MsgConstants::GEMFILE_UPLOADED, scan_id: scan.id,dependencies:  specs.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
     json_response(response, :created)
   end
 
