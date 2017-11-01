@@ -1,23 +1,27 @@
 <template>
   <div id app>
   <h1> Sign Up</h1>
-  <input v-model="creds.name" placeholder="Name">
-    <br/>
-  <input v-model="creds.email" placeholder="Email">
-    <br/>
-    <input v-model="creds.password" placeholder="Password">
-    <br/>
-    <input v-model="creds.password_confirm" placeholder="Password Confirmation">
-    <br/>
-	<md-button class="md-raised md-primary" v-on:click=signup>Sign up</md-button>
+    <md-input-container>
+      <label>Name</label>
+      <md-input v-model="creds.name" placeholder="John Doe"></md-input>   
+    </md-input-container>
+    
+    <md-input-container>
+      <label>Email</label>
+      <md-input v-model="creds.email" placeholder="jdoe@example.com"></md-input>
+    </md-input-container>
 
+    <md-input-container>
+      <label>Password</label>
+      <md-input v-model="creds.password" type="password"></md-input>
+    </md-input-container>
+
+	  <md-button class="md-raised md-primary" v-on:click=handleSignUp>Sign up</md-button>
   </div>
 </template>
 
 <script>
-  const API_URL = 'http://localhost:3000/';
-  const SIGNUP_URL = API_URL + 'signup/';
-
+  import {apiSignUp} from '../utils/api.js';
   export default {
     name: 'SignUp',
     data() {
@@ -25,32 +29,23 @@
         creds: {
           email: '',
           name: '',
-          password: '',
-          password_confirm: ''
+          password: ''
         },
         error: ''
       }
     }, methods:
       {
-        signup(creds) {
-          console.log(creds);
-
-          var formCreds = new FormData();
+        handleSignUp(creds) {
+          var formCreds = new URLSearchParams();
           formCreds.append('name', this.creds.name);
           formCreds.append('email',this.creds.email);
           formCreds.append('password',this.creds.password);
-          formCreds.append('password_confirmation',this.creds.password_confirm);
-
-          this.$http.post(SIGNUP_URL, formCreds, (data) => {
-           console.log(data.auth_token);
-
-            this.user.authenticated = true
-        });
-      }
+          formCreds.append('password_confirmation',this.creds.password);
+          apiSignUp(formCreds);
+        }
       }
   }
 </script>
-
 
 <style> scoped>
 h1, h2 {
@@ -70,5 +65,4 @@ li {
 a {
   color: #42b983;
 }
-
 </style>

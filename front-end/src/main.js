@@ -5,17 +5,20 @@ import App from './App'
 import VueResource from 'vue-resource'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
+import axios from 'axios'
 
 Vue.config.productionTip = false
 Vue.use(VueResource);
 Vue.use(VueMaterial);
+Vue.use(axios);
 
+axios.get
 Vue.material.registerTheme({
   default: {
     primary: 'blue',
     accent: 'red'
   },
-  green: {
+  green: {	
     primary: 'green',
     accent: 'pink'
   },
