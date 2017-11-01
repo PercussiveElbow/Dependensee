@@ -1,0 +1,58 @@
+
+<template>
+<div id="app">
+  <md-layout md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
+    <md-layout md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
+      <md-card-header>
+        <div class="md-title">Login</div>
+      </md-card-header>
+
+      <md-card-content>
+        <md-input-container>
+          <md-icon>person</md-icon>
+          <label>email</label>
+          <md-input email required v-model="email" />
+        </md-input-container>
+
+        <md-input-container md-has-password>
+          <md-icon>lock</md-icon>
+          <label>password</label>
+          <md-input type="password" required v-model="password" />
+        </md-input-container>
+      </md-card-content>
+
+      <md-card-actions>
+        <md-button v-show="!loading" v-on:click=handleLogin type="submit">Login</md-button>
+      </md-card-actions>
+    </md-layout>
+  </md-layout>
+</div>
+</template>
+
+
+<script>
+  import {apiLogin} from '../utils/api.js';
+
+  export default {
+    name: 'Login',
+     data() {
+      return {
+        creds: {
+          email: '',
+          password: '',
+        },
+        error: ''
+      }
+    }, methods:
+      {
+        handleLogin(creds) {
+          var formCreds = new URLSearchParams();
+          formCreds.append('email',this.creds.email);
+          formCreds.append('password',this.creds.password);
+          apiLogin(formCreds);
+        }
+      }
+  }
+</script>
+
+

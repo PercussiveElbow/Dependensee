@@ -13,6 +13,7 @@ import ProjectList from './components/ProjectList.vue'
 export default {
   name: 'app',
   components: {
+    Login,
     SignUp
   }
 }

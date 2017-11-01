@@ -6,12 +6,12 @@ const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
 
 
-export{login,apiSignUp,getProjects};
+export{apiLogin,apiSignUp,getProjects};
 
 
 
-function login() {
-	return axios.post(LOGIN_URL).then(response => response.data);
+function apiLogin(params) {
+	return axios.post(LOGIN_URL,params).then(response => response.data);
 }
 
 function apiSignUp(params) {
