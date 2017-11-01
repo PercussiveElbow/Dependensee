@@ -9,21 +9,21 @@
 
       <md-card-content>
         <md-input-container>
-          <md-icon>person</md-icon>
-          <label>email</label>
-          <md-input email required v-model="email" />
+          <md-icon>mail</md-icon>
+          <label>Email</label>
+          <md-input email v-model="email" />
         </md-input-container>
 
         <md-input-container md-has-password>
           <md-icon>lock</md-icon>
-          <label>password</label>
-          <md-input type="password" required v-model="password" />
+          <label>Password</label>
+          <md-input type="password" v-model="password" />
         </md-input-container>
       </md-card-content>
 
-      <md-card-actions>
-        <md-button v-show="!loading" v-on:click=handleLogin type="submit">Login</md-button>
-      </md-card-actions>
+    <md-card-actions>
+       <md-button class="md-raised md-primary" v-on:click=handleLogin>Login</md-button>
+    </md-card-actions>
     </md-layout>
   </md-layout>
 </div>

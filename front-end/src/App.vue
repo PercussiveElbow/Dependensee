@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <Login/>
+    <br>
     <SignUp/>
   </div>
 </template>

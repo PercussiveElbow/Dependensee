@@ -8,16 +8,19 @@
 
       <md-card-content>
     <md-input-container>
+                <md-icon>person</md-icon>
       <label>Name</label>
-      <md-input v-model="creds.name" placeholder="John Doe"></md-input>   
+      <md-input v-model="creds.name"></md-input>   
     </md-input-container>
     
     <md-input-container>
+      <md-icon>mail</md-icon>
       <label>Email</label>
-      <md-input v-model="creds.email" placeholder="jdoe@example.com"></md-input>
+      <md-input v-model="creds.email" ></md-input>
     </md-input-container>
 
     <md-input-container>
+      <md-icon>lock</md-icon>
       <label>Password</label>
       <md-input v-model="creds.password" type="password"></md-input>
     </md-input-container>
