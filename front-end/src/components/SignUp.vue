@@ -55,7 +55,7 @@
           formCreds.append('email',this.creds.email);
           formCreds.append('password',this.creds.password);
           formCreds.append('password_confirmation',this.creds.password);
-          var resp =apiSignUp(formCreds).then(resp => (resp));
+          apiSignUp(formCreds).then(resp => (saveToken(resp) ));
         }
       }
   }

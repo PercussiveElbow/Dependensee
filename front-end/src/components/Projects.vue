@@ -1,5 +1,5 @@
 <template>
-  <div id ='app'>
+  <div id ='something'>
     <div class="app-viewport" id="file-list">
   <md-sidenav class="md-left md-fixed" ref="sidebar">
     <md-toolbar class="md-account-header">
@@ -109,17 +109,20 @@
   },
     methods: {
     poll_projects:  function () {
-            var self = this;
+      var self = this;
+      
+      console.log(token)
       var token = getToken();
-      var token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZmViM2U5MzItZmZlOC00ZmRhLTg5NDQtNWZjYzc4ZDVlNzNhIiwiZXhwIjoxNTA5ODg5MDUxfQ.DDalzveOyY75qG7qMS9ABVEwNkj7EukUJD0pgQDF-YI';
+      // var token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZmViM2U5MzItZmZlOC00ZmRhLTg5NDQtNWZjYzc4ZDVlNzNhIiwiZXhwIjoxNTA5ODg5MDUxfQ.DDalzveOyY75qG7qMS9ABVEwNkj7EukUJD0pgQDF-YI';
       var resp =getProjects({headers: {'Authorization': token}}).then(function (response) {
         self.items = response;
         console.log(response);
       });
    },
    create_project: function() {
- var token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZmViM2U5MzItZmZlOC00ZmRhLTg5NDQtNWZjYzc4ZDVlNzNhIiwiZXhwIjoxNTA5ODg5MDUxfQ.DDalzveOyY75qG7qMS9ABVEwNkj7EukUJD0pgQDF-YI';
-                var formCreds = new FormData();
+          var token = getToken();
+ // var token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZmViM2U5MzItZmZlOC00ZmRhLTg5NDQtNWZjYzc4ZDVlNzNhIiwiZXhwIjoxNTA5ODg5MDUxfQ.DDalzveOyY75qG7qMS9ABVEwNkj7EukUJD0pgQDF-YI';
+          var formCreds = new FormData();
           formCreds.append('name', 'NewProject');
           formCreds.append('language','Ruby');
           this.$http.post('http://localhost:3000/projects/', formCreds, {headers: {'Authorization': token}}, (data) => {

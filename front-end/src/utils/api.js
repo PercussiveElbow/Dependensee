@@ -27,7 +27,8 @@ function getProjects(params) {
 
 function saveToken(token) {
 	if(token.auth_token){
-  		localStorage.setItem(ACCESS_TOKEN, token);
+		clearToken()
+  		localStorage.setItem(ACCESS_TOKEN, token.auth_token);
   		console.log("Auth token set");
 	}else{
 		console.log("No auth token recieved");

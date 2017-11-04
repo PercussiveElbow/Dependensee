@@ -14,7 +14,6 @@ Vue.config.productionTip = false
 Vue.use(VueResource);
 Vue.use(VueMaterial);
 
-
 Vue.material.registerTheme({
   default: {
     primary: 'blue',
@@ -33,12 +32,6 @@ Vue.material.registerTheme({
     accent: 'blue'
   },
 })
-// /* eslint-disable no-new */
-// new Vue({
-//   el: '#app',
-//   template: '<App/>',
-//   components: { App }
-// })
 
 new Vue({
   el: '#app',
