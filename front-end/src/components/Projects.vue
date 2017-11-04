@@ -1,5 +1,5 @@
 <template>
-  <div id app>
+  <div id ='app'>
     <div class="app-viewport" id="file-list">
   <md-sidenav class="md-left md-fixed" ref="sidebar">
     <md-toolbar class="md-account-header">
@@ -98,6 +98,8 @@
 </template>
 
 <script>
+
+  import {getToken,getProjects} from '../utils/api.js';
   export default {
     name: 'Projects',
   data: function () {
@@ -106,24 +108,21 @@
     }
   },
     methods: {
-
     poll_projects:  function () {
-      var auth_key = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1MDkwNTkxMjl9.7PNirrIAwQLtdi8uJ9Fw4EKt_PGfSb78kVyTBp8CBK0'
-
-      this.$http.get('http://localhost:3000/projects/', { headers: {'Authorization': auth_key}}).then(response => {
-        this.items = response.body
-      }, response => {
-    });
+            var self = this;
+      var token = getToken();
+      var token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZmViM2U5MzItZmZlOC00ZmRhLTg5NDQtNWZjYzc4ZDVlNzNhIiwiZXhwIjoxNTA5ODg5MDUxfQ.DDalzveOyY75qG7qMS9ABVEwNkj7EukUJD0pgQDF-YI';
+      var resp =getProjects({headers: {'Authorization': token}}).then(function (response) {
+        self.items = response;
+        console.log(response);
+      });
    },
-
    create_project: function() {
-      var auth_key = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE1MDkwNTkxMjl9.7PNirrIAwQLtdi8uJ9Fw4EKt_PGfSb78kVyTBp8CBK0'
-
-          var formCreds = new FormData();
+ var token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZmViM2U5MzItZmZlOC00ZmRhLTg5NDQtNWZjYzc4ZDVlNzNhIiwiZXhwIjoxNTA5ODg5MDUxfQ.DDalzveOyY75qG7qMS9ABVEwNkj7EukUJD0pgQDF-YI';
+                var formCreds = new FormData();
           formCreds.append('name', 'NewProject');
           formCreds.append('language','Ruby');
-
-          this.$http.post('http://localhost:3000/projects/', formCreds, {headers: {'Authorization': auth_key}}, (data) => {
+          this.$http.post('http://localhost:3000/projects/', formCreds, {headers: {'Authorization': token}}, (data) => {
         });
           this.poll_projects();
    }
@@ -131,7 +130,7 @@
   },
   created: function () {
       this.poll_projects();
-      setInterval(function () {this.poll_projects();}.bind(this), 600000); 
+      setInterval(function () {this.poll_projects();}.bind(this), 10000); 
     }
 }
 </script>

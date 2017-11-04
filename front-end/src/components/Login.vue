@@ -1,4 +1,3 @@
-
 <template>
 <div id="app">
   <md-layout md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
@@ -31,7 +30,7 @@
 
 
 <script>
-  import {apiLogin} from '../utils/api.js';
+  import {apiLogin,saveToken} from '../utils/api.js';
 
   export default {
     name: 'Login',
@@ -49,7 +48,7 @@
           var formCreds = new URLSearchParams();
           formCreds.append('email',this.creds.email);
           formCreds.append('password',this.creds.password);
-          apiLogin(formCreds);
+          apiLogin(formCreds).then(resp => saveToken(resp));
         }
       }
   }

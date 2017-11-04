@@ -1,5 +1,5 @@
 <template>
-  <div id app>
+  <div id='app'>
     <md-layout md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
     <md-layout md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
       <md-card-header>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-  import {apiSignUp} from '../utils/api.js';
+  import {apiSignUp,saveToken} from '../utils/api.js';
   export default {
     name: 'SignUp',
     data() {
@@ -55,13 +55,13 @@
           formCreds.append('email',this.creds.email);
           formCreds.append('password',this.creds.password);
           formCreds.append('password_confirmation',this.creds.password);
-          apiSignUp(formCreds);
+          var resp =apiSignUp(formCreds).then(resp => (resp));
         }
       }
   }
 </script>
 
-<style> scoped>
+<style scoped>
 h1, h2 {
   font-weight: normal;
 }

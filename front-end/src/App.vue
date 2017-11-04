@@ -1,22 +1,37 @@
 <template>
   <div id="app">
-    <Login/>
-    <br>
-    <SignUp/>
-  </div>
+    <div :style="{ 'background-image': 'url(' + backgroundPattern() + ')' }">
+    <router-link :to="{ name: 'Login' }">Login</router-link>
+    <router-link to="/SignUp">SignUp</router-link>
+        <router-link to="/Projects">projects</router-link>
+
+    <router-view></router-view>
+</div>
+</div>
 </template>
 
 <script>
-import SignUp from './components/SignUp.vue'
-import Login from './components/Login.vue'
-import Projects from './components/Projects.vue'
-import ProjectList from './components/ProjectList.vue'
+
+var  Trianglify = require('trianglify')
 
 export default {
-  name: 'app',
-  components: {
-    Login,
-    SignUp
+  name: '#app',
+  methods: {
+    backgroundPattern(){
+      var width = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth;
+
+      var height = window.innerHeight
+      || document.documentElement.clientHeight
+      || document.body.clientHeight;
+
+      var pattern = Trianglify({
+        height: height,
+        width: width,
+        cell_size: 40});
+    return pattern.png();
+    }
   }
 }
 </script>
@@ -29,6 +44,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 0px;
+  height: 100vh;
 }
-
 </style>
