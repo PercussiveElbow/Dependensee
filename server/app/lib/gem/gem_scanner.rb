@@ -1,5 +1,5 @@
-require_relative 'gemfile_parser'
-require_relative 'gemfile_db'
+require_relative 'gem_parser'
+require_relative 'gem_db'
 require_relative 'gem_version_logic'
 require_relative '../common/vulnerability'
 require_relative '../common/scanner'

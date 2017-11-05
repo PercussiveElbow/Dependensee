@@ -11,8 +11,8 @@ require "action_view/railtie"
 require "action_cable/engine"
 # require "sprockets/railtie"
 require "rails/test_unit/railtie"
-require_relative '../app/lib/gem/gemfile_db'
-require_relative '../app/lib/maven/pom_db'
+require_relative '../app/lib/gem/gem_db'
+require_relative '../app/lib/pom/pom_db'
 require_relative '../app/lib/exploit/exploit_db'
 
 

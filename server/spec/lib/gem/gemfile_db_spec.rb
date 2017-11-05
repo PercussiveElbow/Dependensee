@@ -1,6 +1,6 @@
 # spec/lib/gem/gemfile_db_spec.rb
 require 'rails_helper'
-require_relative '../../../app/lib/gem/gemfile_db'
+require_relative '../../../app/lib/gem/gem_db'
 
 RSpec.describe GemfileDB do
 

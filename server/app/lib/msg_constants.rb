@@ -23,6 +23,10 @@ class MsgConstants
   # Pom Scanning
   POMFILE_UPLOADED = 'Java Pomfile'
 
+  # Pip Scanning
+  PIPFILE_UPLOADED = 'Python Pip Dependencies file'
+
+
   # Results
   SAFE_PATCHED = '               ✔ Safe, patched.'
   SAFE_UNAFFECTED = '               ✔ Safe, unaffected.'

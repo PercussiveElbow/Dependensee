@@ -39,6 +39,18 @@ ActiveRecord::Schema.define(version: 20171104200839) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "python_cves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title"
+    t.string "date"
+    t.string "desc"
+    t.string "cvss2"
+    t.string "cve_id"
+    t.text "affected"
+    t.text "references"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "projects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.boolean "active"
