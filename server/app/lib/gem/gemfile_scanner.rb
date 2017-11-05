@@ -8,14 +8,13 @@ require_relative '../msg_constants'
 
 class GemfileScanner < Scanner
 
-  def initialize(specs)
-    super()
-    @specs = specs
+  def initialize(deps)
+    super(deps)
   end
 
-  def scan_all_gems
+  def scan_all_deps
     vuln_hash = {}
-    @specs.each do |spec|
+    @deps.each do |spec|
       spec_name = spec.instance_variable_get('@name').to_s
       vuln_hash[spec_name] = []
       print("\n\n" + MsgConstants::CHECKING_GEM + spec_name)

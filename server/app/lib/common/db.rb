@@ -16,7 +16,7 @@ class DB
         Git.clone(url, db_name, :path => root_location)
         print('Cloning ' + @log_name + ' to: ' + @db_location + "\n")
         $git_timestamp = Time.now.to_i
-      rescue
+      rescue Exception => e
         abort 'Error cloning '+ @log_name +', exiting.';
       end
     end

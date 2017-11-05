@@ -1,6 +1,6 @@
 app:
   build: .
-  command: rails server -p 3000 -b '127.0.0.1'
+  command: rails server -p 3000 -b '0.0.0.0'
   volumes:
     - .:/app
   ports:
@@ -11,4 +11,3 @@ postgres:
   image: postgres:9.4
   ports:
     - "5432"
-

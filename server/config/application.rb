@@ -12,7 +12,7 @@ require "action_cable/engine"
 # require "sprockets/railtie"
 require "rails/test_unit/railtie"
 require_relative '../app/lib/gem/gemfile_db'
-require_relative '../app/lib/maven/maven_db'
+require_relative '../app/lib/maven/pom_db'
 require_relative '../app/lib/exploit/exploit_db'
 
 
@@ -51,7 +51,7 @@ module Untitled1
 
     if defined?(Rails::Server)
       config.after_initialize do
-        ran_int = Random.rand(100)
+        # ran_int = Random.rand(100).to_s
         ran_int = '1'
 
         print "\n======CLONING DATABASES======\n"

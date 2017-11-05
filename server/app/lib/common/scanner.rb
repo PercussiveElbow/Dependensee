@@ -3,7 +3,8 @@
 
 class Scanner
 
-  def initialize
+  def initialize(deps)
+    @deps=deps
   end
 
 end

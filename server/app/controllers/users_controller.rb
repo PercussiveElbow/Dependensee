@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   # POST /login
   def login
     whitelist_login
-    token = AuthUser.new(params['email'], params['password']).call
+    token = AuthUser.new(params[:email], params[:password]).call
     response = {message: MsgConstants::LOGGED_ON, auth_token: token }
     json_response(response, :created)
   end

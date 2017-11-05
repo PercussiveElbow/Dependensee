@@ -8,7 +8,6 @@ class MsgConstants
   ACC_CREATED='Account created'
   ACC_NO_CREATED='Account not created'
   EXP_TOKEN='Token expired'
-  GEMFILE_UPLOADED='Ruby Gemfile'
   DEPENDENCIES_FOUND='Dependencies found'
   VULNERABILITIES_FOUND='Vulnerabilities found'
   LOGGED_ON='Logged on. New Token generated'
@@ -19,6 +18,10 @@ class MsgConstants
   GEM_VERSION = 'Gem version: '
   PATCHED_VERSION = ' Patched version: '
   ERROR_NOT_FOUND = 'Error. Gemfile not found in: '
+  GEMFILE_UPLOADED = 'Ruby Gemfile'
+
+  # Pom Scanning
+  POMFILE_UPLOADED = 'Java Pomfile'
 
   # Results
   SAFE_PATCHED = '               ✔ Safe, patched.'
