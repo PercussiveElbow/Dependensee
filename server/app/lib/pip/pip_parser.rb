@@ -26,11 +26,9 @@ class PipParser < Parser
       line = line.gsub("\n",'')
       name = line.gsub(/[^a-z]/i,'')
       version = line.gsub(/[^0-9=>.]/i,'')
-      deps.push({'name'=>name,'version'=>version})
+      deps.push({'name'=>name,'version'=>version,'raw'=>line})
     end
     deps
   end
 
 end
-
-# PipParser.load_from_post(File.open('reqstest.txt'))

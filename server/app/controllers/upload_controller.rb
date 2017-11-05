@@ -72,7 +72,7 @@ class UploadController < ApplicationController
   end
 
   def gem_decode
-    deps = GemfileParser::load_from_post(request.raw_post).load_specs
+    deps = GemfileParser::load_from_post(request.raw_post).load_deps
     raise EmptyDependencyException.new('No gems found in your POST body.') if deps.empty?
     deps
   end
@@ -82,7 +82,7 @@ class UploadController < ApplicationController
     deps = pip_decode
     scan = @project.scans.create!(:source => headers['source'])
 
-    for dep in deps do scan.dependencies.create(name: dep.name, version: dep.version, language: 'python', raw: dep) end
+    for dep in deps do scan.dependencies.create(name: dep['name'], version: dep['version'], language: 'python', raw: dep) end
     @vuln_list = PipScanner::new(deps).scan
     vuln_cleanup
 
@@ -91,7 +91,7 @@ class UploadController < ApplicationController
   end
 
   def pip_decode
-    deps = PipParser::load_from_post(request.raw_post).load_specs
+    deps = PipParser::load_from_post(request.raw_post).load_deps
     raise EmptyDependencyException.new('No pip dependencies found in your POST body.') if deps.empty?
     deps
   end

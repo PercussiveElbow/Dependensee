@@ -15,7 +15,7 @@ class GemfileParser < Parser
     self.new(Bundler::LockfileParser.new(body.to_s))
   end
 
-  def load_specs
+  def load_deps
     @lockfile.specs
   end
 
