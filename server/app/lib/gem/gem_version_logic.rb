@@ -42,7 +42,7 @@ class GemVersionLogic
   end
 
   def self.get_latest_version(gem_name)
-    $h = Hash.new() if $h.nil?
+    $h = Hash.new if $h.nil?
     if  $h[gem_name].nil? or ((Time.now.to_i - $h[gem_name][1].to_i)> TIMEOUT)
       $h[gem_name] = [query_rubygems(gem_name), Time.now.to_i]
     end

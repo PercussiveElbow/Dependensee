@@ -1,7 +1,7 @@
 require_relative '../../models/ruby_cve'
-require_relative '../common/db'
+require_relative '../common/base_db'
 
-class GemfileDB < DB
+class GemfileDB < BaseDB
 
   #override
   def initialize(root_location)
@@ -19,7 +19,7 @@ class GemfileDB < DB
         if yaml['cve'].nil?
           #osvdb deal with these later
         else
-          RubyCve::new(:dependency_name => yaml['gem'], :cve_id => yaml['cve'], :date => yaml['date'], :desc => yaml['description'], :cvss2 => yaml['cvss_v2'], :unaffected_versions => yaml['unaffected_versions'].to_a, :patched_versions => yaml['patched_versions'].to_a).save! if RubyCve.where(["cve_id = ?", yaml['cve'].to_s]).empty?
+          RubyCve::new(:dependency_name => yaml['gem'], :cve_id => yaml['cve'], :date => yaml['date'], :desc => yaml['description'], :cvss2 => yaml['cvss_v2'], :unaffected_versions => yaml['unaffected_versions'].to_a, :patched_versions => yaml['patched_versions'].to_a).save! if RubyCve.where(['cve_id = ?', yaml['cve'].to_s]).empty?
         end
       end
   end

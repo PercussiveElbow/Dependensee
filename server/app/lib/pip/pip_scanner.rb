@@ -16,11 +16,11 @@ class PipScanner < Scanner
       vuln_hash[dep['name']] = []
       PythonCve.all.each do |cve|
         cve
-        for affected in cve['affected']
-          if affected['name'] == dep['name'] and PipVersionLogic::is_vuln?(dep['version'],affected['version'],affected['fixedin'])
-            vuln_hash[dep['name']].push( Vulnerability::new(dep['version'],affected['fixedin'],cve.cve_id))
+        cve['affected'].each { |affected|
+          if affected['name'] == dep['name'] and PipVersionLogic::is_vuln?(dep['version'], affected['version'], affected['fixedin'])
+            vuln_hash[dep['name']].push(Vulnerability::new(dep['version'], affected['fixedin'], cve.cve_id))
           end
-        end
+        }
       end
     end
     vuln_hash

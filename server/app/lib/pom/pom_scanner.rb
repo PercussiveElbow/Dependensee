@@ -16,11 +16,11 @@ class PomScanner < Scanner
       dep_name = dep['groupId']+'.'+dep['artifactId']
       vuln_hash[dep_name] = []
       JavaCve.all.each do |cve|
-        for affected in cve['affected']
-          if affected['groupId'] == dep['groupId'] and affected['artifactId'] == dep['artifactId'] and PomVersionLogic::is_vuln?(dep['version'],affected['version'],affected['fixedin'])
-               vuln_hash[dep_name].push( Vulnerability::new(dep['version'],affected['fixedin'],cve.cve_id))
+        cve['affected'].each { |affected|
+          if affected['groupId'] == dep['groupId'] and affected['artifactId'] == dep['artifactId'] and PomVersionLogic::is_vuln?(dep['version'], affected['version'], affected['fixedin'])
+            vuln_hash[dep_name].push(Vulnerability::new(dep['version'], affected['fixedin'], cve.cve_id))
           end
-        end
+        }
       end
     end
     vuln_hash

@@ -1,7 +1,8 @@
 require 'git'
 require 'yaml'
 require 'fileutils'
-class DB
+
+class BaseDB
   GIT_TIMEOUT = 150000
 
   @log_name = ''
@@ -11,12 +12,12 @@ class DB
     root_location  = '/tmp/dependensee/' + root_location
     FileUtils.mkdir_p(root_location) unless Dir.exist?(root_location)
     @db_location=root_location + '/' + db_name + '/'
-    if !File.directory?(@db_location)
+    unless File.directory?(@db_location)
       begin
         Git.clone(url, db_name, :path => root_location)
         print('Cloning ' + @log_name + ' to: ' + @db_location + "\n")
         $git_timestamp = Time.now.to_i
-      rescue Exception => e
+      rescue Exception => _
         abort 'Error cloning '+ @log_name +', exiting.';
       end
     end

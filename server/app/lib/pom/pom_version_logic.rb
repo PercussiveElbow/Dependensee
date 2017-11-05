@@ -5,11 +5,11 @@ class PomVersionLogic
 
   def self.is_vuln?(dep_ver,vuln_ver,fixed_in)
     vuln = false
-    for ver in vuln_ver do
-      if self.is_below_vuln_ver(ver,dep_ver)
+    vuln_ver.each { |ver|
+      if self.is_below_vuln_ver(ver, dep_ver)
         vuln=true; break;
       end
-    end
+    }
     return vuln
   end
 

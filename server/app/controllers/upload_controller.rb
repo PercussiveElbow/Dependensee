@@ -45,7 +45,7 @@ class UploadController < ApplicationController
     deps = pom_decode
     scan = @project.scans.create!(:source => headers['source'])
 
-    for dep in deps do scan.dependencies.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], language: 'java', raw: dep) end
+    deps.each { |dep| scan.dependencies.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], language: 'java', raw: dep) }
     @vuln_list = PomScanner::new(deps).scan
     vuln_cleanup
 
@@ -64,7 +64,7 @@ class UploadController < ApplicationController
     deps = gem_decode
     scan = @project.scans.create!(:source => headers['source'])
 
-    for dep in deps do scan.dependencies.create(name: dep.name, version: dep.version, language: 'ruby', raw: dep) end
+    deps.each { |dep| scan.dependencies.create(name: dep.name, version: dep.version, language: 'ruby', raw: dep) }
     @vuln_list = GemfileScanner::new(deps).scan
     vuln_cleanup
 
@@ -82,7 +82,7 @@ class UploadController < ApplicationController
     deps = pip_decode
     scan = @project.scans.create!(:source => headers['source'])
 
-    for dep in deps do scan.dependencies.create(name: dep['name'], version: dep['version'], language: 'python', raw: dep) end
+    deps.each { |dep| scan.dependencies.create(name: dep['name'], version: dep['version'], language: 'python', raw: dep) }
     @vuln_list = PipScanner::new(deps).scan
     vuln_cleanup
 
@@ -100,8 +100,8 @@ class UploadController < ApplicationController
   # OTHER
   def vuln_cleanup
     @vuln_total=0
-    for k,v in @vuln_list do @vuln_total+=v.length end
-    @vuln_list.delete_if { |k, v| v.empty? }
+    @vuln_list.each { |k, v| @vuln_total+=v.length }
+    @vuln_list.delete_if { |_, v| v.empty? }
   end
 
 end

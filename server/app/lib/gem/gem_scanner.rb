@@ -20,7 +20,7 @@ class GemfileScanner < Scanner
       vuln_hash[spec_name] = []
       print("\n\n" + MsgConstants::CHECKING_GEM + spec_name)
       gem_ver=spec.instance_variable_get('@version').instance_variable_get('@version')
-      RubyCve.where(["dependency_name = ?", spec_name]).each do |cve|
+      RubyCve.where(['dependency_name = ?', spec_name]).each do |cve|
           print("\n" + '          -CVE' + cve.cve_id)
           unless check_unaffected_vers(gem_ver,cve.unaffected_versions)
             needed_patches = get_needed_patches(gem_ver, cve.patched_versions)
