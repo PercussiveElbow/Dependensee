@@ -12,7 +12,8 @@ class GemfileScanner < Scanner
     super(deps)
   end
 
-  def scan_all_deps
+  def scan
+    $ruby_db.update?
     vuln_hash = {}
     @deps.each do |spec|
       spec_name = spec.instance_variable_get('@name').to_s

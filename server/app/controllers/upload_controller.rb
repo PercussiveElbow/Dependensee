@@ -9,7 +9,7 @@ class UploadController < ApplicationController
   before_action only: [:show, :update, :destroy]
 
   def create
-    response = handle_java
+    response = what_language?
     json_response(response, :created)
   end
 
@@ -21,68 +21,58 @@ class UploadController < ApplicationController
     end
   end
 
-
   def upload_headers
     headers.permit(:source)
   end
 
-  # def validate
-  #
-  # end
-
   def what_language?
-    language = 'java'
-    if language.equal('ruby')
-      return handle_ruby
-    elsif language.equal('java')
-      return handle_java
+    if @project.language == 'ruby'
+      handle_ruby
+    elsif @project.language == 'java'
+      handle_java
     else
-      return 'No deps found'
+      raise EmptyDependencyException.new('No dependencies found in your POST body.')
     end
-
   end
 
-  def gemfile_decode
-    specs = GemfileParser::load_from_post(request.raw_post).load_specs
-    if specs.empty?
-      raise EmptyDependencyException.new('No gems found in your POST body.')
-    end
-    specs
+  def gem_decode
+    deps = GemfileParser::load_from_post(request.raw_post).load_specs
+    raise EmptyDependencyException.new('No gems found in your POST body.') if deps.empty?
+    deps
   end
 
-
-  def pomfile_decode
+  def pom_decode
     deps = PomParser::load_from_post(request.raw_post).load_deps
+    raise EmptyDependencyException.new('No jars found in your POST body.') if deps.empty?
+    deps
   end
-
 
   def handle_java
-    deps = pomfile_decode
+    deps = pom_decode
     scan = @project.scans.create!(:source => headers['source'])
-    for dep in deps do scan.dependencies.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], language: 'java', raw: dep) end
-    @vuln_list = PomScanner::new(deps).scan_all_deps
 
-    #TODO REPLACE WITH PROPER IMPLEMENTATION
-    total=0
-    for k,v in @vuln_list do total+=v.length end
-    @vuln_list.delete_if { |k, v| v.empty? }
-    JSON.pretty_generate({type: MsgConstants::POMFILE_UPLOADED, scan_id: scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
+    for dep in deps do scan.dependencies.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], language: 'java', raw: dep) end
+    @vuln_list = PomScanner::new(deps).scan
+    vuln_cleanup
+
+    JSON.pretty_generate({type: MsgConstants::POMFILE_UPLOADED, scan_id: scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
 
-
   def handle_ruby
-    deps = gemfile_decode
-    $ruby_db.update?
-    @vuln_list = GemfileScanner::new(deps).scan_all_deps
-
-    #TODO REPLACE WITH PROPER IMPLEMENTATION
-    total=0
-    for k,v in @vuln_list do total+=v.length end
-    @vuln_list.delete_if { |k, v| v.empty? }
-
+    deps = gem_decode
     scan = @project.scans.create!(:source => headers['source'])
+
     for dep in deps do scan.dependencies.create(name: dep.name, version: dep.version, language: 'ruby', raw: dep) end
-    JSON.pretty_generate({type: MsgConstants::GEMFILE_UPLOADED, scan_id: scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
+    @vuln_list = GemfileScanner::new(deps).scan
+    vuln_cleanup
+
+    JSON.pretty_generate({type: MsgConstants::GEMFILE_UPLOADED, scan_id: scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
+  end
+
+  def vuln_cleanup
+    @vuln_total=0
+    for k,v in @vuln_list do @vuln_total+=v.length end
+    @vuln_list.delete_if { |k, v| v.empty? }
   end
 
 end

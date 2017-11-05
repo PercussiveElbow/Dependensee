@@ -9,9 +9,9 @@
   <description>Sample Appium tests using JUnit</description>
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <groupId>org.asynchttpclient</groupId>
+      <artifactId>async-http-client</artifactId>
+      <version>2.0.34</version>
       <scope>test</scope>
     </dependency>
     <dependency>
