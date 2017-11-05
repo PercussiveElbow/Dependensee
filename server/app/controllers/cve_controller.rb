@@ -13,10 +13,24 @@ class CveController < ApplicationController
 
   def find_cve_by_id
     @cve = RubyCve.where(["cve_id = ?", params[:id]])
+    @cve = JavaCve.where(["cve_id = ?", params[:id]]) if @cve.nil? or @cve.empty?
   end
 
   def find_cve_by_name
     @cve = RubyCve.where(["dependency_name = ?", params[:id]])
+    #
+    #
+    # group_id = params[:id].rpartition('.').first
+    # artifact_id = params[:id].rpartition('.').last
+    # if @cve.nil?
+    #   JavaCve.all.each do |cve|
+    #     for affected in cve['affected']
+    #       # @cve = cve if affected['groupId'] == group_id and affected['artifactId'] == artifact_id
+    #       @cve = cve if affected['groupId'] == group_id
+    #     end
+    #   end
+    # end
+    @cve
   end
 
 end
