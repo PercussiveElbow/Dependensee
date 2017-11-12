@@ -10,13 +10,13 @@
         <md-input-container>
           <md-icon>mail</md-icon>
           <label>Email</label>
-          <md-input email v-model="email" />
+          <md-input email v-model="creds.email" />
         </md-input-container>
 
         <md-input-container md-has-password>
           <md-icon>lock</md-icon>
           <label>Password</label>
-          <md-input type="password" v-model="password" />
+          <md-input type="password" v-model="creds.password" />
         </md-input-container>
       </md-card-content>
 

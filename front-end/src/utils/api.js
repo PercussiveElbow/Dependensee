@@ -1,13 +1,10 @@
-
 var axios = require('axios')
 
 const API_URL = 'http://localhost:3000/';
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
 const PROJECTS_URL = API_URL + 'projects/';
-
 const ACCESS_TOKEN = 'jwk_access_token'
-
 
 export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken};
 
@@ -19,11 +16,9 @@ function apiSignUp(params) {
 	return axios.post(SIGNUP_URL,params).then(response => response.data);
 }
 
-
 function getProjects(params) {
 	return axios.get(PROJECTS_URL,params).then(response => response.data);
 }
-
 
 function saveToken(token) {
 	if(token.auth_token){

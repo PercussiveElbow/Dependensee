@@ -62,11 +62,12 @@
           <md-icon>view_module</md-icon>
         </md-button>
       </div>
-  
+
+
       <div class="md-toolbar-container">
         <h2 class="md-title">Projects</h2>
   
-        <md-button @click=create_project class="md-fab md-mini">
+        <md-button @click=show class="md-fab md-mini">
           <md-icon>add</md-icon>
         </md-button>
       </div>
@@ -74,25 +75,33 @@
   </md-whiteframe>
   
   <main class="main-content">
-
-    <md-list class="md-double-line">
-  <md-list-item v-for="item in items">
-   <md-avatar md-theme="orange" class="md-avatar-icon md-primary">
-          <md-icon>view_list</md-icon>
-        </md-avatar>
-
-        <div class="md-list-text-container">
-          <span>[{{ item.id }}] {{item.name}}</span>
-          <p>{{ item.language }}</p>
-        </div>
-
-        <md-button class="md-icon-button md-list-action">
-          <md-icon>info</md-icon>
-        </md-button>
-  </md-list-item>
-
-    </md-list>
+      <ProjectList></ProjectList>
   </main>
+
+<modal name="create-project"         :height="350" :adaptive="true" @opened="opened">
+    <div style="padding: 30px; text-align: center">
+              <h2 >Add a new project</h2>
+
+        <md-input-container>
+          <md-icon>work</md-icon>
+          <label>New Project</label>
+          <md-input name v-model="newproject.name" />
+        </md-input-container>
+        <md-input-container>
+          <md-icon>description</md-icon>
+          <label>Description</label>
+          <md-input name v-model="newproject.description" />
+        </md-input-container>
+       <select v-model="newproject.language">
+            <option>Ruby</option>
+            <option>Java</option>
+            <option>Python</option>
+          </select>
+        </br>
+  <md-button class="md-primary md-raised" v-on:click=create_project>Create</md-button>
+    </div>
+</modal>
+
 </div>
   </div>
 </template>
@@ -100,46 +109,49 @@
 <script>
 
   import {getToken,getProjects} from '../utils/api.js';
+  import ProjectList from './ProjectList'
+  import ProjectsCreate from './ProjectsCreate'
+
   export default {
     name: 'Projects',
-  data: function () {
-    return {
-      items: []
-    }
-  },
+    components:  {
+      ProjectList,
+      ProjectsCreate
+    },
+         data() {
+      return {
+        newproject: {
+          name: '',
+          language: '',
+        },
+        error: ''
+      }
+    },
+    
     methods: {
-    poll_projects:  function () {
-      var self = this;
-      
-      console.log(token)
-      var token = getToken();
-      // var token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZmViM2U5MzItZmZlOC00ZmRhLTg5NDQtNWZjYzc4ZDVlNzNhIiwiZXhwIjoxNTA5ODg5MDUxfQ.DDalzveOyY75qG7qMS9ABVEwNkj7EukUJD0pgQDF-YI';
-      var resp =getProjects({headers: {'Authorization': token}}).then(function (response) {
-        self.items = response;
-        console.log(response);
-      });
-   },
-   create_project: function() {
-          var token = getToken();
- // var token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZmViM2U5MzItZmZlOC00ZmRhLTg5NDQtNWZjYzc4ZDVlNzNhIiwiZXhwIjoxNTA5ODg5MDUxfQ.DDalzveOyY75qG7qMS9ABVEwNkj7EukUJD0pgQDF-YI';
+   create_project: function(newproject) {
           var formCreds = new FormData();
-          formCreds.append('name', 'NewProject');
-          formCreds.append('language','Ruby');
-          this.$http.post('http://localhost:3000/projects/', formCreds, {headers: {'Authorization': token}}, (data) => {
-        });
-          this.poll_projects();
-   }
-
-  },
-  created: function () {
-      this.poll_projects();
-      setInterval(function () {this.poll_projects();}.bind(this), 10000); 
-    }
+          formCreds.append('name', this.newproject.name);
+          formCreds.append('description', this.newproject.description);
+          formCreds.append('language',this.newproject.language);
+          this.$http.post('http://localhost:3000/projects/', formCreds, {headers: {'Authorization': getToken()}}, (data) => {});
+          // this.poll_projects();
+          this.hide();
+   },
+   openDialog: function(ref) {
+    
+   },
+   show () {
+    this.$modal.show('create-project');
+  }, hide () {
+        this.$modal.hide('create-project');
+  }
+  }
 }
 </script>
 
 
-<style> scoped>
+<style scoped>
 html,
 body,
 .app-viewport {
@@ -202,3 +214,5 @@ body,
   }
 }
 </style>
+
+
