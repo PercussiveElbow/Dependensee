@@ -12,7 +12,7 @@ import vmodal from 'vue-js-modal'
 Vue.config.productionTip = false
 Vue.use(VueResource);
 Vue.use(VueMaterial);
-Vue.use(vmodal);
+Vue.use(vmodal,{ dialog: true });
 
 Vue.material.registerTheme({
   default: {

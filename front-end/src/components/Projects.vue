@@ -80,6 +80,7 @@
 
 <modal name="create-project"         :height="350" :adaptive="true" @opened="opened">
     <div style="padding: 30px; text-align: center">
+      
               <h2 >Add a new project</h2>
 
         <md-input-container>
@@ -110,13 +111,11 @@
 
   import {getToken,getProjects} from '../utils/api.js';
   import ProjectList from './ProjectList'
-  import ProjectsCreate from './ProjectsCreate'
 
   export default {
     name: 'Projects',
     components:  {
-      ProjectList,
-      ProjectsCreate
+      ProjectList
     },
          data() {
       return {

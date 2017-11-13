@@ -13,6 +13,8 @@ gem 'rack-cors'
 gem 'git'
 gem 'secure_headers'
 gem 'pg'
+gem 'prawn'
+gem 'rack-cors'
 
 
 group :development, :test do

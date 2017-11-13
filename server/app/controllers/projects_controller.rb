@@ -33,7 +33,7 @@ class ProjectsController < ApplicationController
   private
 
   def whitelist
-    params.permit(:name, :language)
+    params.permit(:name, :language,:description)
   end
 
   def find_project_by_id

@@ -1,6 +1,7 @@
 require 'set'
 
 class Parser
+
   def initialize
     @dependencies=nil
     @sources=nil

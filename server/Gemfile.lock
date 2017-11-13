@@ -80,7 +80,11 @@ GEM
     nio4r (2.1.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
+    pdf-core (0.6.1)
     pg (0.18.4)
+    prawn (2.1.0)
+      pdf-core (~> 0.6.1)
+      ttfunk (~> 1.4.0)
     puma (3.10.0)
     rack (2.0.3)
     rack-cors (1.0.1)
@@ -158,6 +162,7 @@ GEM
       sprockets (>= 3.0.0)
     thor (0.20.0)
     thread_safe (0.3.6)
+    ttfunk (1.4.0)
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
     useragent (0.16.8)
@@ -178,6 +183,7 @@ DEPENDENCIES
   jwt (~> 2.1)
   listen (>= 3.0.5, < 3.2)
   pg
+  prawn
   puma (~> 3.7)
   rack-cors
   rails (~> 5.1.4)
