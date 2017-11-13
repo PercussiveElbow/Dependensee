@@ -28,11 +28,11 @@ class UploadController < ApplicationController
   end
 
   def what_language?
-    if @project.language == 'ruby'
+    if @project.language == 'Ruby'
       handle_ruby
-    elsif @project.language == 'java'
+    elsif @project.language == 'Java'
       handle_java
-    elsif @project.language == 'python'
+    elsif @project.language == 'Python'
       handle_python
     else
       raise EmptyDependencyException.new('No dependencies found in your POST body.')

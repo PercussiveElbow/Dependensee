@@ -16,7 +16,7 @@
       </md-avatar>
 
       <div class="md-list-text-container">
-        <span>{{item.name}}</span>
+        <router-link :to="{ path: '/project/'+item.id }">{{item.name}}</router-link>
         <p>{{ item.language }}</p>
         <p>{{ item.description }}</p>
       </div>
@@ -46,7 +46,7 @@
               <md-input name v-model="editproject.description"/>
             </md-input-container>
             </br>
-      <md-button class="md-primary md-raised" v-on:click=edit_project>Edit</md-button>
+      <md-button class="md-primary md-raised" v-on:click=edit_project>Save</md-button>
         </div>
     </modal>
   </div>

@@ -27,12 +27,11 @@
     </md-toolbar>
   
     <md-list>
-      <md-list-item @click="$refs.sidebar.toggle()" class="md-primary">
-        <md-icon>folder</md-icon> <span>Projects</span>
+      <md-list-item >
+               <router-link :to="{ path: '/projects/' }">Projects</router-link>
       </md-list-item>
-  
-      <md-list-item @click="$refs.sidebar.toggle()">
-        <md-icon>dehaze</md-icon> <span>Dependencies</span>
+      <md-list-item >
+               <router-link :to="{ path: '/dependencies/' }">Dependencies</router-link>
       </md-list-item>
 
             <md-list-item @click="$refs.sidebar.toggle()">
@@ -80,9 +79,7 @@
 
 <modal name="create-project"         :height="350" :adaptive="true" @opened="opened">
     <div style="padding: 30px; text-align: center">
-      
               <h2 >Add a new project</h2>
-
         <md-input-container>
           <md-icon>work</md-icon>
           <label>New Project</label>

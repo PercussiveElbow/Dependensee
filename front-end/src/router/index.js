@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Projects from '@/components/Projects'
+import Project from '@/components/Project'
+import Scan from '@/components/Scan'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
 
@@ -22,6 +24,16 @@ export default new Router({
       path: '/Projects',
       name: 'Projects',
       component: Projects
+    },
+    {
+     path: '/project/:id',
+     name: 'Project',
+     component: Project
+    },
+    {
+     path: '/scan/:id',
+     name: 'Scan',
+     component: Scan
     },
   ]
 })
