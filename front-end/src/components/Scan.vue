@@ -23,7 +23,7 @@
 
 
       <div class="md-toolbar-container">
-          <md-button class="md-icon-button"  @click="go_projects">
+          <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });">
           <md-icon>home</md-icon>
         </md-button>
         <h2 class="md-title">Project {{project.name}}:    Scan: {{$route.params.scan_id}}</h2>

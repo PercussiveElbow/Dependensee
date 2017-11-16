@@ -23,11 +23,11 @@
 
 
       <div class="md-toolbar-container">
-          <md-button class="md-icon-button"  @click="go_projects">
+          <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });">
           <md-icon>home</md-icon>
         </md-button>
-        <h2 class="md-title">Cve {{cve.id}}</h2>
-          <md-button @click=show class="md-fab md-mini">
+        <h2 class="md-title">Cve: {{cve.id}}</h2>
+          <md-button  class="md-fab md-mini">
           <md-icon>add</md-icon>
         </md-button>
       </div>
@@ -38,6 +38,7 @@
   
   <main class="main-content">
 
+      {{cve.id}}
       {{cve}}
   </main>
 
@@ -64,7 +65,6 @@
        }
     },
     created() {
-      this.cve.id = this.$route.params.cve_id
       this.get_cve();
     },
     watch: {

@@ -72,8 +72,6 @@ function getDependencies(project_id,scan_id){
 
 //CVE
 function getCve(cve_id){
-	console.log(cve_id);
-	// return axios.get(CVE_URL+cve_id,{headers: {'Authorization': getToken()}} ).then (response => response.data);
 	return axios.get(CVE_URL+cve_id).then (response => response.data);
 }
 

@@ -23,7 +23,7 @@
 
 
       <div class="md-toolbar-container">
-          <md-button class="md-icon-button"  @click="go_projects">
+          <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });">
           <md-icon>home</md-icon>
         </md-button>
         <h2 class="md-title">Project: {{project.name}}</h2>
@@ -133,9 +133,6 @@
       },
       get_scans() {
           getScans(this.$route.params.id,{headers: {'Authorization': getToken()}}).then(response =>  {this.scans = response;});
-      },
-      go_projects() {
-          this.$router.push({ path: '/projects/' }); 
       },
       delete_scan(id) {
         this.$http.delete('http://localhost:3000/projects/'+this.$route.params.id+'/scans/' + id, {headers: {'Authorization': getToken()}}, (data) => {});
