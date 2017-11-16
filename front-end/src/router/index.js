@@ -5,6 +5,7 @@ import Project from '@/components/Project'
 import Scan from '@/components/Scan'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
+import Cve from '@/components/Cve'
 
 Vue.use(Router);
 
@@ -34,6 +35,11 @@ export default new Router({
      path: '/scan/:project_id/:scan_id',
      name: 'Scan',
      component: Scan
+    },
+    {
+     path: '/cve/:cve_id/',
+     name: 'Cve',
+     component: Cve
     },
   ]
 })

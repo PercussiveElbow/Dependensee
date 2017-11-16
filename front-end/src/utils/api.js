@@ -5,13 +5,14 @@ const API_URL = 'http://192.168.0.5:3000/';
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
 const PROJECTS_URL = API_URL + 'projects/';
+const CVE_URL = API_URL + 'cve/';
 const UPLOAD_URL =  '/upload/'
 const SCANS_URL = '/scans/'
 const PROFILE_URL = '/profile'
 const DEPENDENCIES_URL = '/dependencies/'
 const ACCESS_TOKEN = 'jwk_access_token'
 
-export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,putProjects,getProject,getScans,isValidToken,getProfile,postProject,upload,getScan,getDependencies};
+export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,putProjects,getProject,getScans,isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve};
 
 
 //AUTH
@@ -67,6 +68,13 @@ function upload(id,body){
 //DEPENDENCIES
 function getDependencies(project_id,scan_id){
 	return axios.get(PROJECTS_URL+project_id+SCANS_URL + scan_id + DEPENDENCIES_URL,{headers: {'Authorization': getToken()}} ).then (response => response.data);
+}
+
+//CVE
+function getCve(cve_id){
+	console.log(cve_id);
+	// return axios.get(CVE_URL+cve_id,{headers: {'Authorization': getToken()}} ).then (response => response.data);
+	return axios.get(CVE_URL+cve_id).then (response => response.data);
 }
 
 
