@@ -17,8 +17,8 @@
             <span>{{profile.email}}</span>
           </div>
   
-          <md-button class="md-icon-button md-list-action">
-            <md-icon>arrow_drop_down</md-icon>
+          <md-button class="md-icon-button md-list-action" @click="handleLogout">
+            <md-icon>exit_to_app</md-icon>
           </md-button>
         </md-list-item>
       </md-list>
@@ -51,7 +51,7 @@
 
 
 <script>
-import {getToken,getProjects,getProfile} from '../utils/api.js';
+import {clearToken,getProfile} from '../utils/api.js';
 
   export default {
     name: 'Sidebar',
@@ -67,6 +67,10 @@ import {getToken,getProjects,getProfile} from '../utils/api.js';
     methods: {
       toggleSidebar() {
         this.$refs.bsidebar.toggle();
+      },
+      handleLogout() {
+        clearToken();
+        this.$router.push('/login');
       }
     }
   }
