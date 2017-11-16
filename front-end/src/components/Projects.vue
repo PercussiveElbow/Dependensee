@@ -1,53 +1,12 @@
 <template>
   <div id ='something'>
     <div class="app-viewport" id="file-list">
-  <md-sidenav class="md-left md-fixed" ref="sidebar">
-    <md-toolbar class="md-account-header">
-      <md-list class="md-transparent">
-        <md-list-item class="md-avatar-list">
-          <md-avatar class="md-large">
-            <img src="https://placeimg.com/128/128/tech" alt="People">
-          </md-avatar>
-  
-          <span style="flex: 1"></span>
-  
-        </md-list-item>
-  
-        <md-list-item>
-          <div class="md-list-text-container">
-            <span>{{profile.name}}</span>
-            <span>{{profile.email}}</span>
-          </div>
-  
-          <md-button class="md-icon-button md-list-action">
-            <md-icon>arrow_drop_down</md-icon>
-          </md-button>
-        </md-list-item>
-      </md-list>
-    </md-toolbar>
-  
-    <md-list>
-      <md-list-item >
-               <router-link :to="{ path: '/projects/' }">Projects</router-link>
-      </md-list-item>
-      <md-list-item >
-               <router-link :to="{ path: '/dependencies/' }">Dependencies</router-link>
-      </md-list-item>
-
-            <md-list-item @click="$refs.sidebar.toggle()">
-        <md-icon>warning</md-icon> <span>Vulnerabilities</span>
-      </md-list-item>
-
-      <md-list-item @click="$refs.sidebar.toggle()">
-        <md-icon>autorenew</md-icon> <span>Quick Scan</span>
-      </md-list-item>
-    </md-list>
-  </md-sidenav>
-  
+      <Sidebar ref='sidebar'></Sidebar>
+        
   <md-whiteframe md-elevation="3" class="main-toolbar">
     <md-toolbar class="md-large">
       <div class="md-toolbar-container">
-        <md-button class="md-icon-button" @click="$refs.sidebar.toggle()">
+        <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()">
           <md-icon>menu</md-icon>
         </md-button>
   
@@ -77,7 +36,7 @@
       <ProjectList></ProjectList>
   </main>
 
-<modal name="create-project"         :height="350" :adaptive="true" @opened="opened">
+<modal name="create-project"         :height="350" :adaptive="true" >
     <div style="padding: 30px; text-align: center">
               <h2 >Add a new project</h2>
         <md-input-container>
@@ -109,11 +68,13 @@
 
   import {getToken,getProjects,getProfile} from '../utils/api.js';
   import ProjectList from './ProjectList'
+  import Sidebar from './Sidebar'
 
   export default {
     name: 'Projects',
     components:  {
-      ProjectList
+      ProjectList,
+      Sidebar
     },
          data() {
       return {
