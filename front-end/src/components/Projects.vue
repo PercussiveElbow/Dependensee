@@ -15,8 +15,8 @@
   
         <md-list-item>
           <div class="md-list-text-container">
-            <span>John Doe</span>
-            <span>test@example.com</span>
+            <span>{{profile.name}}</span>
+            <span>{{profile.email}}</span>
           </div>
   
           <md-button class="md-icon-button md-list-action">
@@ -107,7 +107,7 @@
 
 <script>
 
-  import {getToken,getProjects} from '../utils/api.js';
+  import {getToken,getProjects,getProfile} from '../utils/api.js';
   import ProjectList from './ProjectList'
 
   export default {
@@ -121,10 +121,13 @@
           name: '',
           language: '',
         },
+        profile: {},
         error: ''
       }
     },
-    
+    created: function() {
+        getProfile().then(response =>  {this.profile = response;});
+    },
     methods: {
    create_project: function(newproject) {
           var formCreds = new FormData();

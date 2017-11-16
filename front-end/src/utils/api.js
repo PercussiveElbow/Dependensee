@@ -6,9 +6,10 @@ const SIGNUP_URL = API_URL + 'signup/';
 const PROJECTS_URL = API_URL + 'projects/';
 const UPLOAD_URL = SIGNUP_URL + 'upload/'
 const SCANS_URL = '/scans/'
+const PROFILE_URL = '/profile'
 const ACCESS_TOKEN = 'jwk_access_token'
 
-export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,putProjects,getProject,getScans,isValidToken};
+export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,putProjects,getProject,getScans,isValidToken,getProfile};
 
 
 //AUTH
@@ -23,6 +24,11 @@ function apiSignUp(params) {
 function isValidToken() {
 	var isValid;
 	getProjects( {headers: {'Authorization': getToken()} } ).then(response =>  {return 'fewf';});
+}
+
+//PROFILE
+function getProfile() {
+	return axios.get(API_URL + PROFILE_URL, {headers: {'Authorization': getToken()} }).then(response => response.data);
 }
 
 //PROJECTS

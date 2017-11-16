@@ -7,7 +7,6 @@ Rails.application.routes.draw do
     resources :upload
   end
 
-
   resources :cve do
   end
 
@@ -15,4 +14,5 @@ Rails.application.routes.draw do
   post 'signup', to: 'users#create'
   post 'login', to: 'users#login'
   post 'upload', to: 'upload#create'
+  get 'profile', to: 'profile#profile_get'
 end
