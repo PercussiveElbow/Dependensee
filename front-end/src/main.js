@@ -6,8 +6,10 @@ import VueResource from 'vue-resource'
 import VueMaterial from 'vue-material'
 import axios from 'axios'
 import 'vue-material/dist/vue-material.css'
-import vmodal from 'vue-js-modal'
+import './assets/font-mfizz-2.4.1/font-mfizz.css'
 
+
+import vmodal from 'vue-js-modal'
 
 Vue.config.productionTip = false
 Vue.use(VueResource);

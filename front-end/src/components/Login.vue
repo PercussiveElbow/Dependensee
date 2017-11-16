@@ -21,6 +21,7 @@
       </md-card-content>
 
     <md-card-actions>
+      <router-link :to="{ path: '/SignUp/' }">Sign Up</router-link>
        <md-button class="md-raised md-primary" v-on:click=handleLogin>Login</md-button>
     </md-card-actions>
     </md-layout>
@@ -48,7 +49,18 @@
           var formCreds = new URLSearchParams();
           formCreds.append('email',this.creds.email);
           formCreds.append('password',this.creds.password);
-          apiLogin(formCreds).then(resp => saveToken(resp));
+          apiLogin(formCreds).then(resp => this.isSucessfulSignin(resp));
+        },
+        isSucessfulSignin(resp){
+                    console.log(resp);
+          if(resp.auth_token === null ){
+            //throw error
+            console.log('Signup failed, handle validation response');
+          }else{
+            console.log('Token saved');
+            saveToken(resp);
+            this.$router.push('/projects');
+          }
         }
       }
   }

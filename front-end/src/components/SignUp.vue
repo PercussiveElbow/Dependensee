@@ -27,6 +27,7 @@
     </md-card-content>
 
     <md-card-actions>
+        <router-link :to="{ path: '/login/' }">Log In</router-link>
 	     <md-button class="md-raised md-primary" v-on:click=handleSignUp>Sign up</md-button>
     </md-card-actions>
     </md-layout>
@@ -35,7 +36,7 @@
 </template>
 
 <script>
-  import {apiSignUp,saveToken} from '../utils/api.js';
+  import {apiSignUp,getProjects,saveToken} from '../utils/api.js';
   export default {
     name: 'SignUp',
     data() {
@@ -55,7 +56,19 @@
           formCreds.append('email',this.creds.email);
           formCreds.append('password',this.creds.password);
           formCreds.append('password_confirmation',this.creds.password);
-          apiSignUp(formCreds).then(resp => (saveToken(resp) ));
+          apiSignUp(formCreds).then(resp => (this.isSucessfulSignup(resp)));
+          
+        },
+        isSucessfulSignup(resp) {
+          console.log(resp);
+          if(resp.auth_token === null ){
+            //throw error
+            console.log('Signup failed, handle validation response');
+          }else{
+            console.log('Token saved');
+            saveToken(resp);
+            this.$router.push('/projects');
+          }
         }
       }
   }

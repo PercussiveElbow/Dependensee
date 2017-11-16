@@ -1,9 +1,6 @@
 <template>
   <div id="app">
     <div :style="{ 'background-image': 'url(' + backgroundPattern() + ')' }">
-      <router-link :to="{ name: 'Login' }">Login</router-link>
-      <router-link to="/SignUp">SignUp</router-link>
-      <router-link to="/Projects">projects</router-link>
       <router-view></router-view>
     </div>
   </div>
@@ -11,6 +8,7 @@
 
 <script>
 var  Trianglify = require('trianglify')
+import {isValidToken} from './utils/api.js';
 
 export default {
   name: '#app',
@@ -21,6 +19,9 @@ export default {
       var pattern = Trianglify({height: height,width: width,cell_size: 200});
     return pattern.png();
     }
+  },
+  created() {
+      console.log(isValidToken());
   }
 }
 </script>

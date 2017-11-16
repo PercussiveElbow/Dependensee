@@ -6,18 +6,17 @@
     <md-list-item v-for="item in items">
 
       <md-avatar md-theme="red" v-if="item.language === 'Ruby'" class="md-avatar-icon md-primary">
-        <md-icon >code</md-icon>
+        <i class="icon-ruby"></i>
       </md-avatar>
       <md-avatar md-theme="orange" v-if="item.language === 'Java'" class="md-avatar-icon md-primary">
-        <md-icon >code</md-icon>
+        <i class="icon-java"></i>
       </md-avatar>
       <md-avatar md-theme="green" v-if="item.language === 'Python'" class="md-avatar-icon md-primary">
-        <md-icon >code</md-icon>
+        <i class="icon-python"></i>
       </md-avatar>
 
       <div class="md-list-text-container">
         <router-link :to="{ path: '/project/'+item.id }">{{item.name}}</router-link>
-        <p>{{ item.language }}</p>
         <p>{{ item.description }}</p>
       </div>
 
@@ -69,7 +68,7 @@
     },
     methods: {
       poll_projects:  function () {
-        var resp =getProjects({headers: {'Authorization': getToken()}}).then(response =>  {this.items = response;});
+        var resp =getProjects().then(response =>  {this.items = response;});
       },
       editshow (id) {
         this.edit_id = id;
@@ -122,5 +121,22 @@ body,
 .md-sidenav .md-list-text-container > :nth-child(2) {
   color: rgba(#fff, .54);
 }
-
+.icon-ruby {
+  vertical-align: middle;
+  padding-top: 15px;
+  margin-left: 5px;
+  font-size: 1.75em;
+}
+.icon-java {
+  vertical-align: middle;
+  padding-top: 15px;
+  margin-left: 10px;
+  font-size: 1.75em;
+}
+.icon-python {
+  vertical-align: middle;
+  padding-top: 20px;
+  margin-left: 7px;
+  font-size: 1.75em;
+}
 </style>

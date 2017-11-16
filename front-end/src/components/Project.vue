@@ -71,7 +71,9 @@
   
       </div>
     </md-toolbar>
+
   </md-whiteframe>
+
   
   <main class="main-content">
 
@@ -84,15 +86,15 @@
       </md-avatar>
 
       <div class="md-list-text-container">
-        <router-link :to="{ path: '/scans/'+scan.id }">{{scan.id}}</router-link>
+        <router-link :to="{ path: '/scans/'+scan.id }">Scan: {{scan.id}}</router-link>
         <p>{{ scan.updated_at }}</p>
         <p>{{ scan.description }}</p>
       </div>
 
-      <md-button class="md-icon-button md-list-action"  @click=delete_project(item.id)>
+      <md-button class="md-icon-button md-list-action"  @click=delete_scan(scan.id)>
         <md-icon>delete</md-icon>
       </md-button>
-      <md-button class="md-icon-button md-list-action"  @click=editshow(item.id)>
+      <md-button class="md-icon-button md-list-action"  @click=editscan(scan.id)>
         <md-icon>edit</md-icon>
       </md-button>
 
@@ -105,7 +107,22 @@
 
 
 </div>
+
+<modal name="upload"         :height="350" :adaptive="true" @opened="opened">
+    <div style="padding: 30px; text-align: center">
+          <h2 v-if="project.language == 'Ruby' " >Upload Gemfile</h2>
+          <h2 v-if="project.language  === 'Java' " >Upload Pomfile</h2>
+          <h2 v-if="project.language  === 'Python' " >Upload Dependencies.txt</h2>
+         <md-input-container>
+        <md-file placeholder='Select a file' ></md-file>
+      </md-input-container>
+  <md-button class="md-primary md-raised" v-on:click=handle_upload>Scan</md-button>
+    </div>
+</modal>
+        <md-button class="md-primary md-raised" v-on:click='show'>addtest</md-button>
+
   </div>
+
 </template>
 
 <script>
@@ -116,15 +133,20 @@
     name: 'Project',
     data() {
       return {
-        project: {},
-        scans: []
-      }
+        project: {
+
+        },
+        scans: [],
+        upload: {
+          body : ''
+        }
+       }
     },
     created() {
       this.get_project();
       this.get_scans();
+      setInterval(function () {this.get_scans();}.bind(this), 10000); 
     },
-
     watch: {
       '$route': 'fetchData'
     },
@@ -135,11 +157,23 @@
       },
       get_scans() {
           getScans(this.$route.params.id,{headers: {'Authorization': getToken()}}).then(response =>  {this.scans = response;});
-          console.log(scans);
       },
       go_projects() {
           this.$router.push({ path: '/projects/' }); 
-      } 
+      },
+      delete_scan(id) {
+        this.$http.delete('http://localhost:3000/projects/'+this.$route.params.id+'/scans/' + id, {headers: {'Authorization': getToken()}}, (data) => {});
+        this.get_scans;
+      },
+      handle_upload(){
+
+      },
+      show () {
+        this.$modal.show('upload');
+      },
+      hide () {
+        this.$modal.hide('upload');
+      }
     }
   } 
 </script>
