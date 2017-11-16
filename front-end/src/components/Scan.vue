@@ -6,7 +6,7 @@
   <md-whiteframe md-elevation="3" class="main-toolbar">
     <md-toolbar class="md-large">
       <div class="md-toolbar-container">
-        <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()">
+        <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()" >
           <md-icon>menu</md-icon>
         </md-button>
   
@@ -42,7 +42,13 @@
   <md-list class="md-double-line">
     <md-list-item v-for="dep in dependencies">
 
-      <md-avatar md-theme="green" class="md-avatar-icon md-primary">
+      <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" >
+        <md-icon >code</md-icon>
+      </md-avatar>
+      <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'" >
+        <md-icon >code</md-icon>
+      </md-avatar>
+      <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'" >
         <md-icon >code</md-icon>
       </md-avatar>
 

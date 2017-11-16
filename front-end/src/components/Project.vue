@@ -42,10 +42,15 @@
   <md-list class="md-double-line">
     <md-list-item v-for="scan in scans">
 
-      <md-avatar md-theme="green" class="md-avatar-icon md-primary">
+      <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" >
         <md-icon >description</md-icon>
       </md-avatar>
-
+      <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'" >
+        <md-icon >description</md-icon>
+      </md-avatar>
+            <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'" >
+        <md-icon >description</md-icon>
+      </md-avatar>
       <div class="md-list-text-container">
         <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">Scan: {{scan.id}}</router-link>
         <p>{{ scan.updated_at }}</p>
