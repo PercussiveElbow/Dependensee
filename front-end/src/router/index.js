@@ -31,7 +31,7 @@ export default new Router({
      component: Project
     },
     {
-     path: '/scan/:id',
+     path: '/scan/:project_id/:scan_id',
      name: 'Scan',
      component: Scan
     },

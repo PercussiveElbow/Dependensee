@@ -5,7 +5,7 @@
   <md-list class="md-double-line">
     <md-list-item v-for="item in items">
 
-      <md-avatar md-theme="red" v-if="item.language === 'Ruby'" class="md-avatar-icon md-primary">
+      <md-avatar v-on:click="console.log('test');" md-theme="red" v-if="item.language === 'Ruby'" class="md-avatar-icon md-primary">
         <i class="icon-ruby"></i>
       </md-avatar>
       <md-avatar md-theme="orange" v-if="item.language === 'Java'" class="md-avatar-icon md-primary">
@@ -72,7 +72,6 @@
       },
       editshow (id) {
         this.edit_id = id;
-        console.log(this.edit_id);
         this.$modal.show('edit-project');
       }, 
       hide () {

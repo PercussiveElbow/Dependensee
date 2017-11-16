@@ -18,7 +18,7 @@ Vue.use(vmodal,{ dialog: true });
 
 Vue.material.registerTheme({
   default: {
-    primary: 'blue',
+    primary: 'indigo',
     accent: 'red'
   },
   green: {	

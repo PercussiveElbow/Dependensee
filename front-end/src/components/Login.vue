@@ -21,7 +21,7 @@
       </md-card-content>
 
     <md-card-actions>
-      <router-link :to="{ path: '/SignUp/' }">Sign Up</router-link>
+      <md-button class="md-raised md-primary" v-on:click="$router.push('/Signup')">Signup</md-button>
        <md-button class="md-raised md-primary" v-on:click=handleLogin>Login</md-button>
     </md-card-actions>
     </md-layout>
@@ -69,3 +69,6 @@
 </script>
 
 
+<style>
+
+</style>

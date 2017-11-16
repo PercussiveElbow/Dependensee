@@ -25,11 +25,12 @@
     </md-toolbar>
   
     <md-list>
-      <md-list-item >
-               <router-link :to="{ path: '/projects/' }">Projects</router-link>
+      <md-list-item @click="$router.push('/Projects')">
+        <md-icon>folder</md-icon> <span>Projects</span>
       </md-list-item>
-      <md-list-item >
-               <router-link :to="{ path: '/dependencies/' }">Dependencies</router-link>
+
+      <md-list-item @click="$router.push('/Dependencies')">
+        <md-icon>list</md-icon> <span>Dependencies</span>
       </md-list-item>
 
             <md-list-item @click="$refs.bsidebar.toggle()">
@@ -76,3 +77,25 @@ import {clearToken,getProfile} from '../utils/api.js';
   }
 </script>
 
+<style scoped>
+  .md-list-action .md-icon {
+  color: rgba(#000, .26);
+}
+
+.md-avatar-icon .md-icon {
+  color: #fff !important;
+}
+
+.md-sidenav .md-list-text-container > :nth-child(2) {
+  color: rgba(#fff, .54);
+}
+
+.md-account-header {
+  .md-list-item:hover .md-button:hover {
+    background-color: inherit;
+  }
+
+  .md-avatar-list .md-list-item-container:hover {
+    background: none !important;
+  }
+}</style>

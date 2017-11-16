@@ -27,7 +27,9 @@
           <md-icon>home</md-icon>
         </md-button>
         <h2 class="md-title">Project: {{project.name}}</h2>
-  
+          <md-button @click=show class="md-fab md-mini">
+          <md-icon>add</md-icon>
+        </md-button>
       </div>
     </md-toolbar>
 
@@ -41,11 +43,11 @@
     <md-list-item v-for="scan in scans">
 
       <md-avatar md-theme="green" class="md-avatar-icon md-primary">
-        <md-icon >code</md-icon>
+        <md-icon >description</md-icon>
       </md-avatar>
 
       <div class="md-list-text-container">
-        <router-link :to="{ path: '/scans/'+scan.id }">Scan: {{scan.id}}</router-link>
+        <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">Scan: {{scan.id}}</router-link>
         <p>{{ scan.updated_at }}</p>
         <p>{{ scan.description }}</p>
       </div>
@@ -72,21 +74,27 @@
           <h2 v-if="project.language == 'Ruby' " >Upload Gemfile</h2>
           <h2 v-if="project.language  === 'Java' " >Upload Pomfile</h2>
           <h2 v-if="project.language  === 'Python' " >Upload Dependencies.txt</h2>
+
+          <md-input-container>
+              <md-icon>work</md-icon>
+              <label>Edit Project</label>
+              <md-input name v-model="upload.body"/>
+            </md-input-container>
+
+
          <md-input-container>
         <md-file placeholder='Select a file' ></md-file>
       </md-input-container>
   <md-button class="md-primary md-raised" v-on:click=handle_upload>Scan</md-button>
     </div>
 </modal>
-        <md-button class="md-primary md-raised" v-on:click='show'>addtest</md-button>
-
   </div>
 
 </template>
 
 <script>
 
-  import {getToken,getProject,getScans} from '../utils/api.js';
+  import {getToken,getProject,getScans,upload} from '../utils/api.js';
   import Sidebar from './Sidebar'
 
   export default {
@@ -108,7 +116,7 @@
     created() {
       this.get_project();
       this.get_scans();
-      setInterval(function () {this.get_scans();}.bind(this), 10000); 
+      setInterval(function () {this.get_scans();}.bind(this), 15000); 
     },
     watch: {
       '$route': 'fetchData'
@@ -129,6 +137,8 @@
         this.get_scans;
       },
       handle_upload(){
+        console.log(this.upload.body);
+        upload(this.$route.params.id,this.upload.body);
 
       },
       show () {
@@ -183,27 +193,7 @@ body,
   overflow: auto;
 }
 
-.md-list-action .md-icon {
-  color: rgba(#000, .26);
-}
 
-.md-avatar-icon .md-icon {
-  color: #fff !important;
-}
-
-.md-sidenav .md-list-text-container > :nth-child(2) {
-  color: rgba(#fff, .54);
-}
-
-.md-account-header {
-  .md-list-item:hover .md-button:hover {
-    background-color: inherit;
-  }
-
-  .md-avatar-list .md-list-item-container:hover {
-    background: none !important;
-  }
-}
 </style>
 
 

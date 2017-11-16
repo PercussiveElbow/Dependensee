@@ -1,5 +1,9 @@
 <template>
+
   <div id="app">
+    <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
     <div :style="{ 'background-image': 'url(' + backgroundPattern() + ')' }">
       <router-view></router-view>
     </div>

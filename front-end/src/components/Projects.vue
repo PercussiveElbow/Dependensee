@@ -3,8 +3,8 @@
     <div class="app-viewport" id="file-list">
       <Sidebar ref='sidebar'></Sidebar>
         
-  <md-whiteframe md-elevation="3" class="main-toolbar">
-    <md-toolbar class="md-large">
+  <md-whiteframe md-elevation="1" class="main-toolbar">
+    <md-toolbar class="md-dense">
       <div class="md-toolbar-container">
         <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()">
           <md-icon>menu</md-icon>
@@ -25,7 +25,7 @@
       <div class="md-toolbar-container">
         <h2 class="md-title">Projects</h2>
   
-        <md-button @click=show class="md-fab md-mini">
+        <md-button @click=show class="md-fab md-mini" >
           <md-icon>add</md-icon>
         </md-button>
       </div>
@@ -66,7 +66,7 @@
 
 <script>
 
-  import {getToken,getProjects,getProfile} from '../utils/api.js';
+  import {getToken,getProjects,getProfile,saveToken,postProject} from '../utils/api.js';
   import ProjectList from './ProjectList'
   import Sidebar from './Sidebar'
 
@@ -82,12 +82,11 @@
           name: '',
           language: '',
         },
-        profile: {},
         error: ''
       }
     },
     created: function() {
-        getProfile().then(response =>  {this.profile = response;});
+
     },
     methods: {
    create_project: function(newproject) {
@@ -95,9 +94,9 @@
           formCreds.append('name', this.newproject.name);
           formCreds.append('description', this.newproject.description);
           formCreds.append('language',this.newproject.language);
-          this.$http.post('http://localhost:3000/projects/', formCreds, {headers: {'Authorization': getToken()}}, (data) => {});
-          // this.poll_projects();
+          postProject(formCreds);
           this.hide();
+          console.log(getToken());
    },
    openDialog: function(ref) {
     
@@ -143,7 +142,7 @@ body,
 }
 
 .md-title {
-  padding-left: 8px;
+  padding-left: 40px;
   color: #fff;
 }
 
@@ -152,27 +151,8 @@ body,
   z-index: 1;
   overflow: auto;
 }
-
-.md-list-action .md-icon {
-  color: rgba(#000, .26);
-}
-
-.md-avatar-icon .md-icon {
-  color: #fff !important;
-}
-
-.md-sidenav .md-list-text-container > :nth-child(2) {
-  color: rgba(#fff, .54);
-}
-
-.md-account-header {
-  .md-list-item:hover .md-button:hover {
-    background-color: inherit;
-  }
-
-  .md-avatar-list .md-list-item-container:hover {
-    background: none !important;
-  }
+.md-fab md-mini{
+  size:100px;
 }
 </style>
 
