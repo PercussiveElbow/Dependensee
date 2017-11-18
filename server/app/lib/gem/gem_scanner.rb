@@ -16,10 +16,10 @@ class GemfileScanner < Scanner
     $ruby_db.update?
     vuln_hash = {}
     @deps.each do |spec|
-      spec_name = spec.instance_variable_get('@name').to_s
+      spec_name = spec.name
       vuln_hash[spec_name] = []
       print("\n\n" + MsgConstants::CHECKING_GEM + spec_name)
-      gem_ver=spec.instance_variable_get('@version').instance_variable_get('@version')
+      gem_ver=spec.version
       RubyCve.where(['dependency_name = ?', spec_name]).each do |cve|
           print("\n" + '          -CVE' + cve.cve_id)
           unless check_unaffected_vers(gem_ver,cve.unaffected_versions)

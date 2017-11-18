@@ -44,8 +44,9 @@ class UploadController < ApplicationController
   def handle_java
     deps = pom_decode
     scan = @project.scans.create!(:source => headers['source'])
-
     deps.each { |dep| scan.dependencies.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], language: 'java', raw: dep) }
+
+    deps =  Dependency.where(['scan_id = ?', scan.id])
     @vuln_list = PomScanner::new(deps).scan
     vuln_cleanup
 
@@ -65,6 +66,8 @@ class UploadController < ApplicationController
     scan = @project.scans.create!(:source => headers['source'])
 
     deps.each { |dep| scan.dependencies.create(name: dep.name, version: dep.version, language: 'ruby', raw: dep) }
+    deps =  Dependency.where(['scan_id = ?', scan.id])
+
     @vuln_list = GemfileScanner::new(deps).scan
     vuln_cleanup
 
@@ -83,6 +86,7 @@ class UploadController < ApplicationController
     scan = @project.scans.create!(:source => headers['source'])
 
     deps.each { |dep| scan.dependencies.create(name: dep['name'], version: dep['version'], language: 'python', raw: dep) }
+    deps =  Dependency.where(['scan_id = ?', scan.id])
     @vuln_list = PipScanner::new(deps).scan
     vuln_cleanup
 

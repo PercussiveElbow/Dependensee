@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :projects do
     resources :scans do
       resources :dependencies
+      resources :reports
     end
     resources :upload
   end

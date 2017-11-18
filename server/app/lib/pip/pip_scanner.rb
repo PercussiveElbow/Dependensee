@@ -13,12 +13,16 @@ class PipScanner < Scanner
     $maven_pip_db.update?
     vuln_hash = {}
     @deps.each do |dep|
-      vuln_hash[dep['name']] = []
+      vuln_hash[dep.name] = []
       PythonCve.all.each do |cve|
-        cve
+
         cve['affected'].each { |affected|
-          if affected['name'] == dep['name'] and PipVersionLogic::is_vuln?(dep['version'], affected['version'], affected['fixedin'])
-            vuln_hash[dep['name']].push(Vulnerability::new(dep['version'], affected['fixedin'], cve.cve_id))
+
+          if affected['name'] == 'GeoAlchemy'
+            print affected
+          end
+          if affected['name'] == dep.name and PipVersionLogic::is_vuln?(dep.version, affected['version'], affected['fixedin'])
+            vuln_hash[dep.name].push(Vulnerability::new(dep.version, affected['fixedin'], cve.cve_id))
           end
         }
       end

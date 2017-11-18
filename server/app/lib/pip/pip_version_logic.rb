@@ -22,6 +22,9 @@ class PipVersionLogic
     # Pip includes version constraints, so =>/== but ignore => for now
     dep_ver_tidy = dep_ver.gsub('=','').gsub('>','')
 
+    if vuln_ver.include? '=='
+      return Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, '')) == Gem::Version.new(dep_ver.gsub(/[^0-9.]/, ''))
+    end
     if vuln_ver.include? '<' ##There's no nice way to do >=, should really
       if vuln_ver.include? '<='; return (Gem::Version.new(dep_ver_tidy) < Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))) | (Gem::Version.new(dep_ver_tidy) == Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, '')))
       else; return Gem::Version.new(dep_ver_tidy) < Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))
