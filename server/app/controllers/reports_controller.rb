@@ -9,56 +9,28 @@ class ReportsController < ApplicationController
 
 
   def index
-    return 'broke'
+    json_response(error:'Specify a report type')
   end
-
-
 
   def show
-    response = what_language?
-    json_response(response, :created)
-
-  end
-
-  def what_language?
-    print params[:id]
-    @project
-    if @project.language == 'Ruby'
-      return handle_ruby
-    elsif @project.language == 'Java'
-      return handle_java
-    elsif @project.language == 'Python'
-      return handle_python
+    if params[:id] == 'json'
+      if @project.language == 'Ruby'
+        @vuln_list = GemfileScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
+      elsif @project.language == 'Java'
+        @vuln_list = PomScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
+      elsif @project.language == 'Python'
+        @vuln_list = PipScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
+      else
+        raise EmptyDependencyException.new('Put an actual error message here')
+      end
+      vuln_cleanup
+      response = @vuln_list.to_json
     else
-      raise EmptyDependencyException.new('Put an actual error message here')
+      response = ''
     end
+
+    json_response(response, :created)
   end
-
-  # JAVA
-  def handle_java
-    @vuln_list = PomScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
-    vuln_cleanup
-    JSON.pretty_generate({ vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
-  end
-
-
-  # RUBY
-  def handle_ruby
-    @vuln_list = GemfileScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
-    vuln_cleanup
-    JSON.pretty_generate({type: MsgConstants::GEMFILE_UPLOADED, scan_id: scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
-   end
-
-
-
-  # PYTHON
-  def handle_python
-    @vuln_list = PipScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
-    vuln_cleanup
-    JSON.pretty_generate({type: MsgConstants::PIPFILE_UPLOADED, scan_id: scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
-  end
-
-
 
   def get_project_by_id
     @project = Project.find(params[:project_id])

@@ -63,10 +63,14 @@
       <md-button class="md-icon-button md-list-action"  @click=editscan(scan.id)>
         <md-icon>edit</md-icon>
       </md-button>
-
+      <md-button class="md-icon-button md-list-action"  @click=view_vulns(scan.id)>
+        <md-icon>cloud</md-icon>
+      </md-button>
 
     </md-list-item>
   </md-list>
+  <v-dialog/>
+
   </div>
 
   </main>
@@ -99,7 +103,7 @@
 
 <script>
 
-  import {getToken,getProject,getScans,upload} from '../utils/api.js';
+  import {getToken,getProject,getScans,upload,getJsonReport} from '../utils/api.js';
   import Sidebar from './Sidebar'
 
   export default {
@@ -115,13 +119,14 @@
         scans: [],
         upload: {
           body : ''
-        }
+        },
+        report: {}
        }
     },
     created() {
       this.get_project();
       this.get_scans();
-      setInterval(function () {this.get_scans();}.bind(this), 15000); 
+      setInterval(function () {this.get_scans();}.bind(this), 10000); 
     },
     watch: {
       '$route': 'fetchData'
@@ -129,10 +134,10 @@
     methods: {
       get_project() {
           console.log(getToken());
-          getProject(this.$route.params.id,{headers: {'Authorization': getToken()}}).then(response =>  {this.project = response;});
+          getProject(this.$route.params.id).then(response =>  {this.project = response;});
       },
       get_scans() {
-          getScans(this.$route.params.id,{headers: {'Authorization': getToken()}}).then(response =>  {this.scans = response;});
+          getScans(this.$route.params.id).then(response =>  {this.scans = response;});
       },
       delete_scan(id) {
         this.$http.delete('http://localhost:3000/projects/'+this.$route.params.id+'/scans/' + id, {headers: {'Authorization': getToken()}}, (data) => {});
@@ -148,6 +153,21 @@
       },
       hide () {
         this.$modal.hide('upload');
+      },
+      view_vulns(scan_id) {
+         getJsonReport(this.$route.params.id,scan_id).then(response =>  {this.open_vuln_dialog(response)})
+      },
+      open_vuln_dialog (response) {
+        this.report=response;
+          this.$modal.show('dialog', {
+            title: 'Vulnerabilities',
+            text: this.report,
+            buttons: [
+              { title: 'JSON', handler: () => { alert('pdf') } },
+              { title: 'PDF' },
+              { title: 'HTML'}
+           ]
+          })
       }
     }
   } 

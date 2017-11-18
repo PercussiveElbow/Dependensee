@@ -30,6 +30,9 @@
           <md-button @click=show class="md-fab md-mini">
           <md-icon>add</md-icon>
         </md-button>
+              <md-button class="md-icon-button md-list-action"  @click=view_vulns()>
+        <md-icon>cloud download</md-icon>
+      </md-button>
       </div>
     </md-toolbar>
 
@@ -72,13 +75,15 @@
 
 
 </div>
+
+  <v-dialog/>
   </div>
 
 </template>
 
 <script>
 
-  import {getProject,getScan,upload,getDependencies} from '../utils/api.js';
+  import {getProject,getScan,upload,getDependencies,getJsonReport} from '../utils/api.js';
   import Sidebar from './Sidebar'
 
   export default {
@@ -96,6 +101,9 @@
         dependencies: [],
         upload: {
           body : ''
+        },
+        report: {
+
         }
        }
     },
@@ -118,8 +126,20 @@
       get_dependencies() {
           getDependencies(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.dependencies = response;});
       },
-      go_projects() {
-          this.$router.push({ path: '/projects/' }); 
+      view_vulns() {
+         getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.open_vuln_dialog(response)})
+      },
+      open_vuln_dialog (response) {
+        this.report=response;
+          this.$modal.show('dialog', {
+            title: 'Vulnerabilities',
+            text: this.report,
+            buttons: [
+              { title: 'JSON', handler: () => { alert('pdf') } },
+              { title: 'PDF' },
+              { title: 'HTML'}
+           ]
+          })
       }
     }
   } 
