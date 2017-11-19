@@ -1,7 +1,7 @@
 var axios = require('axios')
 
 // const API_URL = 'http://localhost:3000/';
-const API_URL = 'http://192.168.1.95:3000/';
+const API_URL = 'http://192.168.1.97:3000/';
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
 const PROJECTS_URL = API_URL + 'projects/';
@@ -13,7 +13,7 @@ const DEPENDENCIES_URL = '/dependencies/'
 const JSON_REPORT_URL = '/reports/json/'
 const ACCESS_TOKEN = 'jwk_access_token'
 
-export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,putProjects,getProject,getScans,isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport};
+export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,deleteScan,editScan};
 
 
 //AUTH
@@ -40,8 +40,12 @@ function getProject(id) {
 	return axios.get(PROJECTS_URL+id,{headers: {'Authorization': getToken()}}).then(response => response.data);
 }
 
-function putProjects(params) {
-	return axios.put(PROJECTS_URL,params).then(response => response.data);
+function editProject(id,params) {
+	return axios.put(PROJECTS_URL+id,params, {headers: {'Authorization': getToken()}}).then(response => response.data);
+}
+
+function deleteProject(id){
+	return axios.delete(PROJECTS_URL+id,{headers: {'Authorization': getToken()}}).then(response => response.data);
 }
 
 function getProjects() {
@@ -64,6 +68,10 @@ function getScans(id){
 
 function upload(id,body){
 	return axios.post(PROJECTS_URL+id+UPLOAD_URL, body, {headers: {'Authorization': getToken()}, 'Content-Type': 'text/plain'}).then(response =>response.data);
+}
+
+function deleteScan(id,scan_id){
+	return axios.delete(PROJECTS_URL+id+SCANS_URL+scan_id, {headers: {'Authorization': getToken()}}).then (response => response.data);
 }
 
 //DEPENDENCIES

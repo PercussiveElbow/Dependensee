@@ -53,7 +53,7 @@
 </template>
 
 <script>
-  import {getToken,getProjects,putProjects} from '../utils/api.js';
+  import {getToken,getProjects,editProject,deleteProject} from '../utils/api.js';
   export default {
     name: 'ProjectList',
     data: function () {
@@ -82,12 +82,12 @@
           var formCreds = new FormData();
           formCreds.append('name', this.editproject.name);
           formCreds.append('description', this.editproject.description);
-          this.$http.put('http://localhost:3000/projects/'+this.edit_id, formCreds, {headers: {'Authorization': getToken()}}, (data) => {});
+          editProject(this.edit_id,formCreds);
           this.hide();
           this.poll_projects();
       },
       delete_project(id) {
-        this.$http.delete('http://localhost:3000/projects/'+id, {headers: {'Authorization': getToken()}}, (data) => {});
+        deleteProject(id)
         this.poll_projects;
       },
       beforeOpen (event) {

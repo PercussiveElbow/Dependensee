@@ -60,9 +60,6 @@
       <md-button class="md-icon-button md-list-action"  @click=delete_scan(scan.id)>
         <md-icon>delete</md-icon>
       </md-button>
-      <md-button class="md-icon-button md-list-action"  @click=editscan(scan.id)>
-        <md-icon>edit</md-icon>
-      </md-button>
       <md-button class="md-icon-button md-list-action"  @click=view_vulns(scan.id)>
         <md-icon>cloud</md-icon>
       </md-button>
@@ -103,7 +100,7 @@
 
 <script>
 
-  import {getToken,getProject,getScans,upload,getJsonReport} from '../utils/api.js';
+  import {getToken,getProject,getScans,upload,getJsonReport,deleteScan} from '../utils/api.js';
   import Sidebar from './Sidebar'
 
   export default {
@@ -140,7 +137,7 @@
           getScans(this.$route.params.id).then(response =>  {this.scans = response;});
       },
       delete_scan(id) {
-        this.$http.delete('http://localhost:3000/projects/'+this.$route.params.id+'/scans/' + id, {headers: {'Authorization': getToken()}}, (data) => {});
+        deleteScan(this.$route.params.id,id)
         this.get_scans;
       },
       handle_upload(){
