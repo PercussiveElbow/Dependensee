@@ -35,42 +35,50 @@
 
   </md-whiteframe>
 
-  
-  <main class="main-content">
+        <md-tabs>
+      <md-tab id="tab-scans" md-label="Scans" to="/components/tabs/scans">
 
-    <div>
-  <md-list class="md-double-line">
-    <md-list-item v-for="scan in scans">
 
-      <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" >
-        <md-icon >description</md-icon>
-      </md-avatar>
-      <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'" >
-        <md-icon >description</md-icon>
-      </md-avatar>
-            <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'" >
-        <md-icon >description</md-icon>
-      </md-avatar>
-      <div class="md-list-text-container">
-        <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">Scan: {{scan.id}}</router-link>
-        <p>{{ scan.updated_at }}</p>
-        <p>{{ scan.description }}</p>
+      <main class="main-content">
+
+        <div>
+      <md-list class="md-double-line">
+        <md-list-item v-for="scan in scans">
+
+          <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" >
+            <md-icon >description</md-icon>
+          </md-avatar>
+          <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'" >
+            <md-icon >description</md-icon>
+          </md-avatar>
+                <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'" >
+            <md-icon >description</md-icon>
+          </md-avatar>
+          <div class="md-list-text-container">
+            <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">Scan: {{scan.id}}</router-link>
+            <p>{{ scan.updated_at }}</p>
+            <p>{{ scan.description }}</p>
+          </div>
+
+          <md-button class="md-icon-button md-list-action"  @click=delete_scan(scan.id)>
+            <md-icon>delete</md-icon>
+          </md-button>
+          <md-button class="md-icon-button md-list-action"  @click=view_vulns(scan.id)>
+            <md-icon>cloud</md-icon>
+          </md-button>
+
+        </md-list-item>
+      </md-list>
+      <v-dialog/>
+
       </div>
 
-      <md-button class="md-icon-button md-list-action"  @click=delete_scan(scan.id)>
-        <md-icon>delete</md-icon>
-      </md-button>
-      <md-button class="md-icon-button md-list-action"  @click=view_vulns(scan.id)>
-        <md-icon>cloud</md-icon>
-      </md-button>
+      </main>
+    </md-tab>
 
-    </md-list-item>
-  </md-list>
-  <v-dialog/>
-
-  </div>
-
-  </main>
+      <md-tab id="tab-history" md-label="History" to="/components/tabs/history">
+      </md-tab>
+  </md-tabs>
 
 
 </div>
@@ -212,6 +220,9 @@ body,
   overflow: auto;
 }
 
+.md-tab {
+   background-color: white;
+}
 
 </style>
 

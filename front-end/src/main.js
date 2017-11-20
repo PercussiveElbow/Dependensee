@@ -7,6 +7,7 @@ import VueMaterial from 'vue-material'
 import axios from 'axios'
 import 'vue-material/dist/vue-material.css'
 import './assets/font-mfizz-2.4.1/font-mfizz.css'
+// import VueCharts from 'vue-chartjs'
 
 
 import vmodal from 'vue-js-modal'
@@ -15,6 +16,7 @@ Vue.config.productionTip = false
 Vue.use(VueResource);
 Vue.use(VueMaterial);
 Vue.use(vmodal,{ dialog: true });
+// Vue.use(VueCharts)
 
 Vue.material.registerTheme({
   default: {

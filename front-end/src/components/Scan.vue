@@ -27,9 +27,7 @@
           <md-icon>home</md-icon>
         </md-button>
         <h2 class="md-title">Project {{project.name}}:    Scan: {{$route.params.scan_id}}</h2>
-          <md-button @click=show class="md-fab md-mini">
-          <md-icon>add</md-icon>
-        </md-button>
+
               <md-button class="md-icon-button md-list-action"  @click=view_vulns()>
         <md-icon>cloud download</md-icon>
       </md-button>
@@ -38,7 +36,9 @@
 
   </md-whiteframe>
 
-  
+      <md-tabs>
+      <md-tab id="tab-home" md-label="Dependencies" to="/components/tabs/home">
+      
   <main class="main-content">
 
     <div>
@@ -74,6 +74,61 @@
   </main>
 
 
+      </md-tab>
+
+            <md-tab id="tab-vulns" md-label="Vulnerabilities" to="/components/tabs/vulns">
+<main class="main-content">
+
+    <div>
+  <md-list class="md-double-line">
+    <md-list-item v-for="vuln in vulns">
+
+      <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" >
+        <md-icon >warning</md-icon>
+      </md-avatar>
+      <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'" >
+        <md-icon >warning</md-icon>
+      </md-avatar>
+      <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'" >
+        <md-icon >warning</md-icon>
+      </md-avatar>
+
+      <div class="md-list-text-container">
+        <a @click=openCVEModal(vuln[0].cve)>CVE: {{vuln[0].cve}}</a>
+        <p>Our ver: {{ vuln[0].our_version }}</p>
+        <p>Patched ver: {{ vuln[0].patched_version }}</p>
+      </div>
+
+      <md-button class="md-icon-button md-list-action"  @click=delete_scan(scan.id)>
+        <md-icon>delete</md-icon>
+      </md-button>
+      <md-button class="md-icon-button md-list-action"  @click=editscan(scan.id)>
+        <md-icon>edit</md-icon>
+      </md-button>
+    </md-list-item>
+  </md-list>
+  </div>
+
+  </main>      </md-tab>
+
+
+      <md-tab id="tab-pages" md-label="Graphs" to="/components/tabs/pages">
+        <div id='graphthing' style="height:500; width:500px;">
+        <line-example ></line-example>
+        </div>
+      </md-tab>
+
+                  <md-tab id="tab-reports" md-label="Reports" to="/components/tabs/reports">
+        Reports tab
+        <p>Qui, voluptas repellat impedit ducimus earum at ad architecto consectetur perferendis aspernatur iste amet ex tempora animi, illum tenetur quae assumenda iusto.</p>
+      </md-tab>
+
+      <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
+        Options tab
+        <p>Maiores, dolorum. Beatae, optio tempore fuga odit aperiam velit, consequuntur magni inventore sapiente alias sequi odio qui harum dolorem sunt quasi corporis.</p>
+      </md-tab>
+    </md-tabs>
+
 </div>
 
   <v-dialog/>
@@ -83,13 +138,16 @@
 
 <script>
 
-  import {getProject,getScan,upload,getDependencies,getJsonReport} from '../utils/api.js';
+  import {getProject,getScan,upload,getDependencies,getJsonReport,getCve} from '../utils/api.js';
   import Sidebar from './Sidebar'
+  import LineExample from '../utils/LineExample.js'
+  // import DoughnutExample from '../utils/DoughnutExample.js'
 
   export default {
     name: 'Scan',
     components:  {
-      Sidebar
+      Sidebar,
+      LineExample
     },
     data() {
       return {
@@ -104,12 +162,19 @@
         },
         report: {
 
-        }
+        },
+        graphWidth: '',
+        graphHeight: '',
+        vulns : [],
+        cve: []
        }
     },
     created() {
       this.get_project();
       this.get_dependencies();
+      this.set_vulns();
+      this.graphWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      this.graphHeight = window.innerHeight || document.documentElement.clientHeight  || document.body.clientHeight;
       setInterval(function () {this.get_dependencies();}.bind(this), 15000); 
     },
     watch: {
@@ -129,6 +194,9 @@
       view_vulns() {
          getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.open_vuln_dialog(response)})
       },
+      set_vulns(){
+         getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.vulns = response})
+      },
       open_vuln_dialog (response) {
         this.report=response;
           this.$modal.show('dialog', {
@@ -139,6 +207,14 @@
               { title: 'PDF' },
               { title: 'HTML'}
            ]
+          })
+      },
+      openCVEModal(cve_id){
+        getCve(cve_id).then(response => {this.cve = response})
+        this.$modal.show('dialog', {
+            title: 'CVE: ' +cve_id + ' ' + this.cve[0].title,
+            text:  this.cve[0].cvss2,
+            text: this.cve[0].desc
           })
       }
     }
@@ -185,6 +261,10 @@ body,
   position: relative;
   z-index: 1;
   overflow: auto;
+}
+
+.md-tab {
+   background-color: white;
 }
 
 

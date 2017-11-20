@@ -38,8 +38,9 @@
   
   <main class="main-content">
 
-      {{cve.id}}
-      {{cve}}
+      Name: {{cve[0].id}}
+    </br>
+      Description: {{cve[0].desc}}
   </main>
 
 
