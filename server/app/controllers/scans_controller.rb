@@ -5,7 +5,7 @@ class ScansController < ApplicationController
 
   # GET /projects/:project_id/scans
   def index
-    json_response(@project.scans)
+    json_response((@project.scans.sort_by &:created_at).reverse)
   end
 
   # GET /projects/:project_id/scans/:id

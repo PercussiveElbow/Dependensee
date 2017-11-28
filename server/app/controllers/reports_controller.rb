@@ -1,6 +1,7 @@
 require_relative '../lib/pom/pom_scanner'
 require_relative '../lib/gem/gem_scanner'
 require_relative '../lib/pip/pip_scanner'
+require "prawn"
 
 class ReportsController < ApplicationController
   before_action :get_project_by_id
@@ -13,7 +14,6 @@ class ReportsController < ApplicationController
   end
 
   def show
-    if params[:id] == 'json'
       if @project.language == 'Ruby'
         @vuln_list = GemfileScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
       elsif @project.language == 'Java'
@@ -24,8 +24,14 @@ class ReportsController < ApplicationController
         raise EmptyDependencyException.new('Put an actual error message here')
       end
       vuln_cleanup
-      response = @vuln_list.to_json
-    else
+      if params[:id] == 'json'
+        response = @vuln_list.to_json
+      elsif params[:id] == 'pdf'
+        doc = Prawn::Document.generate("hello.pdf") do
+          text "Hello World!"
+        end
+        return send_data(doc, :filename => "report.pdf", :type => "application/pdf")
+      else
       response = ''
     end
 

@@ -50,7 +50,7 @@
           <md-input name v-model="newproject.description" />
         </md-input-container>
        <select v-model="newproject.language">
-        <option disabled value="">Please select one</option>
+        <option disabled value="">Language</option>
             <option>Ruby</option>
             <option>Java</option>
             <option>Python</option>

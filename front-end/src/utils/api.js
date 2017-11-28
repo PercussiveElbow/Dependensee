@@ -1,7 +1,7 @@
 var axios = require('axios')
 
 // const API_URL = 'http://localhost:3000/';
-const API_URL = 'http://localhost:3000/';
+const API_URL = 'http://192.168.0.12:3000/';
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
 const PROJECTS_URL = API_URL + 'projects/';
@@ -14,7 +14,7 @@ const JSON_REPORT_URL = '/reports/json/'
 const PDF_REPORT_URL = '/reports/pdf/'
 const ACCESS_TOKEN = 'jwk_access_token'
 
-export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,deleteScan,editScan};
+export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,deleteScan,editScan,gemsLatest};
 
 
 //AUTH
@@ -111,4 +111,15 @@ function clearToken() {
 
 function getToken() {
   return localStorage.getItem(ACCESS_TOKEN);
+}
+
+//OTHER
+function gemsLatest(dep_name){
+        axios.get('https://rubygems.org/gems/' + dep_name + 'versions.atom').then (response => {
+          console.log(response);
+        xmlDoc = parser.parseFromString(text,"text/xml");
+        this.selecteddep.latestver = xmlDoc.getElementsByTagName(response);
+
+
+        });
 }

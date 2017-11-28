@@ -14,6 +14,7 @@ class CveController < ApplicationController
   def find_cve_by_id
     @cve = RubyCve.where(['cve_id = ?', params[:id]])
     @cve = JavaCve.where(['cve_id = ?', params[:id]]) if @cve.nil? or @cve.empty?
+    @cve = PythonCve.where(['cve_id = ?', params[:id]]) if @cve.nil? or @cve.empty?
   end
 
   def find_cve_by_name

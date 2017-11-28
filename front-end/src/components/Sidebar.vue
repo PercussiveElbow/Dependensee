@@ -42,7 +42,7 @@
       </md-list-item>
 
       <md-list-item @click= "$router.push('/cve/2016-0752')" >
-        <md-icon>search</md-icon> <span>Cve</span>
+        <md-icon>search</md-icon> <span>CVEs</span>
       </md-list-item>
     </md-list>
   </md-sidenav>
