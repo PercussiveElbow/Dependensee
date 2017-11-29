@@ -1,5 +1,5 @@
 <template>
-  <div id='app'>
+  <div id='app' :style="{ 'background-image': 'url(' + backgroundPattern() + ')' }">
     <md-layout md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
     <md-layout md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
       <md-card-header>
@@ -37,6 +37,8 @@
 
 <script>
   import {apiSignUp,getProjects,saveToken} from '../utils/api.js';
+  var  Trianglify = require('trianglify')
+
   export default {
     name: 'SignUp',
     data() {
@@ -69,6 +71,12 @@
             saveToken(resp);
             this.$router.push('/projects');
           }
+        },
+        backgroundPattern(){
+          var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+          var height = window.innerHeight || document.documentElement.clientHeight  || document.body.clientHeight;
+          var pattern = Trianglify({height: height,width: width,cell_size: 200});
+          return pattern.png();
         }
       }
   }

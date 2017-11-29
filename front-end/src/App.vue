@@ -4,7 +4,7 @@
     <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-    <div :style="{ 'background-image': 'url(' + backgroundPattern() + ')' }">
+    <div>
       <router-view></router-view>
     </div>
   </div>
@@ -16,14 +16,6 @@ import {isValidToken} from './utils/api.js';
 
 export default {
   name: '#app',
-  methods: {
-    backgroundPattern(){
-      var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      var height = window.innerHeight || document.documentElement.clientHeight  || document.body.clientHeight;
-      var pattern = Trianglify({height: height,width: width,cell_size: 200});
-    return pattern.png();
-    }
-  },
   created() {
       console.log(isValidToken());
   }
