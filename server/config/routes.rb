@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 
   resources :cve do
   end
+  resources :exploit do
+  end
 
   post 'auth/login', to: 'authentication#authenticate'
   post 'signup', to: 'users#create'

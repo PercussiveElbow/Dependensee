@@ -1,11 +1,13 @@
 var axios = require('axios')
 
 // const API_URL = 'http://localhost:3000/';
-const API_URL = 'http://127.0.0.1:3000/';
+ const API_URL = 'http://127.0.0.1:3000/';
+
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
 const PROJECTS_URL = API_URL + 'projects/';
 const CVE_URL = API_URL + 'cve/';
+const EXPLOIT_URL = API_URL + 'exploit/';
 const UPLOAD_URL =  '/upload/'
 const SCANS_URL = '/scans/'
 const PROFILE_URL = '/profile'
@@ -19,7 +21,7 @@ const ACCESS_TOKEN = 'jwk_access_token'
 
 //Split this file out for tidiness	
 export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
-	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,editScan,gemsLatest,getTxtReport};
+	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,editScan,gemsLatest,getTxtReport,getExploit};
 
 
 //AUTH
@@ -110,6 +112,12 @@ function getTxtReport(project_id,scan_id){
 //CVE
 function getCve(cve_id){
 	return axios.get(CVE_URL+cve_id).then (response => response.data);
+}
+
+//EXPLOIT
+function getExploit(cve_id){
+	cve_id = '2010-2860'
+	return axios.get(EXPLOIT_URL+cve_id).then (response => response.data);
 }
 
 

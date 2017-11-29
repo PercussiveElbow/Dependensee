@@ -14,6 +14,7 @@ require "rails/test_unit/railtie"
 require_relative '../app/lib/gem/gem_db'
 require_relative '../app/lib/pom/pom_db'
 require_relative '../app/lib/exploit/exploit_db'
+require_relative '../app/lib/exploit/exploit_db_mappings'
 
 
 # Require the gems listed in Gemfile, including any gems
@@ -54,14 +55,18 @@ module Untitled1
         # ran_int = Random.rand(100).to_s
         ran_int = '1'
 
-        print "\n======CLONING DATABASES======\n"
+        print "\n======DOWNLOADING SOURCES======\n"
         # Clone the RubyCVE Git Repo
         $ruby_db = GemfileDB::new(ran_int)
         # Clone Maven/Pip CVE Git Repo
         $maven_pip_db = MavenAndPipDB::new(ran_int)
         # Clone exploit DB
         $exploit_db = ExploitDB::new(ran_int)
-        print "======DONE CLONING     ======\n\n"
+        # Clone exploit DB mappings
+        ExploitDbMappings::new('')
+
+        #do that
+        print "======DONE DOWNLOADING     ======\n\n"
 
       end
     end
