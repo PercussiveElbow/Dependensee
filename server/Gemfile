@@ -15,7 +15,7 @@ gem 'secure_headers'
 gem 'pg'
 gem 'prawn'
 gem 'rack-cors'
-
+gem 'rubyzip'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
