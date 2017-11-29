@@ -32,4 +32,33 @@ class MsgConstants
   SAFE_UNAFFECTED = '               ✔ Safe, unaffected.'
   VULNERABILITY_FOUND = '               ✘ Vulnerability: '
   NO_VULN_FOUND = '          No vulnerabilities found'
+
+
+  # Reports
+  # General report constants
+  TITLE = 'CVE Scan: '
+  TEXT_SAVED = 'Text report saved to: '
+  PDF_SAVED = 'PDF saved to: '
+  TIMESTAMP = '%d_%m_%Y_%H%M'
+  NEWLINES = "\n\n\n\n"
+
+  # Version constants
+  VERSIONS = 'Versions: '
+  GEMFILE_VER = 'Current: '
+  PATCHED_VER = 'Safe: '
+  LATEST_VER = 'Latest: '
+  VERSION_WARNING = '    *Requires major version update'
+
+  # Score constants
+  NO_CVE_SCORE = 'No CVE Score found for this issue.'
+  SCORE = 'Score: '
+
+  # Hex constants
+  YELLOW = 'FF4500'
+  RED = 'FF0000'
+  GREEN = '32CD32'
+  GREY = 'A9A9A9'
+  DEFAULT = 'FFA500'
+
+
 end

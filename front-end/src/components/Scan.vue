@@ -54,8 +54,6 @@
                     <p>Our ver: {{ vuln[0].our_version }}</p>
                     <p>Patched ver: {{ vuln[0].patched_version }}</p>
                   </div>
-                  <md-button class="md-icon-button md-list-action" @click=delete_scan(scan.id)><md-icon>delete</md-icon></md-button>
-                  <md-button class="md-icon-button md-list-action" @click=editscan(scan.id)><md-icon>edit</md-icon></md-button>
                 </md-list-item>
             </md-list>
           </div>
@@ -68,12 +66,12 @@
         </div>
       </md-tab>
       <md-tab id="tab-reports" md-label="Reports" to="/components/tabs/reports">
-            Reports tab
-            <p>Qui, voluptas repellat impedit ducimus earum at ad architecto consectetur perferendis aspernatur iste amet ex tempora animi, illum tenetur quae assumenda </p>
+            Reports tab placeholder
+            <p>Click the download button above to initiate download</p>
       </md-tab>
       <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
             Options tab
-            <p>Maiores, dolorum. Beatae, optio tempore fuga odit aperiam velit, consequuntur magni inventore sapiente alias sequi odio qui harum dolorem sunt quasi corporis.</p>
+            <p>Placeholder for now</p>
       </md-tab>
     </md-tabs>
   </div>
@@ -85,19 +83,36 @@
             <h1  v-bind:style="{ color: activeColor}" style ="text-align: center" >CVE {{cve.cve_id}}</h1>
             <h2 style ="text-align: center" >{{cve.title}}</h2>
             <p>{{selectedvuln.depname}}</p>
-            <p>{{cve.desc}}</p>
+              <p v-if="project.language === 'Python' | project.language === 'Java'" >{{cve.desc}}</p>
 
             <span class="md-subheading" style="font-weight: bold" >Versions</span></br>
-            <span>Our version: {{selectedvuln.our_version}}</span></br>
-            <span>Patched version: {{selectedvuln.patched_version}}</span>
-            </br></br>
+            <span style="font-weight: bold" >Our version: </span><span>{{selectedvuln.our_version}}</span></br>
 
-            <span class="md-subheading" style="font-weight: bold">Affected</span ></br>
-            <span v-for="affected in cve.affected">
+            <div v-if="project.language === 'Python' | project.language === 'Java'">
+              <span style="font-weight: bold" >Patched version: </span><span>{{selectedvuln.patched_version}}</span>
+            </div>
+
+            <div v-if="project.language === 'Ruby'">
+              </br>
+              <span class="md-subheading" style="font-weight: bold">Patched versions</span ></br>
+              <span v-for="patched in cve.patched_versions">
+                 {{patched}}</br>
+              </span>
+              </br>
+              <span class="md-subheading" style="font-weight: bold">Unaffected versions</span ></br>
+              <span v-for="unaffected in cve.unaffected_versions">
+                 {{unaffected}}</br>
+              </span>
+            </div>
+
+            </br>
+
+            <span v-if="project.language === 'Python' | project.language === 'Java'" class="md-subheading" style="font-weight: bold">Affected</span ></br>
+            <span v-if="project.language === 'Python' | project.language === 'Java'" v-for="affected in cve.affected">
                  {{affected}}</br>
             </span></br>
-            <span class="md-subheading" style="font-weight: bold">References</span></br>
-            <a v-for="reference in cve.references">
+            <span v-if="project.language === 'Python' | project.language === 'Java'" class="md-subheading" style="font-weight: bold">References</span></br>
+            <a v-if="project.language === 'Python' | project.language === 'Java'" v-for="reference in cve.references">
                  {{reference}}</br>
             </a>
             </br>
@@ -113,16 +128,17 @@
 
   <modal name="depmodal" :height="300" :adaptive="true" >
     <div style="padding: 20px; text-align: left">
-      <i class="icon-python" v-if="project.language === 'Python'"></i>
-        <i class="icon-java" v-if="project.language === 'Java'"></i>
-        <i class="icon-ruby" v-if="project.language === 'Ruby'"></i>
+      <i class="icon-python" style="font-size: 1.75em" v-if="project.language === 'Python'"></i>
+        <i class="icon-java" style="font-size: 1.75em" v-if="project.language === 'Java'"></i>
+        <i class="icon-ruby" style="font-size: 1.75em" v-if="project.language === 'Ruby'"></i>
         <h1 style ="text-align: center" >{{selecteddep.name}}</h1>
        <span style="font-weight: bold">Version: </span><span>{{selecteddep.version}}</span>
        </br>
-       <span style="font-weight: bold">Raw: </span><span> {{selecteddep.raw}}</span>
-       </br>
         <span style="font-weight: bold">Latest version: </span><a>{{selecteddep.latestver}}</a>
-       </br>
+       </br></br>
+       <span style="font-weight: bold">Raw: </span><span> {{selecteddep.raw}}</span>
+               </br>
+
         <div style="text-align: center">
           <span style="font-weight: bold">Open on:</span></br>
           <md-button v-if="project.language === 'Java'" class="md-primary md-raised" @click="maven(selecteddep.name)">Maven Central</md-button>
@@ -137,7 +153,7 @@
 
 <script>
 
-  import {getProject,getScan,upload,getDependencies,getJsonReport,getCve} from '../utils/api.js';
+  import {getProject,getScan,upload,getDependencies,getJsonReport,getCve,getPdfReport,getTxtReport} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import LineExample from '../utils/LineExample.js'
   import PieExample from '../utils/PieExample.js'
@@ -175,7 +191,7 @@
       this.get_scan();
       this.graphWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       this.graphHeight = window.innerHeight || document.documentElement.clientHeight  || document.body.clientHeight;
-      setInterval(function () {this.get_dependencies();}.bind(this), 15000); 
+      setInterval(function () {this.get_dependencies();}.bind(this), 30000); 
     },
     watch: {
       '$route': 'fetchData'
@@ -190,26 +206,25 @@
       view_vulns() {getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.open_vuln_dialog(response)})},
       set_vulns(){
          getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  
-          {var vulns = response;
-            this.vulns=vulns;})
-
+          { this.vulns=response;})
          this.graphData.labels = ['January', 'February'];
       },
       open_vuln_dialog (response) {
         this.report=response;
           this.$modal.show('dialog', {
-            title: 'Vulnerabilities',
-            text: this.report,
+            title: 'Vulnerability Report Downloads',
             buttons: [
-              { title: 'JSON', handler: () => { alert('pdf') } },
-              { title: 'PDF' },
-              { title: 'HTML'}
+              { title: 'JSON', handler: () => { this.openJsonReport() } },
+              { title: 'PDF', handler: () => { getPdfReport(this.$route.params.project_id,this.$route.params.scan_id) } },
+              { title: 'TXT', handler: () => { getTxtReport(this.$route.params.project_id,this.$route.params.scan_id) } },
+              { title: 'HTML', handler: () => {alert('Html reports not implemented yet')}}
            ]
           })
       },
       openCVEModal(vuln){
         getCve(vuln[0].cve).then(response => {
           this.cve = response[0]
+          console.log(this.cve.cve_id);
           if (parseFloat(this.cve.cvss2) > 8) {this.activeColor = 'firebrick';
           }else if (parseFloat(this.cve.cvss2) > 4) {this.activeColor = 'orange';
           }else{this.activeColor = 'black';
@@ -230,7 +245,15 @@
       mitre(cve_id){window.location.href = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name='+ cve_id},
       nvdb(cve_id){window.location.href = 'https://nvd.nist.gov/vuln/detail/'+ cve_id},
       cvedetails(cve_id){window.location.href = 'https://www.cvedetails.com/cve/CVE-'+ cve_id},
-      cvemodalshow(cve){this.$modal.show('depmodal');}
+      cvemodalshow(cve){this.$modal.show('depmodal');},
+      openJsonReport(){
+        getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {
+          console.log(response)
+          let blob = new Blob([JSON.stringify(response)], { type: 'application/json' } ),
+          url = window.URL.createObjectURL(blob)
+          window.open(url);
+        });
+      }
     }
   } 
 </script>
@@ -281,6 +304,11 @@ body,
    background-color: white;
 }
 
+.md-content {
+  max-width: 400px;
+  max-height: 100px;
+  overflow: auto;
+}
 
 </style>
 

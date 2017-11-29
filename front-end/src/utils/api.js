@@ -1,7 +1,7 @@
 var axios = require('axios')
 
 // const API_URL = 'http://localhost:3000/';
-const API_URL = 'http://192.168.0.12:3000/';
+const API_URL = 'http://127.0.0.1:3000/';
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
 const PROJECTS_URL = API_URL + 'projects/';
@@ -12,9 +12,14 @@ const PROFILE_URL = '/profile'
 const DEPENDENCIES_URL = '/dependencies/'
 const JSON_REPORT_URL = '/reports/json/'
 const PDF_REPORT_URL = '/reports/pdf/'
+const TXT_REPORT_URL = '/reports/txt/'
+
 const ACCESS_TOKEN = 'jwk_access_token'
 
-export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,deleteScan,editScan,gemsLatest};
+
+//Split this file out for tidiness	
+export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
+	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,editScan,gemsLatest,getTxtReport};
 
 
 //AUTH
@@ -85,7 +90,21 @@ function getJsonReport(project_id,scan_id){
 		return axios.get(PROJECTS_URL+project_id+SCANS_URL + scan_id + JSON_REPORT_URL,{headers: {'Authorization': getToken()}} ).then (response => response.data);
 }
 function getPdfReport(project_id,scan_id){
-		return axios.get(PROJECTS_URL+project_id+SCANS_URL + scan_id + PDF_REPORT_URL,{headers: {'Authorization': getToken()}} ).then (response => response.data);
+	return axios.get(PROJECTS_URL+project_id+SCANS_URL + scan_id + PDF_REPORT_URL,{headers: {'Authorization': getToken()}} ).then (
+			response => { response.data
+			let blob = new Blob([response.data], { type: 'application/pdf' } ),
+			url = window.URL.createObjectURL(blob)
+			 window.open(url);
+			});
+}
+
+function getTxtReport(project_id,scan_id){
+	return axios.get(PROJECTS_URL+project_id+SCANS_URL + scan_id + TXT_REPORT_URL,{headers: {'Authorization': getToken()}} ).then (
+			response => { response.data
+			let blob = new Blob([response.data], { type: 'application/text' } ),
+			url = window.URL.createObjectURL(blob)
+			 window.open(url);
+	});
 }
 
 //CVE
@@ -113,8 +132,8 @@ function getToken() {
   return localStorage.getItem(ACCESS_TOKEN);
 }
 
-//OTHER
-function gemsLatest(dep_name){
+//OTHER 
+function gemsLatest(dep_name){ //probably need to move this to backend, because cors
         axios.get('https://rubygems.org/gems/' + dep_name + 'versions.atom').then (response => {
           console.log(response);
         xmlDoc = parser.parseFromString(text,"text/xml");
