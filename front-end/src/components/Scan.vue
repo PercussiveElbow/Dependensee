@@ -7,13 +7,13 @@
     <md-toolbar class="md-large">
       <div class="md-toolbar-container">
         <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()" ><md-icon>menu</md-icon></md-button>
-        <h2 class="md-title" @click="$router.push({ path: '/projects/' });">Project: {{project.name}}</h2><span style="flex: 1"></span>
+        <h2 class="md-title" @click="$router.push({ path: '/project/'+project.id });">Project: {{project.name}}</h2><span style="flex: 1"></span>
         <md-button class="md-icon-button"><md-icon>search</md-icon></md-button>
         <md-button class="md-icon-button"><md-icon>view_module</md-icon></md-button>
       </div>
 
       <div class="md-toolbar-container">
-        <md-button class="md-icon-button"  @click="returnToProj"><md-icon>home</md-icon></md-button>
+        <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });"><md-icon>home</md-icon></md-button>
         <h2 class="md-title">Scan: {{scan.created_at}}</h2>
         <md-button class="md-icon-button md-list-action"  @click=view_vulns()><md-icon>cloud download</md-icon></md-button>
       </div>
@@ -117,11 +117,11 @@
             </a>
             </br>
         <div style="text-align: center">
-          <span style="font-weight: bold">Open on:</span></br>
+          <span style="font-weight: bold">Open:</span></br>
           <md-button class="md-primary md-raised" @click="mitre(cve.cve_id)">Mitre</md-button>
           <md-button  @click="nvdb(cve.cve_id)" class="md-primary md-raised">NVDB</md-button>
           <md-button @click="cvedetails(cve.cve_id)" class="md-primary md-raised">CVEDetails</md-button>
-          <md-button @click="getExploitInfo(cve.cve_id)" class="md-primary md-raised">Exploit PoC</md-button>
+          <md-button @click="getExploitInfo(cve.cve_id)" style="background-color: red" class="md-primary md-raised">Exploit PoC</md-button>
         </div>
     </div>
   </modal>

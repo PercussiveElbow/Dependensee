@@ -63,7 +63,7 @@ module Untitled1
         # Clone exploit DB
         $exploit_db = ExploitDB::new(ran_int)
         # Clone exploit DB mappings
-        ExploitDbMappings::new('')
+        ExploitDbMappings::new
 
         #do that
         print "======DONE DOWNLOADING     ======\n\n"

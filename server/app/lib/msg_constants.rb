@@ -61,4 +61,11 @@ class MsgConstants
   DEFAULT = 'FFA500'
 
 
+
+  #EXPLOIT MAPPINGS
+  EXPLOIT_MAPPING_SITE = 'cve.mitre.org'
+  EXPLOIT_MAPPING_SITE_LOC = '/data/refs/refmap/allrefmaps.zip'
+  EXPLOIT_MAPPING_DOWNLOAD_LOC = '/tmp/dependensee/mapping.zip'
+  EXPLOIT_MAPPING_UNZIP_LOC = '/tmp/dependensee/mappings/'
+  EXPLOIT_MAPPING_FILE_NAME = 'source-EXPLOIT-DB.html'
 end

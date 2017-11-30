@@ -116,8 +116,9 @@ function getCve(cve_id){
 
 //EXPLOIT
 function getExploit(cve_id){
-	cve_id = '2010-2860'
-	return axios.get(EXPLOIT_URL+cve_id).then (response => response.data);
+	cve_id = '2016-6662'
+	// return axios.get(EXPLOIT_URL+cve_id).then (response => response.data);
+	window.location.href = EXPLOIT_URL+cve_id
 }
 
 
