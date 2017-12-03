@@ -15,7 +15,7 @@ class ReportsController < ApplicationController
 
   def show
       if @project.language == 'Ruby'
-        @vuln_list = GemfileScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
+        @vuln_list = GemScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
       elsif @project.language == 'Java'
         @vuln_list = PomScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
       elsif @project.language == 'Python'

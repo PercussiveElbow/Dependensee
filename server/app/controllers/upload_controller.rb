@@ -68,14 +68,14 @@ class UploadController < ApplicationController
     deps.each { |dep| scan.dependencies.create(name: dep.name, version: dep.version, language: 'ruby', raw: dep) }
     deps =  Dependency.where(['scan_id = ?', scan.id])
 
-    @vuln_list = GemfileScanner::new(deps).scan
+    @vuln_list = GemScanner::new(deps).scan
     vuln_cleanup
 
     JSON.pretty_generate({type: MsgConstants::GEMFILE_UPLOADED, scan_id: scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
 
   def gem_decode
-    deps = GemfileParser::load_from_post(request.raw_post).load_deps
+    deps = GemParser::load_from_post(request.raw_post).load_deps
     raise EmptyDependencyException.new('No gems found in your POST body.') if deps.empty?
     deps
   end

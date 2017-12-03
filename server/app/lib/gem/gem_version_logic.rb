@@ -22,7 +22,7 @@ class GemVersionLogic
     end
     if safe_ver.include? '<' ##There's no nice way to do >=, should really
       if safe_ver.include? '<='; return (Gem::Version.new(gem_ver) < Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))) | (Gem::Version.new(gem_ver) == Gem::Version.new(safe_ver.gsub(/[^0-9.]/, '')))
-      else; return Gem::Version.new(gem_ver) < Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))
+      else return Gem::Version.new(gem_ver) < Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))
       end
     elsif safe_ver.include? '>'
       if safe_ver.include? '>='; return (Gem::Version.new(gem_ver) > Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))) | (Gem::Version.new(gem_ver) == Gem::Version.new(safe_ver.gsub(/[^0-9.]/, '')))

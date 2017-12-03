@@ -57,7 +57,7 @@ module Untitled1
 
         print "\n======DOWNLOADING SOURCES======\n"
         # Clone the RubyCVE Git Repo
-        $ruby_db = GemfileDB::new(ran_int)
+        $ruby_db = GemDB::new(ran_int)
         # Clone Maven/Pip CVE Git Repo
         $maven_pip_db = MavenAndPipDB::new(ran_int)
         # Clone exploit DB

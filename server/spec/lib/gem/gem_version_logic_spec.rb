@@ -60,4 +60,16 @@ RSpec.describe GemVersionLogic do
     expect(GemVersionLogic::is_within_minor_ver('3.2.1','3.2.1')).to eql(true)
   end
 
+  it 'should test if it is safe version under' do
+    expect(GemVersionLogic::is_unaffected('1.0','<=1.1')).to eql(true)
+  end
+
+  it 'should test if it is safe version under 2' do
+    expect(GemVersionLogic::is_unaffected('1.0','<1.1')).to eql(true)
+  end
+
+  it 'should query rubygems correctly ' do
+    puts GemVersionLogic.get_latest_version('activerecord')
+  end
+
 end

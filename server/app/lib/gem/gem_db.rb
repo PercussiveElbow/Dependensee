@@ -1,7 +1,7 @@
 require_relative '../../models/ruby_cve'
 require_relative '../common/base_db'
 
-class GemfileDB < BaseDB
+class GemDB < BaseDB
 
   #override
   def initialize(root_location)

@@ -1,18 +1,18 @@
-# spec/lib/gem/gemfile_db_spec.rb
+# spec/lib/gem/gem_db_spec.rb
 require 'rails_helper'
-require_relative '../../../app/lib/gem/gem_db'
+require_relative '../../../app/lib/pom/pom_db'
 
-RSpec.describe GemfileDB do
+RSpec.describe MavenAndPipDB do
 
-  describe 'Gem DB Tests' do
+  describe 'Pom DB Tests' do
 
     before(:all) do
-      @random_no = Random.rand(100).to_s
-      @db = GemfileDB.new( @random_no )
+      @random_no = '/test/' + Random.rand(100).to_s
+      @db = MavenAndPipDB.new(@random_no )
     end
 
-    def common_cve_load(gemname, expected)
-      cves = RubyCve.where(['dependency_name = ?', gemname])
+    def common_cve_load(pomname, expected)
+      cves = JavaCve.where(['dependency_name = ?', pomname])
       loaded_cves = Array.new
       cves.each{
           |cve| loaded_cves.push(cve.id)
@@ -45,11 +45,11 @@ RSpec.describe GemfileDB do
 end
 
 
-    # def test_secondary_db_doesnt_break
-    #   @db.load_cves_for_gem('rack')
-    #   GemDB.new( @random_no ).load_cves_for_gem('rack')
-    # end
+# def test_secondary_db_doesnt_break
+#   @db.load_cves_for_gem('rack')
+#   GemDB.new( @random_no ).load_cves_for_gem('rack')
+# end
 
-    # after(:all) do
-    #   FileUtils.rm_rf('/tmp/dependensee/' + @random_no)
-    # end
+# after(:all) do
+#   FileUtils.rm_rf('/tmp/dependensee/' + @random_no)
+# end

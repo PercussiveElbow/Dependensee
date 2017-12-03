@@ -6,7 +6,7 @@ require_relative '../common/base_scanner'
 require_relative '../msg_constants'
 
 
-class GemfileScanner < BaseScanner
+class GemScanner < BaseScanner
 
   def initialize(deps)
     super(deps)
@@ -20,7 +20,7 @@ class GemfileScanner < BaseScanner
       vuln_hash[spec_name] = []
       print("\n\n" + MsgConstants::CHECKING_GEM + spec_name)
       gem_ver=spec.version
-      RubyCve.where(['dependency_name = ?', spec_name]).each do |cve|
+      RubyCve.where(['dependency_name = ?', spec_name]).each do |cve| #todo sanitize
           print("\n" + '          -CVE' + cve.cve_id)
           unless check_unaffected_vers(gem_ver,cve.unaffected_versions)
             needed_patches = get_needed_patches(gem_ver, cve.patched_versions)
