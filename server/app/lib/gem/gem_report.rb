@@ -1,8 +1,8 @@
-require_relative '../common/report'
+require_relative '../common/base_report'
 require_relative '../msg_constants'
 
 
-class GemReport < Report
+class GemReport < BaseReport
 
   def self.gen_txt(vulnlist,language)
     filename =  self.add_dir_return_filename + '.txt'

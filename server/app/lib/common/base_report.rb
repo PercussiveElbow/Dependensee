@@ -1,14 +1,12 @@
 require 'prawn'
 require 'date'
+require 'fileutils'
 require_relative '../msg_constants'
 
 
-class Report
+class BaseReport
   def self.add_dir_return_filename(reports_dir = '/tmp/dependensee/reports/')
-    reports_dir = '/tmp/dependensee/reports/'
-    unless Dir.exists?(reports_dir)
-      Dir.mkdir(reports_dir)
-    end
+    FileUtils::mkdir_p(reports_dir) unless Dir.exists?(reports_dir)
     reports_dir + 'Scan_' + DateTime.now.strftime(MsgConstants::TIMESTAMP)
   end
 

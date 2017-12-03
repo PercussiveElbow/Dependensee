@@ -1,8 +1,8 @@
-require_relative '../common/parser'
+require_relative '../common/base_parser'
 require 'nokogiri'
 require 'open-uri'
 
-class PomParser < Parser
+class PomParser < BaseParser
 
   def initialize(pomfile)
     super()

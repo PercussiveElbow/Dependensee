@@ -1,7 +1,5 @@
 
-#Common class for extension
-
-class Scanner
+class BaseScanner
 
   def initialize(deps)
     @deps=deps

@@ -1,8 +1,8 @@
-require_relative '../common/parser'
+require_relative '../common/base_parser'
 require 'nokogiri'
 require 'open-uri'
 
-class PipParser < Parser
+class PipParser < BaseParser
 
   def initialize(pipfile)
     super()

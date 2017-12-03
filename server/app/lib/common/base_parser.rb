@@ -1,6 +1,5 @@
-require 'set'
 
-class Parser
+class BaseParser
 
   def initialize
     @dependencies=nil

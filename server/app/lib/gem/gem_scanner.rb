@@ -2,11 +2,11 @@ require_relative 'gem_parser'
 require_relative 'gem_db'
 require_relative 'gem_version_logic'
 require_relative '../common/vulnerability'
-require_relative '../common/scanner'
+require_relative '../common/base_scanner'
 require_relative '../msg_constants'
 
 
-class GemfileScanner < Scanner
+class GemfileScanner < BaseScanner
 
   def initialize(deps)
     super(deps)

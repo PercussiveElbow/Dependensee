@@ -1,8 +1,8 @@
-require_relative '../common/parser'
+require_relative '../common/base_parser'
 require 'bundler'
 require 'bundler/lockfile_parser'
 
-class GemfileParser < Parser
+class GemfileParser < BaseParser
 
   def initialize(lockfile)
     super()

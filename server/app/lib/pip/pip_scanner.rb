@@ -1,9 +1,9 @@
 require_relative '../common/vulnerability'
-require_relative '../common/scanner'
+require_relative '../common/base_scanner'
 require_relative '../msg_constants'
 require_relative 'pip_version_logic'
 
-class PipScanner < Scanner
+class PipScanner < BaseScanner
 
   def initialize(deps)
     super(deps)

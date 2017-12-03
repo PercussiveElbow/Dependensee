@@ -1,9 +1,9 @@
 require_relative '../common/vulnerability'
-require_relative '../common/scanner'
+require_relative '../common/base_scanner'
 require_relative '../msg_constants'
 require_relative 'pom_version_logic'
 
-class PomScanner < Scanner
+class PomScanner < BaseScanner
 
   def initialize(deps)
     super(deps)
