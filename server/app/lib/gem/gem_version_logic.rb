@@ -9,7 +9,7 @@ class GemVersionLogic
       return Gem::Version.new(gem_ver) >= Gem::Version.new(patch_ver.gsub('>=', '').gsub(' ',''))
     elsif patch_ver.include? '~>'
       return Gem::Dependency.new('', patch_ver).match?('', gem_ver)
-    else
+    else #todo check how semantics work here
       return false
     end
   end

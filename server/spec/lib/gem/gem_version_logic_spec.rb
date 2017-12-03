@@ -72,4 +72,13 @@ RSpec.describe GemVersionLogic do
     puts GemVersionLogic.get_latest_version('activerecord')
   end
 
+  #todo check if both these need fixed
+  it 'should return false if contains a comma' do
+    expect(GemVersionLogic::is_unaffected('1.0','<1.1,>=5.0.0')).to eql(false)
+  end
+
+  it 'should return false if just greater than' do
+    expect(GemVersionLogic::is_above_patched_ver('1.0','>1.1.1')).to eql(false)
+  end
+
 end

@@ -20,7 +20,7 @@ class PomVersionLogic
     end
     if vuln_ver.include? '<' ##There's no nice way to do >=, should really
       if vuln_ver.include? '<='; return (Gem::Version.new(dep_ver) < Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))) | (Gem::Version.new(dep_ver) == Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, '')))
-      else; return Gem::Version.new(dep_ver) < Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))
+      else return Gem::Version.new(dep_ver) < Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))
       end
     end
   end

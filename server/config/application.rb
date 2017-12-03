@@ -53,7 +53,7 @@ module Untitled1
     if defined?(Rails::Server)
       config.after_initialize do
         # ran_int = Random.rand(100).to_s
-        ran_int = '1'
+        ran_int = 'development'
 
         print "\n======DOWNLOADING SOURCES======\n"
         # Clone the RubyCVE Git Repo
@@ -63,7 +63,7 @@ module Untitled1
         # Clone exploit DB
         $exploit_db = ExploitDB::new(ran_int)
         # Clone exploit DB mappings
-        ExploitDbMappings::new
+        ExploitDbMappings::new(ran_int)
 
         #do that
         print "======DONE DOWNLOADING     ======\n\n"
