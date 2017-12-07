@@ -86,7 +86,7 @@
       }
     },
     created: function() {
-
+        console.log(getToken())
     },
     methods: {
    create_project: function(newproject) {

@@ -34,7 +34,7 @@
 
 <script>
 var  Trianglify = require('trianglify')
-  import {apiLogin,saveToken} from '../utils/api.js';
+  import {apiLogin,saveToken,saveTokenQR} from '../utils/api.js';
 
   export default {
     name: 'Login',
@@ -55,7 +55,7 @@ var  Trianglify = require('trianglify')
           apiLogin(formCreds).then(resp => this.isSucessfulSignin(resp));
         },
         isSucessfulSignin(resp){
-                    console.log(resp);
+          console.log(resp);
           if(resp.auth_token === null ){
             //throw error
             console.log('Signup failed, handle validation response');
@@ -71,11 +71,25 @@ var  Trianglify = require('trianglify')
       var pattern = Trianglify({height: height,width: width,cell_size: 200});
     return pattern.png();
     }
+      },
+      created() {
+          var key = this.$route.query.key
+
+          if(key == undefined) {
+            console.log("Not QR key")
+
+          }else{
+            console.log("Attempt setting key from QR")
+            saveTokenQR(key)
+            this.$router.push('/projects');
+          }
       }
-  }
+}
+
+
 </script>
 
 
 <style>
 
-</style>
+</style

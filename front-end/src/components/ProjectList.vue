@@ -2,6 +2,7 @@
 
 
   <div>
+
   <md-list class="md-double-line">
     <md-list-item v-for="item in items">
 
@@ -61,7 +62,7 @@
         items: [],
          editproject: {
           name: '',
-          description: '',
+          description: ''
         },
         edit_id: ''
       }

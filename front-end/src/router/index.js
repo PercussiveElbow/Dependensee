@@ -6,6 +6,7 @@ import Scan from '@/components/Scan'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
 import Cve from '@/components/Cve'
+import Qr from '@/components/Qr'
 
 Vue.use(Router);
 
@@ -41,5 +42,10 @@ export default new Router({
      name: 'Cve',
      component: Cve
     },
+    {
+    path: '/qr',
+     name: 'qr',
+     component: Qr
+    }
   ]
 })

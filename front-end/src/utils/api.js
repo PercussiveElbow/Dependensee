@@ -1,7 +1,9 @@
 var axios = require('axios')
 
 // const API_URL = 'http://localhost:3000/';
- const API_URL = 'http://127.0.0.1:3000/';
+ // const API_URL = 'http://127.0.0.1:3000/';
+ const API_URL  = 'http://143.117.224.77:3000/';
+
 
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
@@ -20,7 +22,7 @@ const ACCESS_TOKEN = 'jwk_access_token'
 
 
 //Split this file out for tidiness	
-export{apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
+export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
 	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,editScan,gemsLatest,getTxtReport,getExploit};
 
 
@@ -131,6 +133,12 @@ function saveToken(token) {
 	}else{
 		console.log("No auth token recieved");
 	}
+}
+
+function saveTokenQR(token){
+		clearToken()
+  		localStorage.setItem(ACCESS_TOKEN, token);
+  		console.log("Auth token set");
 }
 
 function clearToken() {
