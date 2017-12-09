@@ -7,6 +7,7 @@ import VueMaterial from 'vue-material'
 import axios from 'axios'
 import 'vue-material/dist/vue-material.css'
 import './assets/font-mfizz-2.4.1/font-mfizz.css'
+import './assets/gfont/dosis.css'
 import VueQrcode from '@xkeshi/vue-qrcode'
 // import VueCharts from 'vue-chartjs'
 

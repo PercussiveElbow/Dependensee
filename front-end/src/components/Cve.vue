@@ -26,26 +26,65 @@
           <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });">
           <md-icon>home</md-icon>
         </md-button>
-        <h2 class="md-title">Cve: {{cve.id}}</h2>
-          <md-button  class="md-fab md-mini">
-          <md-icon>add</md-icon>
-        </md-button>
+        <h2 class="md-title">CVE-{{cve.cve_id}}</h2>
       </div>
     </md-toolbar>
 
   </md-whiteframe>
 
   
-  <main class="main-content">
+  <main class="main-content" style="text-align: left;">
+    <div style="padding: 20px" v-if="cve.language === 'Ruby' || cve.language === 'Java' || cve.language === 'Python'">
+      <div v-if="cve.language === 'Ruby'">
+        <i class="icon-ruby" style="font-size: 1.75em" ></i>
+        </br>
+        <span style="font-weight: bold;">Name: </span><span>CVE-{{cve.id}}</span>
+        </br>
+        <span style="font-weight: bold;">Dependency name: </span><span>{{cve.dependency_name}}</span>
+        </br>
+        <span style="font-weight: bold;">Description: </span><span>{{cve.desc}}</span>
+        </br>
+        </br>
+        <span style="font-weight: bold;">Patched versions: </span><span>{{cve.patched_versions}}</span>
+        </br>
+        <span style="font-weight: bold;">Unaffected versions: </span><span>{{cve.unaffected_versions}}</span>
+        </br>
+        </div>
 
-      Name: {{cve[0].id}}
-    </br>
-      Description: {{cve[0].desc}}
+      <div v-if="cve.language === 'Java' || cve.language === 'Python'">
+          <i class="icon-python" style="font-size: 1.75em" v-if="cve.language === 'Python'"></i>
+          <i class="icon-java" style="font-size: 1.75em" v-if="cve.language === 'Java'"></i>
+        </br>
+        <span style="font-weight: bold;">Name: </span><span>CVE-{{cve.cve_id}}</span>
+        </br>
+        <span style="font-weight: bold;">Title: </span><span>{{cve.title}}</span>
+        </br>
+        <span style="font-weight: bold;">Description: </span><span>{{cve.desc}}</span>
+        </br>
+        </br>
+        <span style="font-weight: bold;">CVSS2 Score: </span><span>{{cve.cvss2}}</span>
+        </br>
+        </br>
+        <span style="font-weight: bold;">Affected: </span></br>
+        <span v-for="affected in cve.affected">{{affected}}</br></span>
+        </br>
+        <span style="font-weight: bold;">References: </span></br>
+        <a v-for="reference in cve.references">{{reference}}</br></a>
+        </br>
+      </div>
+
+
+         <md-button style="margin-left: 0px; margin-right: 0px" class="md-primary md-raised" @click="mitre(cve.cve_id)">Mitre</md-button>
+          <md-button  style="margin-left: 0px; margin-right: 0px" @click="nvdb(cve.cve_id)" class="md-primary md-raised">NVDB</md-button>
+          <md-button style="margin-left: 0px; margin-right: 0px" @click="cvedetails(cve.cve_id)" class="md-primary md-raised">CVEDetails</md-button>
+          <md-button style="margin-left: 0px; margin-right: 0px" class="md-primary md-raised" @click="rapid7(cve.cve_id)">Rapid7</md-button>
+          <md-button @click="getExploitInfo(cve.cve_id)" style="background-color: red; margin-left: 0px; margin-right: 0px" class="md-primary md-raised">Exploit</md-button>
+    </div>
   </main>
 
 
-</div>
   </div>
+</div>
 
 </template>
 
@@ -61,8 +100,7 @@
     },
     data() {
       return {
-        cve: {
-        }
+        cve: ''
        }
     },
     created() {
@@ -72,9 +110,11 @@
       '$route': 'fetchData'
     },
     methods: {
-      get_cve() {
-        getCve(this.$route.params.cve_id).then(resp => {this.cve = resp;});
-      }
+      get_cve() {getCve(this.$route.params.cve_id).then(resp => {this.cve = resp;});},
+      getExploitInfo(cve_id){getExploit(cve_id);},
+      nvdb(cve_id){window.location.href = 'https://nvd.nist.gov/vuln/detail/'+ cve_id},
+      cvedetails(cve_id){window.location.href = 'https://www.cvedetails.com/cve/CVE-'+ cve_id},
+      rapid7(cve_id){window.location.href = 'https://www.rapid7.com/db/search?utf8=%E2%9C%93&q=' + cve_id + '&t=a'}
     }
   } 
 </script>

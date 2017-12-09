@@ -28,7 +28,7 @@
         </md-button>
         <h2 class="md-title">Project: {{project.name}}</h2>
           <md-button @click=show class="md-fab md-mini">
-          <md-icon>add</md-icon>
+          <md-icon>file_upload</md-icon>
         </md-button>
       </div>
     </md-toolbar>
@@ -46,25 +46,25 @@
         <md-list-item v-for="scan in scans">
 
           <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" >
-            <md-icon >description</md-icon>
+            <md-icon >assessment</md-icon>
           </md-avatar>
           <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'" >
-            <md-icon >description</md-icon>
+            <md-icon >assessment</md-icon>
           </md-avatar>
                 <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'" >
-            <md-icon >description</md-icon>
+            <md-icon >assessment</md-icon>
           </md-avatar>
           <div class="md-list-text-container">
-            <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">Scan: {{scan.id}}</router-link>
-            <p>{{ scan.updated_at }}</p>
-            <p>{{ scan.description }}</p>
-          </div>
+            <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">Scan: {{scan.title}}</router-link>
+            <p>{{ scan.id }}</p>
+<!--             <p>{{ scan.description }}</p>
+ -->          </div>
 
           <md-button class="md-icon-button md-list-action"  @click=delete_scan(scan.id)>
             <md-icon>delete</md-icon>
           </md-button>
           <md-button class="md-icon-button md-list-action"  @click=view_vulns(scan.id)>
-            <md-icon>cloud</md-icon>
+            <md-icon>file_download</md-icon>
           </md-button>
 
         </md-list-item>
@@ -91,7 +91,7 @@
 
           <md-input-container>
               <md-icon>work</md-icon>
-              <label>Edit Project</label>
+              <label>Text Input (DEBUG)</label>
               <md-input name v-model="upload.body"/>
             </md-input-container>
 
@@ -142,7 +142,17 @@
           getProject(this.$route.params.id).then(response =>  {this.project = response;});
       },
       get_scans() {
-          getScans(this.$route.params.id).then(response =>  {this.scans = response;});
+          getScans(this.$route.params.id).then(response =>  {
+
+          this.scans = response;
+
+          this.scans.forEach(function (scan) {
+            console.log(scan);
+            scan.title = scan.created_at.slice(0, scan.created_at.length-8).replace("T", "  ");
+          });
+
+
+          });
       },
       delete_scan(id) {
         deleteScan(this.$route.params.id,id)

@@ -2,7 +2,7 @@ var axios = require('axios')
 
 // const API_URL = 'http://localhost:3000/';
  // const API_URL = 'http://127.0.0.1:3000/';
- const API_URL  = 'http://143.117.224.77:3000/';
+ const API_URL  = 'http://192.168.1.95:3000/';
 
 
 const LOGIN_URL = API_URL + 'login/';
@@ -23,7 +23,8 @@ const ACCESS_TOKEN = 'jwk_access_token'
 
 //Split this file out for tidiness	
 export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
-	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,editScan,gemsLatest,getTxtReport,getExploit};
+	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,editScan,
+	gemsLatest,getTxtReport,getExploit,getExploitPlain,getQr};
 
 
 //AUTH
@@ -123,6 +124,11 @@ function getExploit(cve_id){
 	window.location.href = EXPLOIT_URL+cve_id
 }
 
+function getExploitPlain(cve_id){
+	cve_id = '2016-6662'
+	return axios.get(EXPLOIT_URL+cve_id).then (response => response);
+}
+
 
 //TOKEN
 function saveToken(token) {
@@ -155,7 +161,9 @@ function gemsLatest(dep_name){ //probably need to move this to backend, because 
           console.log(response);
         xmlDoc = parser.parseFromString(text,"text/xml");
         this.selecteddep.latestver = xmlDoc.getElementsByTagName(response);
+});
+}
 
-
-        });
+function getQr(){
+	return '192.168.1.95:8080/' + 'login?key=' + getToken()
 }

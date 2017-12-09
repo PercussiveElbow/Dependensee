@@ -6,12 +6,19 @@ import Scan from '@/components/Scan'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
 import Cve from '@/components/Cve'
+import Exploit from '@/components/Exploit'
 import Qr from '@/components/Qr'
 
 Vue.use(Router);
 
+
+
 export default new Router({
  routes: [
+    {
+      path: '/',
+      redirect: '/login'
+    },
     {
       path: '/Login',
       name: 'Login',
@@ -43,9 +50,16 @@ export default new Router({
      component: Cve
     },
     {
+     path: '/exploit/:exploit_id/',
+     name: 'Exploit',
+     component: Exploit
+    },
+    {
     path: '/qr',
      name: 'qr',
      component: Qr
     }
-  ]
+  ],
+    mode: 'history'
+
 })

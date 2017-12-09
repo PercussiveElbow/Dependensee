@@ -30,14 +30,14 @@
       </md-list-item>
 
       <md-list-item @click="$refs.bsidebar.toggle()">
-        <md-icon>autorenew</md-icon> <span>Quick Scan</span>
+        <md-icon>file_upload</md-icon> <span>Quick Scan</span>
       </md-list-item>
 
-      <md-list-item @click= "$router.push('/cve/2016-0752')" >
+      <md-list-item @click= "$router.push('/cve/2017-14063')" >
         <md-icon>search</md-icon> <span>CVE Search</span>
       </md-list-item>
 
-      <md-list-item @click= "$router.push('/exploit/')" >
+      <md-list-item @click= "$router.push('/exploit/2016-6662')" >
         <md-icon>warning</md-icon> <span>Exploit Search</span>
       </md-list-item>
 
@@ -45,14 +45,8 @@
         <md-icon>smartphone</md-icon> <span>Open on phone</span>
       </md-list-item>
 
-
     </md-list>
   </md-sidenav>
-
-
-
-
-
 
 </template>
 

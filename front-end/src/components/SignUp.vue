@@ -1,5 +1,5 @@
 <template>
-  <div id='app' :style="{ 'background-image': 'url(' + backgroundPattern() + ')' }">
+  <div id='app' v-bind:style="{ 'background-image': 'url(' + background + ')' }" >
     <md-layout md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
     <md-layout md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
       <md-card-header>
@@ -48,7 +48,8 @@
           name: '',
           password: ''
         },
-        error: ''
+        error: '',
+        background: ''
       }
     }, methods:
       {
@@ -78,6 +79,9 @@
           var pattern = Trianglify({height: height,width: width,cell_size: 200});
           return pattern.png();
         }
+      },
+      created() {
+          this.background = this.backgroundPattern()
       }
   }
 </script>

@@ -11,6 +11,7 @@
         </md-button>
   
         <span style="flex: 1"></span>
+
   
         <md-button class="md-icon-button">
           <md-icon>search</md-icon>
