@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
+
 import VueResource from 'vue-resource'
 import VueMaterial from 'vue-material'
 import axios from 'axios'
@@ -12,7 +13,13 @@ import VueQrcode from '@xkeshi/vue-qrcode'
 // import VueCharts from 'vue-chartjs'
 
 
+
 import vmodal from 'vue-js-modal'
+
+
+import 'vue-event-calendar/dist/style.css' //^1.1.10, CSS has been extracted as one file, so you can easily update it.
+import vueEventCalendar from 'vue-event-calendar'
+Vue.use(vueEventCalendar, {locale: 'en'})
 
 Vue.config.productionTip = false
 Vue.use(VueResource);

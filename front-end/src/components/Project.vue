@@ -77,6 +77,10 @@
     </md-tab>
 
       <md-tab id="tab-history" md-label="History" to="/components/tabs/history">
+
+  <vue-event-calendar :events="scansCalendar"></vue-event-calendar>
+
+
       </md-tab>
   </md-tabs>
 
@@ -122,6 +126,7 @@
 
         },
         scans: [],
+        scansCalendar: [],
         upload: {
           body : ''
         },
@@ -137,41 +142,31 @@
       '$route': 'fetchData'
     },
     methods: {
-      get_project() {
-          console.log(getToken());
-          getProject(this.$route.params.id).then(response =>  {this.project = response;});
-      },
+      get_project() {getProject(this.$route.params.id).then(response =>  {this.project = response;});},
       get_scans() {
           getScans(this.$route.params.id).then(response =>  {
 
           this.scans = response;
+          this.scansCalendar = this.scans;
 
           this.scans.forEach(function (scan) {
-            console.log(scan);
             scan.title = scan.created_at.slice(0, scan.created_at.length-8).replace("T", "  ");
           });
-
-
+          this.scansCalendar.forEach(function (scan) {
+            scan.date = scan.created_at.slice(0, 10)
+            scan.date = scan.date.replace(/-/g,"/");
+            console.log(scan.date);
           });
+      });
       },
       delete_scan(id) {
         deleteScan(this.$route.params.id,id)
         this.get_scans;
       },
-      handle_upload(){
-        console.log(this.upload.body);
-        upload(this.$route.params.id,this.upload.body);
-
-      },
-      show () {
-        this.$modal.show('upload');
-      },
-      hide () {
-        this.$modal.hide('upload');
-      },
-      view_vulns(scan_id) {
-         getJsonReport(this.$route.params.id,scan_id).then(response =>  {this.open_vuln_dialog(response)})
-      },
+      handle_upload(){upload(this.$route.params.id,this.upload.body);},
+      show () {this.$modal.show('upload');},
+      hide () {this.$modal.hide('upload');},
+      view_vulns(scan_id) {getJsonReport(this.$route.params.id,scan_id).then(response =>  {this.open_vuln_dialog(response)})},
       open_vuln_dialog (response) {
         this.report=response;
           this.$modal.show('dialog', {
@@ -233,7 +228,4 @@ body,
 .md-tab {
    background-color: white;
 }
-
 </style>
-
-
