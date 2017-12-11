@@ -23,10 +23,11 @@
 
 
       <div class="md-toolbar-container">
-          <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });">
+          <md-button class="md-icon-button"  @click="$router.go(-1);">
           <md-icon>home</md-icon>
         </md-button>
         <h2 class="md-title">Project: {{project.name}}</h2>
+        <span style="flex: 1"></span>
           <md-button @click=show class="md-fab md-mini">
           <md-icon>file_upload</md-icon>
         </md-button>
@@ -147,15 +148,17 @@
           getScans(this.$route.params.id).then(response =>  {
 
           this.scans = response;
-          this.scansCalendar = this.scans;
+          this.scansCalendar = response;
 
           this.scans.forEach(function (scan) {
             scan.title = scan.created_at.slice(0, scan.created_at.length-8).replace("T", "  ");
           });
-          this.scansCalendar.forEach(function (scan) {
-            scan.date = scan.created_at.slice(0, 10)
-            scan.date = scan.date.replace(/-/g,"/");
-            console.log(scan.date);
+          this.scansCalendar.forEach(function (ascan) {
+            ascan.title = ascan.created_at.slice(ascan.created_at.length-13, ascan.created_at.length-8).replace("T", "  ");
+            ascan.date = ascan.created_at.slice(0, 10)
+            ascan.date = ascan.date.replace(/-/g,"/");
+            ascan.desc = "Vulns found (DEBUG)"
+            console.log(ascan.date);
           });
       });
       },
@@ -204,9 +207,8 @@ body,
 
 .md-fab {
   margin: 0;
-  position: absolute;
-  bottom: -20px;
-  left: 16px;
+  top: 60px;
+  left: 0;
   z-index: 10;
   
   .md-icon {

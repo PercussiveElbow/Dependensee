@@ -1,7 +1,7 @@
 <template>
 <div id="app" v-bind:style="{ 'background-image': 'url(' + background + ')' }">
   <md-layout md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
-    <md-layout md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
+    <md-layout  style=" background-color: black" md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
       <md-card-header>
         <div class="md-title">Login</div>
       </md-card-header>

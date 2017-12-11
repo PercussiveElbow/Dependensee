@@ -2,8 +2,9 @@ var axios = require('axios')
 
 // const API_URL = 'http://localhost:3000/';
  // const API_URL = 'http://127.0.0.1:3000/';
- const API_URL  = 'http://192.168.1.95:3000/';
-
+ const ADDRESS  = 'http://192.168.0.12';
+ const API_URL = ADDRESS + ':3000/'
+ const WEB_URL = ADDRESS + ':8080/'
 
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
@@ -165,5 +166,5 @@ function gemsLatest(dep_name){ //probably need to move this to backend, because 
 }
 
 function getQr(){
-	return '192.168.1.95:8080/' + 'login?key=' + getToken()
+	return WEB_URL + 'login?key=' + getToken()
 }

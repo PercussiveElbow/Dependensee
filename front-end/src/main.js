@@ -19,7 +19,7 @@ import vmodal from 'vue-js-modal'
 
 import 'vue-event-calendar/dist/style.css' //^1.1.10, CSS has been extracted as one file, so you can easily update it.
 import vueEventCalendar from 'vue-event-calendar'
-Vue.use(vueEventCalendar, {locale: 'en'})
+Vue.use(vueEventCalendar, {locale: 'en',className: 'Custom'})
 
 Vue.config.productionTip = false
 Vue.use(VueResource);

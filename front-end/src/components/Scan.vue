@@ -14,6 +14,9 @@
 
       <div class="md-toolbar-container">
         <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });"><md-icon>home</md-icon></md-button>
+          <md-button class="md-icon-button"  @click="$router.push({ path: '/project/' + project.id });">
+          <md-icon>keyboard_backspace</md-icon>
+        </md-button>
         <h2 class="md-title">Scan: {{scan.title}}</h2>
         <md-button class="md-icon-button md-list-action"  @click=view_vulns()><md-icon>file_download</md-icon></md-button>
       </div>
@@ -61,7 +64,8 @@
 
       <md-tab id="tab-pages" md-label="Graphs" to="/components/tabs/pages">
         <div id='graphthing' style="height:500; width:500px;">
-          <line-chart :data="graphData" ></line-chart>
+              <line-chart :chart-data="datacollection"></line-chart>
+    <button @click="fillData()">Randomize</button>
         </div>
       </md-tab>
 <!--       <md-tab id="tab-reports" md-label="Reports" to="/components/tabs/reports">
@@ -158,14 +162,14 @@
 <script>
   import {getProject,getScan,upload,getDependencies,getJsonReport,getCve,getPdfReport,getTxtReport,getExploit} from '../utils/api.js';
   import Sidebar from './Sidebar'
-  import LineExample from '../utils/LineExample.js'
   import PieExample from '../utils/PieExample.js'
+  import LineChart from '../utils/LineChart.js'
 
   export default {
     name: 'Scan',
     components:  {
       Sidebar,
-      LineExample,
+      LineChart,
       PieExample
     },
     data() {
@@ -184,7 +188,8 @@
           data: []
         },
         activeColor: 'white',
-        selecteddep: {}
+        selecteddep: {},
+         datacollection: null
       }
     },
     created() {
@@ -198,6 +203,9 @@
     },
     watch: {
       '$route': 'fetchData'
+    },
+    mounted () {
+      this.fillData()
     },
     methods: {
       get_project() {getProject(this.$route.params.project_id).then(response =>  {this.project = response;});},
@@ -260,18 +268,30 @@
       cvemodalshow(cve){this.$modal.show('depmodal');},
       openJsonReport(){
         getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {
-          console.log(response)
-          let blob = new Blob([JSON.stringify(response)], { type: 'application/json' } ),
-          url = window.URL.createObjectURL(blob)
-          window.open(url);
-        });
+          window.open(window.URL.createObjectURL(new Blob([JSON.stringify(response)], { type: 'application/json' } )));});
       },
-      returnToProj(){
-          var path = this.$route.params.project_id
-          console.log('path: ' + path)
-          $router.push({path: '/project/'+path});
+      returnToProj(){$router.push({path: '/project/'+this.$route.params.project_id});},
+      getExploitInfo(cve_id){getExploit(cve_id);},
+    
+     fillData () {
+        this.datacollection = {
+          labels: [this.getRandomInt(), this.getRandomInt()],
+          datasets: [
+            {
+              label: 'Data One',
+              backgroundColor: '#f87979',
+              data: [this.getRandomInt(), this.getRandomInt()]
+            }, {
+              label: 'Data One',
+              backgroundColor: '#f87979',
+              data: [this.getRandomInt(), this.getRandomInt()]
+            }
+          ]
+        }
       },
-      getExploitInfo(cve_id){getExploit(cve_id);}
+      getRandomInt () {
+        return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+      }
     }
   } 
 </script>
