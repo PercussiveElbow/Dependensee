@@ -4,15 +4,15 @@ require 'json'
 
 # Hard coded for now, these will be changed.
 SERVER_URL = 'http://127.0.0.1:3000'
-AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYWVmZmQzOWQtYzZjZi00MjE0LWE0NWMtZDJmNzMwNDNhZDk3IiwiZXhwIjoxNTA5NTcyMDY3fQ.RfMNhOQ5cvsqiUC26z7bsgsIW26IZkFiJXas_MRMXj0'
+AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZGE5Y2VhOTEtNDhkNC00YTIyLTkxOTctZGYwZDA3ZjA3YTAzIiwiZXhwIjoxNTE0NTAyMzIyfQ.LZXRVyS3-lKCzgxrPdY9Uw48wkwoWxiYjX3SqpOUJtc'
 @project_id = ''
 
 def scan
-  if File.exists?(File.expand_path File.dirname(__FILE__) + '/Gemfile.lock.test')
-    gem_project
-  elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
+  if File.exist s?(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
     maven_project
-  elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/dependencies.txt.test')
+  elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/Gemfile.lock.test')
+    gem_project
+  elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/requirements.txt.test')
     pip_project
   else
       raise StandardError.new 'No Dependency file found. Exiting.'
@@ -23,21 +23,21 @@ def gem_project
   print "Gemfile found \n"
   body = [] << File.read(File.expand_path File.dirname(__FILE__) + '/Gemfile.lock.test')
   print "Posting Gemfile contents \n"
-  post('ruby',body)
+  post('Ruby',body)
 end
 
 def maven_project
   print "Pomfile found \n"
   body = [] << File.read(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
   print "Posting Pomfile contents \n"
-  post('java',body)
+  post('Java',body)
 end
 
 def pip_project
   print "Pip dependencies found \n"
-  body = [] << File.read(File.expand_path File.dirname(__FILE__) + '/dependencies.txt.test')
+  body = [] << File.read(File.expand_path File.dirname(__FILE__) + '/requirements.txt.test')
   print "Posting Pip dependencies contents \n"
-  post('python',body)
+  post('Python',body)
 end
 
 def create_new_project(language)
