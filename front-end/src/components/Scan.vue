@@ -64,8 +64,9 @@
 
       <md-tab id="tab-pages" md-label="Graphs" to="/components/tabs/pages">
         <div id='graphthing' style="height:500; width:500px;">
-              <line-chart :chart-data="datacollection"></line-chart>
-    <button @click="fillData()">Randomize</button>
+<!--               <line-chart :chart-data="graphData"></line-chart>
+
+ -->              <h1>Vulnerable vs Safe Dependencies</h1><pie-chart :chart-data="pieData"></pie-chart>
         </div>
       </md-tab>
 <!--       <md-tab id="tab-reports" md-label="Reports" to="/components/tabs/reports">
@@ -162,7 +163,7 @@
 <script>
   import {getProject,getScan,upload,getDependencies,getJsonReport,getCve,getPdfReport,getTxtReport,getExploit} from '../utils/api.js';
   import Sidebar from './Sidebar'
-  import PieExample from '../utils/PieExample.js'
+  import PieChart from '../utils/PieChart.js'
   import LineChart from '../utils/LineChart.js'
 
   export default {
@@ -170,7 +171,7 @@
     components:  {
       Sidebar,
       LineChart,
-      PieExample
+      PieChart
     },
     data() {
       return {
@@ -187,6 +188,11 @@
           labels: [],
           data: []
         },
+        pieData: {
+          labels: [],
+          data: []
+        },
+        cveThing: '',
         activeColor: 'white',
         selecteddep: {},
          datacollection: null
@@ -204,29 +210,28 @@
     watch: {
       '$route': 'fetchData'
     },
-    mounted () {
-      this.fillData()
-    },
     methods: {
       get_project() {getProject(this.$route.params.project_id).then(response =>  {this.project = response;});},
       get_scan(){
           this.scan.id = this.$route.params.scan_id;
           getScan(this.$route.params.project_id,this.$route.params.scan_id).then(response =>{
-
             this.scan=response;
             this.scan.title = this.scan.created_at.slice(0, this.scan.created_at.length-8).replace("T", "  ");
 
-          }
-
-
-            )
+          })
       },
       get_dependencies() {getDependencies(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.dependencies = response;});},
       view_vulns() {getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.open_vuln_dialog(response)})},
       set_vulns(){
+        this.datacollection = {
+          labels: [],
+          datasets: []
+        };
          getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  
-          { this.vulns=response;})
-         this.graphData.labels = ['January', 'February'];
+          { this.vulns=response;
+                  this.fillData();
+          })
+
       },
       open_vuln_dialog (response) {
         this.report=response;
@@ -243,7 +248,6 @@
       openCVEModal(vuln){
         getCve(vuln[0].cve).then(response => {
           this.cve = response
-          console.log(this.cve.cve_id);
           if (parseFloat(this.cve.cvss2) > 8) {this.activeColor = 'firebrick';
           }else if (parseFloat(this.cve.cvss2) > 4) {this.activeColor = 'orange';
           }else{this.activeColor = 'black';
@@ -271,23 +275,40 @@
           window.open(window.URL.createObjectURL(new Blob([JSON.stringify(response)], { type: 'application/json' } )));});
       },
       returnToProj(){$router.push({path: '/project/'+this.$route.params.project_id});},
-      getExploitInfo(cve_id){getExploit(cve_id);},
-    
+      getExploitInfo(cve_id){getExploit(cve_id);}, 
      fillData () {
-        this.datacollection = {
-          labels: [this.getRandomInt(), this.getRandomInt()],
+        this.graphData = {
+          labels: [],
+          datasets: []
+        }
+        this.pieData = {
+          labels: ['Safe','Vuln'],
           datasets: [
             {
-              label: 'Data One',
-              backgroundColor: '#f87979',
-              data: [this.getRandomInt(), this.getRandomInt()]
-            }, {
-              label: 'Data One',
-              backgroundColor: '#f87979',
-              data: [this.getRandomInt(), this.getRandomInt()]
+              label: ['Safe','Vuln'],
+              backgroundColor: ['#f87979','#00000'],
+              data: [this.dependencies.length-Object.keys(this.vulns).length,Object.keys(this.vulns).length]
             }
           ]
         }
+
+                        var thing = this;
+
+            var keys = Object.keys(thing.vulns);
+            for(var i=0;i<keys.length;i++){
+                var key = keys[i];
+                var len = thing.vulns[key].length;
+                for(var j=0; j<len; j++){
+                         console.log(thing.vulns[key][j].cve);
+                         var vthing = thing.vulns[key][j];
+                        thing.graphData['labels'].push('alabel');
+
+                         getCve(thing.vulns[key][j].cve).then(function() {
+                              thing.graphData['labels'].push('fewifowfiewifwo');
+                              thing.graphData['datasets'].push({ label: 'jefjwf' ,backgroundColor: '#00000',data: [100]});
+                        });
+                }
+            }
       },
       getRandomInt () {
         return Math.floor(Math.random() * (50 - 5 + 1)) + 5

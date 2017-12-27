@@ -1,10 +1,10 @@
 var axios = require('axios')
 
 // const API_URL = 'http://localhost:3000/';
- // const API_URL = 'http://127.0.0.1:3000/';
- const ADDRESS  = 'http://192.168.0.12';
- const API_URL = ADDRESS + ':3000/'
- const WEB_URL = ADDRESS + ':8080/'
+ const API_URL = 'http://127.0.0.1:3000/';
+ // const ADDRESS  = 'http://143.117.228.142';
+ //const API_URL = ADDRESS + ':3000/'
+ //const WEB_URL = ADDRESS + ':8080/'
 
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
