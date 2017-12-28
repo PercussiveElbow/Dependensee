@@ -68,10 +68,6 @@
              <h1>Vulnerability Severity</h1> <line-chart :chart-data="graphData"></line-chart>
         </div>
       </md-tab>
-<!--       <md-tab id="tab-reports" md-label="Reports" to="/components/tabs/reports">
-            Reports tab placeholder
-            <p>Click the download button above to initiate download</p>
-      </md-tab> -->
       <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
             Options tab
             <p>Placeholder for now</p>
@@ -86,8 +82,6 @@
             <h2 style ="text-align: center" >{{cve.title}}</h2>
             <p>{{selectedvuln.depname}}</p>
             <span style="font-weight: bold" >CVSS2 Score: </span><span > {{cve.cvss2}}</span>
-<!--               <p v-if="project.language === 'Python' | project.language === 'Java'" >{{cve.desc}}</p>
- -->
                <p v-if="project.language === 'Python' | project.language === 'Java'" >{{cve.desc}}</p>
                </br v-if="project.language === 'Ruby'">
                 <a v-if="project.language === 'Ruby'" class="md-title" @click="$router.push({ path: '/cve/'+cve.id });">Description</a>
@@ -119,9 +113,9 @@
                  {{affected}}</br>
             </span></br>
             <span v-if="project.language === 'Python' | project.language === 'Java'" class="md-subheading" style="font-weight: bold">References</span></br>
-            <a v-if="project.language === 'Python' | project.language === 'Java'" v-for="reference in cve.references">
-                 {{reference}}</br>
-            </a>
+            <div v-if="project.language === 'Python' | project.language === 'Java'" v-for="reference in cve.references">
+                     <a v-bind:href="reference">{{reference}}</a></br>
+            </div>
             </br>
         <div style="text-align: center">
 <!--           <span style="font-weight: bold">Open:</span></br>
