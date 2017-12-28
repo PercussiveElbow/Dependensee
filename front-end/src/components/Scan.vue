@@ -64,9 +64,8 @@
 
       <md-tab id="tab-pages" md-label="Graphs" to="/components/tabs/pages">
         <div id='graphthing' style="height:500; width:500px;">
-<!--               <line-chart :chart-data="graphData"></line-chart>
-
- -->              <h1>Vulnerable vs Safe Dependencies</h1><pie-chart :chart-data="pieData"></pie-chart>
+             <h1>Vulnerable vs Safe Dependencies</h1> <pie-chart :chart-data="pieData"></pie-chart></br>
+             <h1>Vulnerability Severity</h1> <line-chart :chart-data="graphData"></line-chart>
         </div>
       </md-tab>
 <!--       <md-tab id="tab-reports" md-label="Reports" to="/components/tabs/reports">
@@ -195,7 +194,7 @@
         cveThing: '',
         activeColor: 'white',
         selecteddep: {},
-         datacollection: null
+        datacollection: null
       }
     },
     created() {
@@ -210,7 +209,18 @@
     watch: {
       '$route': 'fetchData'
     },
+    // components: {
+    // 'pieComp': {
+    //   template: '<pie-hmm :chart-data="pieData"></pie-hmm>'
+    // },
+    // 'lineComp': {
+    //   template: '<h1>Bar component</h1>'
+    //   }
+    // },
     methods: {
+      swapComponent: function(component){
+        this.currentComponent = component;
+      },
       get_project() {getProject(this.$route.params.project_id).then(response =>  {this.project = response;});},
       get_scan(){
           this.scan.id = this.$route.params.scan_id;
@@ -291,23 +301,21 @@
             }
           ]
         }
-
-                        var thing = this;
-
-            var keys = Object.keys(thing.vulns);
+            var keys = Object.keys(this.vulns);
             for(var i=0;i<keys.length;i++){
                 var key = keys[i];
-                var len = thing.vulns[key].length;
+                var len = this.vulns[key].length;
+                var someData = [];
                 for(var j=0; j<len; j++){
-                         console.log(thing.vulns[key][j].cve);
-                         var vthing = thing.vulns[key][j];
-                        thing.graphData['labels'].push('alabel');
-
-                         getCve(thing.vulns[key][j].cve).then(function() {
-                              thing.graphData['labels'].push('fewifowfiewifwo');
-                              thing.graphData['datasets'].push({ label: 'jefjwf' ,backgroundColor: '#00000',data: [100]});
-                        });
+                         var vthing = this.vulns[key][j];
+                         var labelname = this.vulns[key][j].cve;
+                        this.graphData['labels'].push(labelname);
+                        someData.push(10);
+                        console.log(getCve(this.vulns[key][j].cve));
+                        // var thing = await getCve(this.vulns[key][j].cve)['cvss2']);
+                        // someData.push(await getCve(this.vulns[key][j].cve)['cvss2']);
                 }
+                this.graphData['datasets'].push({ label: 'Severity (CSVSS2)' , backgroundColor: '#00000', data: someData } );
             }
       },
       getRandomInt () {

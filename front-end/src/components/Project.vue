@@ -88,23 +88,14 @@
 
 </div>
 
-<modal name="upload"         :height="350" :adaptive="true" @opened="opened">
+<modal name="upload"         :height="200" :adaptive="true" @opened="opened">
     <div style="padding: 30px; text-align: center">
           <h2 v-if="project.language == 'Ruby' " >Upload Gemfile</h2>
           <h2 v-if="project.language  === 'Java' " >Upload Pomfile</h2>
           <h2 v-if="project.language  === 'Python' " >Upload Dependencies.txt</h2>
-
-          <md-input-container>
-              <md-icon>work</md-icon>
-              <label>Text Input (DEBUG)</label>
-              <md-input name v-model="upload.body"/>
-            </md-input-container>
-
-
-         <md-input-container>
-        <md-file placeholder='Select a file' ></md-file>
-      </md-input-container>
-  <md-button class="md-primary md-raised" v-on:click=handle_upload>Scan</md-button>
+    <form enctype="multipart/form-data">
+      <input type="file" @change="handle_upload_file">
+    </form>
     </div>
 </modal>
   </div>
@@ -128,9 +119,6 @@
         },
         scans: [],
         scansCalendar: [],
-        upload: {
-          body : ''
-        },
         report: {}
        }
     },
@@ -158,7 +146,6 @@
             ascan.date = ascan.created_at.slice(0, 10)
             ascan.date = ascan.date.replace(/-/g,"/");
             ascan.desc = "Vulns found (DEBUG)"
-            console.log(ascan.date);
           });
       });
       },
@@ -166,7 +153,15 @@
         deleteScan(this.$route.params.id,id)
         this.get_scans;
       },
-      handle_upload(){upload(this.$route.params.id,this.upload.body);},
+      handle_upload_file(e){
+      var files = e.target.files || e.dataTransfer.files;
+      var self = this;
+      var fr = new FileReader(); fr.onload = function(e) { 
+        upload(self.$route.params.id,e.target.result);
+        self.hide();
+       }; 
+      fr.readAsText(files[0]);
+      },
       show () {this.$modal.show('upload');},
       hide () {this.$modal.hide('upload');},
       view_vulns(scan_id) {getJsonReport(this.$route.params.id,scan_id).then(response =>  {this.open_vuln_dialog(response)})},
