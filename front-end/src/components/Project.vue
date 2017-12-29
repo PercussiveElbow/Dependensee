@@ -140,7 +140,7 @@
     methods: {
       get_project() {getProject(this.$route.params.id).then(response =>  {
             this.project = response;
-            this.clientDownload = getClient() + this.project.id;});},
+            this.clientDownload = getClient() + ' ' + this.project.id;});},
       get_scans() {
           getScans(this.$route.params.id).then(response =>  {
 
