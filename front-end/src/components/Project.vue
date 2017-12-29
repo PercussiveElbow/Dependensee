@@ -87,7 +87,7 @@
       <h3>Linux/MacOS</h3>
       <pre v-highlightjs="clientLinux"><code class="bash"></code></pre>
       <h3>Windows</h3>
-      <a href=clientDownload>Download client</a>
+      <a v-bind:href="clientDownload">Download client</a>
       <p> Then run: </p>
       <pre v-highlightjs="clientWindows"><code class="bash"></code></pre>
     </md-tab>
