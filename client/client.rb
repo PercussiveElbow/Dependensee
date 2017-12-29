@@ -2,13 +2,12 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-# Hard coded for now, these will be changed.
+# Hard coded for now, these will be changed, shouldn't put api keys in VC but its just dummy accounts whoops/home/adam/RubymineProjects/dependensee/client/client.rb
 TIMEOUT = 360
 SERVER_URL = 'http://127.0.0.1:3000'
 AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZGE5Y2VhOTEtNDhkNC00YTIyLTkxOTctZGYwZDA3ZjA3YTAzIiwiZXhwIjoxNTE0NTgxODQwfQ.dTBumQHjhv91SlEuE0hMRVJnPHtnGd44hwX1xamyczQ'
-@project_id = ''
-print "Auth key #{ENV['depAPIKey']}\n"
-
+ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
+#print "Auth key #{ENV['depAPIKey']}\n"
 
 def scan
   if File.exists?(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')

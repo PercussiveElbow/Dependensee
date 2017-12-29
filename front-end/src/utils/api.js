@@ -21,7 +21,7 @@ const ACCESS_TOKEN = 'jwk_access_token'
 //Split this file out for tidiness	
 export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
 	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,editScan,
-	gemsLatest,getTxtReport,getExploit,getExploitPlain,getQr};
+	gemsLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClient};
 
 
 //AUTH
@@ -163,4 +163,8 @@ function gemsLatest(dep_name){ //probably need to move this to backend, because 
 
 function getQr(){
 	return WEB_URL + 'login?key=' + getToken()
+}
+
+function getClient(){
+	return 'wget ' + WEB_URL + 'static/quickclient.rb' + ' && ruby quickclient.rb'
 }

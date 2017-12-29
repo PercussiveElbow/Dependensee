@@ -11,6 +11,7 @@ import './assets/font-mfizz-2.4.1/font-mfizz.css'
 import './assets/gfont/dosis.css'
 import VueQrcode from '@xkeshi/vue-qrcode'
 // import VueCharts from 'vue-chartjs'
+import VueHighlightJS from 'vue-highlightjs'
 
 
 
@@ -26,6 +27,7 @@ Vue.use(VueResource);
 Vue.use(VueMaterial);
 Vue.use(vmodal,{ dialog: true });
 Vue.use(VueQrcode);
+Vue.use(VueHighlightJS)
 
 Vue.component('qrcode', VueQrcode);
 

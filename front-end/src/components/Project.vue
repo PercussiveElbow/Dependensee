@@ -77,12 +77,14 @@
       </main>
     </md-tab>
 
-      <md-tab id="tab-history" md-label="History" to="/components/tabs/history">
+    <md-tab id="tab-history" md-label="History" to="/components/tabs/history">
+      <vue-event-calendar :events="scansCalendar"></vue-event-calendar>
+    </md-tab>
 
-  <vue-event-calendar :events="scansCalendar"></vue-event-calendar>
+    <md-tab id="tab-client" md-label="Setup Client" to="/components/tabs/client">
+      <pre v-highlightjs="sourcecode"><code class="bash">{{clientDownload}} {{project.id}}</code></pre>
+    </md-tab>
 
-
-      </md-tab>
   </md-tabs>
 
 
@@ -92,7 +94,7 @@
     <div style="padding: 30px; text-align: center">
           <h2 v-if="project.language == 'Ruby' " >Upload Gemfile</h2>
           <h2 v-if="project.language  === 'Java' " >Upload Pomfile</h2>
-          <h2 v-if="project.language  === 'Python' " >Upload Dependencies.txt</h2>
+          <h2 v-if="project.language  === 'Python' " >Upload Requirements.txt</h2>
     <form enctype="multipart/form-data">
       <input type="file" @change="handle_upload_file">
     </form>
@@ -104,7 +106,7 @@
 
 <script>
 
-  import {getToken,getProject,getScans,upload,getJsonReport,deleteScan} from '../utils/api.js';
+  import {getToken,getProject,getScans,upload,getJsonReport,deleteScan,getClient} from '../utils/api.js';
   import Sidebar from './Sidebar'
 
   export default {
@@ -119,12 +121,14 @@
         },
         scans: [],
         scansCalendar: [],
-        report: {}
+        report: {},
+        clientDownload: ''
        }
     },
     created() {
       this.get_project();
       this.get_scans();
+      this.clientDownload = getClient();
       setInterval(function () {this.get_scans();}.bind(this), 10000); 
     },
     watch: {

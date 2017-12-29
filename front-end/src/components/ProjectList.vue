@@ -97,7 +97,7 @@
     },
     created: function () {
         this.poll_projects();
-        setInterval(function () {this.poll_projects();}.bind(this), 10000); 
+        setInterval(function () {this.poll_projects();}.bind(this), 2000); 
     }
 }
 </script>
