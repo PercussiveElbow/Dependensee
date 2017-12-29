@@ -3,12 +3,15 @@ require 'uri'
 require 'json'
 
 # Hard coded for now, these will be changed.
+TIMEOUT = 360
 SERVER_URL = 'http://127.0.0.1:3000'
-AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZGE5Y2VhOTEtNDhkNC00YTIyLTkxOTctZGYwZDA3ZjA3YTAzIiwiZXhwIjoxNTE0NTAyMzIyfQ.LZXRVyS3-lKCzgxrPdY9Uw48wkwoWxiYjX3SqpOUJtc'
+AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZGE5Y2VhOTEtNDhkNC00YTIyLTkxOTctZGYwZDA3ZjA3YTAzIiwiZXhwIjoxNTE0NTgxODQwfQ.dTBumQHjhv91SlEuE0hMRVJnPHtnGd44hwX1xamyczQ'
 @project_id = ''
+print "Auth key #{ENV['depAPIKey']}\n"
+
 
 def scan
-  if File.exist s?(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
+  if File.exists?(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
     maven_project
   elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/Gemfile.lock.test')
     gem_project
@@ -59,6 +62,7 @@ end
 
 def post(language,body)
   create_new_project(language) if(@project_id.nil? or @project_id.empty?)
+  print "Attempting to upload dependencies and scan..\n"
   uri = URI.parse(SERVER_URL + '/projects/' + @project_id + '/upload')
   http = Net::HTTP.new(uri.host, uri.port)
   request = Net::HTTP::Post.new(uri.request_uri)
@@ -80,5 +84,9 @@ def output(resp)
   end
 end
 
-
-scan
+while true
+  print "Beginning scan at #{Time.new.inspect}\n"
+  scan
+  print "Sleeping for #{TIMEOUT} seconds.\n"
+  sleep TIMEOUT
+end
