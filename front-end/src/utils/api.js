@@ -1,6 +1,6 @@
 var axios = require('axios')
 
- const ADDRESS  = 'http://192.168.0.132';
+ const ADDRESS  = 'http://127.0.0.1';
  const API_URL = ADDRESS + ':3000/'
  const WEB_URL = ADDRESS + ':8080/'
 
@@ -21,7 +21,7 @@ const ACCESS_TOKEN = 'jwk_access_token'
 //Split this file out for tidiness	
 export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
 	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,editScan,
-	gemsLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClient};
+	gemsLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux};
 
 
 //AUTH
@@ -75,7 +75,8 @@ function getScans(id){
 }
 
 function upload(id,body){
-	return axios.post(PROJECTS_URL+id+UPLOAD_URL, body, {headers: {'Authorization': getToken()}, 'Content-Type': 'text/plain'}).then(response =>response.data);
+	var source = "Web [" + window.navigator.userAgent + "] "
+	return axios.post(PROJECTS_URL+id+UPLOAD_URL, body, {headers: {'Authorization': getToken(), 'Source': source}, 'Content-Type': 'text/plain'}).then(response =>response.data);
 }
 
 function deleteScan(id,scan_id){
@@ -165,6 +166,9 @@ function getQr(){
 	return WEB_URL + 'login?key=' + getToken()
 }
 
-function getClient(){
+function getClientLinux(){
 	return 'wget ' + WEB_URL + 'static/quickclient.rb' + ' && ruby quickclient.rb'
+}
+function getClientDownload(){
+	return WEB_URL + 'static/quickclient.rb'
 }

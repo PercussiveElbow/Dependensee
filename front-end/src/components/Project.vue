@@ -57,6 +57,7 @@
           </md-avatar>
           <div class="md-list-text-container">
             <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">Scan: {{scan.title}}</router-link>
+            <p> {{scan.source}}</p>
             <p>{{ scan.id }}</p>
 <!--             <p>{{ scan.description }}</p>
  -->          </div>
@@ -84,11 +85,14 @@
     <md-tab id="tab-client" md-label="Setup Client" to="/components/tabs/client">
       <h2>Quickly setup your code for scanning</h2>
       <h3>Linux/MacOS</h3>
-      <pre v-highlightjs="clientDownload"><code class="bash"></code></pre>
+      <pre v-highlightjs="clientLinux"><code class="bash"></code></pre>
       <h3>Windows</h3>
-      <pre v-highlightjs="sourcecode"><code class="bash">In progress..</code></pre>
+      <a href=clientDownload>Download client</a>
+      <p> Then run: </p>
+      <pre v-highlightjs="clientWindows"><code class="bash"></code></pre>
     </md-tab>
-
+    <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
+    </md-tab>
   </md-tabs>
 
 
@@ -110,7 +114,7 @@
 
 <script>
 
-  import {getToken,getProject,getScans,upload,getJsonReport,deleteScan,getClient} from '../utils/api.js';
+  import {getToken,getProject,getScans,upload,getJsonReport,deleteScan,getClientLinux,getClientDownload} from '../utils/api.js';
   import Sidebar from './Sidebar'
 
   export default {
@@ -126,7 +130,9 @@
         scans: [],
         scansCalendar: [],
         report: {},
-        clientDownload: ''
+        clientDownload: '',
+        clientLinux: '',
+        clientWindows: ''
        }
     },
     created() {
@@ -140,7 +146,10 @@
     methods: {
       get_project() {getProject(this.$route.params.id).then(response =>  {
             this.project = response;
-            this.clientDownload = getClient() + ' ' + this.project.id;});},
+            this.clientLinux = getClientLinux() + ' ' + this.project.id;
+            this.clientDownload = getClientDownload();
+            this.clientWindows = 'ruby quickclient.rb' + this.project.id;
+          });},
       get_scans() {
           getScans(this.$route.params.id).then(response =>  {
 

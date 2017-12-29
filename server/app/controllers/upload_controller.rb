@@ -7,7 +7,7 @@ require_relative '../lib/pip/pip_scanner'
 
 
 class UploadController < ApplicationController
-  before_action :find_project_by_id
+  before_action :find_project_by_id,:upload_headers
   before_action only: [:show, :update, :destroy]
 
   def create
@@ -24,7 +24,11 @@ class UploadController < ApplicationController
   end
 
   def upload_headers
-    headers.permit(:source)
+    # request.headers.permit('source')
+
+    if request.headers['source'].nil? or  request.headers['source'].empty?
+      request.headers['source'] = 'API'
+    end
   end
 
   def what_language?
@@ -43,7 +47,7 @@ class UploadController < ApplicationController
   # JAVA
   def handle_java
     deps = pom_decode
-    scan = @project.scans.create!(:source => headers['source'])
+    scan = @project.scans.create!(:source => request.headers['source'])
     deps.each { |dep| scan.dependencies.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], language: 'java', raw: dep) }
 
     deps =  Dependency.where(['scan_id = ?', scan.id])
@@ -63,7 +67,7 @@ class UploadController < ApplicationController
   # RUBY
   def handle_ruby
     deps = gem_decode
-    scan = @project.scans.create!(:source => headers['source'])
+    scan = @project.scans.create!(:source => request.headers['source'])
 
     deps.each { |dep| scan.dependencies.create(name: dep.name, version: dep.version, language: 'ruby', raw: dep) }
     deps =  Dependency.where(['scan_id = ?', scan.id])
@@ -83,7 +87,7 @@ class UploadController < ApplicationController
   # PYTHON
   def handle_python
     deps = pip_decode
-    scan = @project.scans.create!(:source => headers['source'])
+    scan = @project.scans.create!(:source => request.headers['source'])
 
     deps.each { |dep| scan.dependencies.create(name: dep['name'], version: dep['version'], language: 'python', raw: dep) }
     deps =  Dependency.where(['scan_id = ?', scan.id])

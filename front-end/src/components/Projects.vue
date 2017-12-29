@@ -82,12 +82,12 @@
         newproject: {
           name: '',
           language: '',
+          description: ''
         },
         error: ''
       }
     },
     created: function() {
-        console.log(getToken())
     },
     methods: {
    create_project: function(newproject) {
@@ -97,7 +97,6 @@
           formCreds.append('language',this.newproject.language);
           postProject(formCreds);
           this.hide();
-          console.log(getToken());
    },
    openDialog: function(ref) {
     

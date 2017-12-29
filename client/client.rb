@@ -5,7 +5,7 @@ require 'json'
 # Hard coded for now, these will be changed, shouldn't put api keys in VC but its just dummy accounts whoops/home/adam/RubymineProjects/dependensee/client/client.rb
 TIMEOUT = 360
 SERVER_URL = 'http://127.0.0.1:3000'
-AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZGE5Y2VhOTEtNDhkNC00YTIyLTkxOTctZGYwZDA3ZjA3YTAzIiwiZXhwIjoxNTE0NTgxODQwfQ.dTBumQHjhv91SlEuE0hMRVJnPHtnGd44hwX1xamyczQ'
+AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZGE5Y2VhOTEtNDhkNC00YTIyLTkxOTctZGYwZDA3ZjA3YTAzIiwiZXhwIjoxNTE0NjQ3MjE5fQ.y3psf6_M8J5V_xjT5wRrppru1RgEwudQKNgQW3mJJLI'
 ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
 #print "Auth key #{ENV['depAPIKey']}\n"
 
@@ -67,6 +67,8 @@ def post(language,body)
   request = Net::HTTP::Post.new(uri.request_uri)
   request.body = body.join
   request['Authorization'] = AUTH_KEY
+  os = RbConfig::CONFIG['host_os'] + " #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
+  request['Source'] = "Client [#{os}]"
   resp = http.request(request)
   output(resp)
 end

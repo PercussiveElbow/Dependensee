@@ -45,6 +45,9 @@
         <md-icon>smartphone</md-icon> <span>Open on phone</span>
       </md-list-item>
 
+      <md-list-item @click= "$router.push('/desktop/')" >
+        <md-icon>laptop</md-icon> <span>Download Desktop Client</span>
+      </md-list-item>
     </md-list>
   </md-sidenav>
 

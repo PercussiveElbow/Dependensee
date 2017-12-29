@@ -68,10 +68,6 @@
              <h1>Vulnerability Severity</h1> <line-chart :chart-data="graphData"></line-chart>
         </div>
       </md-tab>
-      <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
-            Options tab
-            <p>Placeholder for now</p>
-      </md-tab>
     </md-tabs>
   </div>
   <v-dialog/>
@@ -203,14 +199,6 @@
     watch: {
       '$route': 'fetchData'
     },
-    // components: {
-    // 'pieComp': {
-    //   template: '<pie-hmm :chart-data="pieData"></pie-hmm>'
-    // },
-    // 'lineComp': {
-    //   template: '<h1>Bar component</h1>'
-    //   }
-    // },
     methods: {
       swapComponent: function(component){
         this.currentComponent = component;

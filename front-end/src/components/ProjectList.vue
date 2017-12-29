@@ -123,9 +123,9 @@ body,
 }
 .icon-ruby {
   vertical-align: middle;
-  padding-top: 15px;
+  margin-top: 50px;
   margin-left: 5px;
-  font-size: 1.75em;
+  font-size: 1.9em;
 }
 .icon-java {
   vertical-align: middle;
