@@ -1,6 +1,6 @@
 var axios = require('axios')
 
- const ADDRESS  = 'http://192.168.0.128';
+ const ADDRESS  = 'http://192.168.0.132';
  const API_URL = ADDRESS + ':3000/'
  const WEB_URL = ADDRESS + ':8080/'
 
@@ -16,9 +16,7 @@ const DEPENDENCIES_URL = '/dependencies/'
 const JSON_REPORT_URL = '/reports/json/'
 const PDF_REPORT_URL = '/reports/pdf/'
 const TXT_REPORT_URL = '/reports/txt/'
-
 const ACCESS_TOKEN = 'jwk_access_token'
-
 
 //Split this file out for tidiness	
 export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,

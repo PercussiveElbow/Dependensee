@@ -157,9 +157,11 @@
       var files = e.target.files || e.dataTransfer.files;
       var self = this;
       var fr = new FileReader(); fr.onload = function(e) { 
-        upload(self.$route.params.id,e.target.result);
-        self.hide();
-       }; 
+        upload(self.$route.params.id,e.target.result).then(response => {
+          self.$router.push({ path: '/scan/' + self.project.id+'/'+response['scan_id'] });
+          self.hide();
+          });
+      }; 
       fr.readAsText(files[0]);
       },
       show () {this.$modal.show('upload');},
