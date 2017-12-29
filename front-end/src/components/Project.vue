@@ -82,7 +82,11 @@
     </md-tab>
 
     <md-tab id="tab-client" md-label="Setup Client" to="/components/tabs/client">
-      <pre v-highlightjs="sourcecode"><code class="bash">{{clientDownload}} {{project.id}}</code></pre>
+      <h2>Quickly setup your code for scanning</h2>
+      <h3>Linux/MacOS</h3>
+      <pre v-highlightjs="clientDownload"><code class="bash"></code></pre>
+      <h3>Windows</h3>
+      <pre v-highlightjs="sourcecode"><code class="bash">In progress..</code></pre>
     </md-tab>
 
   </md-tabs>
@@ -128,14 +132,15 @@
     created() {
       this.get_project();
       this.get_scans();
-      this.clientDownload = getClient();
       setInterval(function () {this.get_scans();}.bind(this), 10000); 
     },
     watch: {
       '$route': 'fetchData'
     },
     methods: {
-      get_project() {getProject(this.$route.params.id).then(response =>  {this.project = response;});},
+      get_project() {getProject(this.$route.params.id).then(response =>  {
+            this.project = response;
+            this.clientDownload = getClient() + this.project.id;});},
       get_scans() {
           getScans(this.$route.params.id).then(response =>  {
 
