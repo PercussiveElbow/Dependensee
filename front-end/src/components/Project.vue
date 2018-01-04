@@ -242,6 +242,7 @@
         var self = this;
 
         var data = []
+        var labels = []
         var locScans = this.scans;
         for(var a= locScans.length-1; a>=0; a--){
           console.log(a);
@@ -250,8 +251,20 @@
           getDependencies(this.$route.params.id,aScan.id).then(response =>  {
 
             this.values = response;
-            self.depGraphData['datasets'][0]['data'].push(this.values.length)
-            self.depGraphData['labels'].push(aScan.created_at.slice(0, aScan.created_at.length-8).replace("T", "  "))
+            // self.depGraphData['datasets'][0]['data'].push(this.values.length)
+            // self.depGraphData['labels'].push(aScan.created_at.slice(0, aScan.created_at.length-8).replace("T", "  "))
+
+            data.push(this.values.length)
+            labels.push(aScan.created_at.slice(0, aScan.created_at.length-8).replace("T", "  "))
+
+            self.depGraphData = {
+              labels: labels,
+              datasets: [{
+              label: 'Number of dependencies' ,
+              backgroundColor: '#0074D9', 
+              data: data
+              }]
+             }
 
             // self.depGraphData['labels'].push(self.scans[a].id);
           });
