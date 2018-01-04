@@ -92,6 +92,21 @@
       <pre v-highlightjs="clientWindows"><code class="bash"></code></pre>
     </md-tab>
     <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
+
+    <div>
+    <md-switch v-model="boolean">Automatically Scan<small>(Default)</small></md-switch>
+    <md-switch v-model="boolean" class="md-primary">Attempt Update</md-switch>
+    </div>
+
+  <div>
+    <h3> Scan every: </h3>
+    <md-radio v-model="radio" :value="false">Minute</md-radio>
+    <md-radio v-model="radio" value="my-radio">Hour</md-radio>
+    <md-radio v-model="radio">Day</md-radio>
+    <md-radio v-model="radio" >Week</md-radio>
+  </div>
+
+
     </md-tab>
   </md-tabs>
 
@@ -132,7 +147,8 @@
         report: {},
         clientDownload: '',
         clientLinux: '',
-        clientWindows: ''
+        clientWindows: '',
+        boolean: true
        }
     },
     created() {
@@ -148,7 +164,7 @@
             this.project = response;
             this.clientLinux = getClientLinux() + ' ' + this.project.id;
             this.clientDownload = getClientDownload();
-            this.clientWindows = 'ruby quickclient.rb' + this.project.id;
+            this.clientWindows = 'ruby quickclient.rb ' + this.project.id;
           });},
       get_scans() {
           getScans(this.$route.params.id).then(response =>  {

@@ -283,6 +283,8 @@
             }
           ]
         }
+
+            var athing = this;
             var keys = Object.keys(this.vulns);
             for(var i=0;i<keys.length;i++){
                 var key = keys[i];
@@ -291,9 +293,14 @@
                 for(var j=0; j<len; j++){
                          var vthing = this.vulns[key][j];
                          var labelname = this.vulns[key][j].cve;
-                        this.graphData['labels'].push(labelname);
-                        someData.push(10);
-                        console.log(getCve(this.vulns[key][j].cve));
+                         console.log(labelname)
+
+                         var self = this;
+                        getCve(labelname).then(function (response) {
+                          console.log(self.graphData)
+                          self.graphData.push(10);
+                          self.graphData['labels'].push(labelname);
+                        } );
                         // var thing = await getCve(this.vulns[key][j].cve)['cvss2']);
                         // someData.push(await getCve(this.vulns[key][j].cve)['cvss2']);
                 }

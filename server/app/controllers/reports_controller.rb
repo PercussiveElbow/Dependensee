@@ -7,8 +7,6 @@ class ReportsController < ApplicationController
   before_action :get_project_by_id
   before_action :set_project_scan, only: [:index, :show, :update, :destroy]
 
-
-
   def index
     json_response(error:'Specify a report type')
   end

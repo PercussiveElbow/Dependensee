@@ -12,9 +12,6 @@ import './assets/gfont/dosis.css'
 import VueQrcode from '@xkeshi/vue-qrcode'
 // import VueCharts from 'vue-chartjs'
 import VueHighlightJS from 'vue-highlightjs'
-
-
-
 import vmodal from 'vue-js-modal'
 
 

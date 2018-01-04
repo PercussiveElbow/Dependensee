@@ -7,7 +7,7 @@ RSpec.describe 'PipParser' do
 
   it 'should be created correctly from post' do
     parser = PipParser::load_from_post(File.read File.expand_path(File.dirname(__FILE__) + '../../../resources/requirements.txt.test'))
-    expect(parser.load_deps.length).to eql(8)
+    expect(parser.load_deps.length).to eql(10)
   end
 end
 

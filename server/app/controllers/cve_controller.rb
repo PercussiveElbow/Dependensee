@@ -1,3 +1,5 @@
+require_relative '../lib/msg_constants'
+
 class CveController < ApplicationController
   before_action :find_cve_by_id, only: [:show]
   skip_before_action :auth_req
@@ -5,11 +7,14 @@ class CveController < ApplicationController
   # GET /cve/:cve_id
   def show
     resp = @cve.as_json
-    if !resp[0].empty?
-          resp = resp[0]
-          resp['language'] = @language if !@language.nil?
+    if !resp.empty?
+      if !resp[0].empty?
+            resp = resp[0]
+            resp['language'] = @language if !@language.nil?
+      end
+      return json_response(resp)
     end
-    return json_response(resp)
+    raise CustomException::NotFound, MsgConstants::NOT_FOUND
   end
 
   # def name_or_cve

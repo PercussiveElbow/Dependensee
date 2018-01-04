@@ -1,7 +1,6 @@
 # app/controllers/profile_controller.rb
 class ProfileController < ApplicationController
 
-
   def profile_get
     name = current_user.name
     email = current_user.email
@@ -9,6 +8,5 @@ class ProfileController < ApplicationController
     json_response(response)
   end
   private
-
 
 end

@@ -5,7 +5,6 @@ require_relative '../lib/pom/pom_scanner'
 require_relative '../lib/gem/gem_scanner'
 require_relative '../lib/pip/pip_scanner'
 
-
 class UploadController < ApplicationController
   before_action :find_project_by_id,:upload_headers
   before_action only: [:show, :update, :destroy]
@@ -42,7 +41,6 @@ class UploadController < ApplicationController
       raise EmptyDependencyException.new('No dependencies found in your POST body.')
     end
   end
-
 
   # JAVA
   def handle_java
@@ -95,7 +93,6 @@ class UploadController < ApplicationController
     vuln_cleanup
 
     JSON.pretty_generate({type: MsgConstants::PIPFILE_UPLOADED, scan_id: scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
-
   end
 
   def pip_decode
