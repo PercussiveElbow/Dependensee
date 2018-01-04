@@ -91,23 +91,30 @@
       <p> Then run: </p>
       <pre v-highlightjs="clientWindows"><code class="bash"></code></pre>
     </md-tab>
-    <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
 
-    <div>
-    <md-switch v-model="boolean">Automatically Scan<small>(Default)</small></md-switch>
-    <md-switch v-model="boolean" class="md-primary">Attempt Update</md-switch>
-    </div>
+      <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
 
-  <div>
-    <h3> Scan every: </h3>
-    <md-radio v-model="radio" :value="false">Minute</md-radio>
-    <md-radio v-model="radio" value="my-radio">Hour</md-radio>
-    <md-radio v-model="radio">Day</md-radio>
-    <md-radio v-model="radio" >Week</md-radio>
-  </div>
+      <div>
+      <md-switch v-model="boolean">Automatically Scan</md-switch>
+      <md-switch v-model="boolean" class="md-primary">Attempt Update</md-switch>
+      </div>
+
+      <div>
+        <h3> Scan every: </h3>
+        <md-radio v-model="radio" :value="false">Minute</md-radio>
+        <md-radio v-model="radio" value="my-radio">Hour</md-radio>
+        <md-radio v-model="radio">Day</md-radio>
+        <md-radio v-model="radio" >Week</md-radio>
+      </div>
 
 
-    </md-tab>
+      </md-tab>
+       <md-tab id="tab-graph" md-label="Graphs" to="/components/tabs/graph">
+              <div id='graphthing' style="height:500; width:500px;">
+
+                <h1>Number of dependencies</h1> <line-chart :chart-data="depGraphData"></line-chart>
+            </div>
+       </md-tab>
   </md-tabs>
 
 
@@ -129,13 +136,15 @@
 
 <script>
 
-  import {getToken,getProject,getScans,upload,getJsonReport,deleteScan,getClientLinux,getClientDownload} from '../utils/api.js';
+  import {getToken,getProject,getScans,getDependencies,upload,getJsonReport,deleteScan,getClientLinux,getClientDownload} from '../utils/api.js';
   import Sidebar from './Sidebar'
+  import LineChart from '../utils/LineChart'
 
   export default {
     name: 'Project',
     components:  {
-      Sidebar
+      Sidebar,
+      LineChart
     },
     data() {
       return {
@@ -148,7 +157,11 @@
         clientDownload: '',
         clientLinux: '',
         clientWindows: '',
-        boolean: true
+        boolean: true,
+        depGraphData: {
+          labels: [],
+          data: []
+        },
        }
     },
     created() {
@@ -181,6 +194,8 @@
             ascan.date = ascan.date.replace(/-/g,"/");
             ascan.desc = "Vulns found (DEBUG)"
           });
+
+          this.fillData();
       });
       },
       delete_scan(id) {
@@ -212,7 +227,37 @@
               { title: 'HTML'}
            ]
           })
-      }
+      },
+      fillData(){
+        this.depGraphData = {
+          labels: [],
+          datasets: [
+          { label: 'Number of dependencies' ,
+           backgroundColor: '#0074D9', 
+           data: []
+          } 
+          ]
+        }
+
+        var self = this;
+
+        var data = []
+        var locScans = this.scans;
+        for(var a= locScans.length-1; a>=0; a--){
+          console.log(a);
+          var values = [];
+          var aScan = locScans[a];
+          getDependencies(this.$route.params.id,aScan.id).then(response =>  {
+
+            this.values = response;
+            self.depGraphData['datasets'][0]['data'].push(this.values.length)
+            self.depGraphData['labels'].push(aScan.created_at.slice(0, aScan.created_at.length-8).replace("T", "  "))
+
+            // self.depGraphData['labels'].push(self.scans[a].id);
+          });
+          }
+
+    }
     }
   } 
 </script>

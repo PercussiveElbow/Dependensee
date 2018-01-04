@@ -273,7 +273,7 @@
           labels: [],
           datasets: [
           { label: 'Severity (CVSS2)' ,
-           backgroundColor: '#00000', 
+           backgroundColor: '#0074D9', 
            data: []
           } 
           ]
