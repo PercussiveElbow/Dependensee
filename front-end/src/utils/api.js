@@ -115,6 +115,10 @@ function getCve(cve_id){
 	return axios.get(CVE_URL+cve_id).then (response => response.data);
 }
 
+// async function getCve(cve_id){
+// 	return await axios.get(CVE_URL+cve_id);
+// }
+
 //EXPLOIT
 function getExploit(cve_id){
 	cve_id = '2016-6662'

@@ -65,7 +65,7 @@
       <md-tab id="tab-pages" md-label="Graphs" to="/components/tabs/pages">
         <div id='graphthing' style="height:500; width:500px;">
              <h1>Vulnerable vs Safe Dependencies</h1> <pie-chart :chart-data="pieData"></pie-chart></br>
-             <h1>Vulnerability Severity</h1> <line-chart :chart-data="graphData"></line-chart>
+             <h1>Vulnerability Severity</h1> <bar-chart :chart-data="graphData"></bar-chart>
         </div>
       </md-tab>
     </md-tabs>
@@ -153,13 +153,13 @@
   import {getProject,getScan,upload,getDependencies,getJsonReport,getCve,getPdfReport,getTxtReport,getExploit} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import PieChart from '../utils/PieChart.js'
-  import LineChart from '../utils/LineChart.js'
+  import BarChart from '../utils/BarChart.js'
 
   export default {
     name: 'Scan',
     components:  {
       Sidebar,
-      LineChart,
+      BarChart,
       PieChart
     },
     data() {
@@ -271,7 +271,12 @@
      fillData () {
         this.graphData = {
           labels: [],
-          datasets: []
+          datasets: [
+          { label: 'Severity (CVSS2)' ,
+           backgroundColor: '#00000', 
+           data: []
+          } 
+          ]
         }
         this.pieData = {
           labels: ['Safe','Vuln'],
@@ -285,6 +290,7 @@
         }
 
             var athing = this;
+            var data = [];
             var keys = Object.keys(this.vulns);
             for(var i=0;i<keys.length;i++){
                 var key = keys[i];
@@ -293,18 +299,18 @@
                 for(var j=0; j<len; j++){
                          var vthing = this.vulns[key][j];
                          var labelname = this.vulns[key][j].cve;
-                         console.log(labelname)
 
-                         var self = this;
-                        getCve(labelname).then(function (response) {
-                          console.log(self.graphData)
-                          self.graphData.push(10);
-                          self.graphData['labels'].push(labelname);
-                        } );
-                        // var thing = await getCve(this.vulns[key][j].cve)['cvss2']);
-                        // someData.push(await getCve(this.vulns[key][j].cve)['cvss2']);
+                          if( labelname !== undefined){
+                            athing.graphData['labels'].push(labelname);
+
+                            getCve(labelname).then(response =>  {
+                              if(response['cvss2'] !== undefined){
+                                console.log(parseFloat(response['cvss2']))
+                                athing.graphData['datasets'][0]['data'].push(parseFloat(response['cvss2']))
+                                }
+                            });
+                        }
                 }
-                this.graphData['datasets'].push({ label: 'Severity (CSVSS2)' , backgroundColor: '#00000', data: someData } );
             }
       },
       getRandomInt () {
