@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {apiSignUp,saveToken,postProject,getToken} from '../../../src/utils/api.js'
+import {apiSignUp,saveToken,postProject,getToken,getProject,getProfile,deleteProject, upload} from '../../../src/utils/api.js'
 import 'url-search-params-polyfill';
 var FormData = require('form-data');
 var chai = require('chai');
@@ -14,15 +14,9 @@ describe('API Tests', function() {
   		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		for (var i = 0; i < 8; i++)
 		  creds.name += possible.charAt(Math.floor(Math.random() * possible.length));
-
 		for (var i = 0; i < 8; i++)
 		  creds.password += possible.charAt(Math.floor(Math.random() * possible.length));
-
-
-
-
 		  creds.email = creds.name + "@test.com"
-
           var formCreds = new URLSearchParams();
           formCreds.append('name', creds.name);
           formCreds.append('email',creds.email);
@@ -35,23 +29,40 @@ describe('API Tests', function() {
 
     }, 10000);
 
+    it('should get profile sucessfully', function(){
+    	getProfile().then(resp => (expect(resp).to.have.property("name")));
 
-    it('should create a project', function() {
- 		  var formCreds = new FormData();
-          formCreds.append('name', 'testname');
-          formCreds.append('description', 'testdesc');
-          formCreds.append('language','Java');
-
-          var formCreds = {}
-          formCreds.name = 'testname'
-          formCreds.description = 'testdesc'
-          formCreds.language = 'Java'
-          postProject(formCreds).then(resp => (console.log(resp)));
     });
 
 
 
+    var projectId = ''
+    it('should create a project and delete a project', function(done) {
+          var formCreds = {}
+          formCreds.name = 'testname'
+          formCreds.description = 'testdesc'
+          formCreds.language = 'Java'
+          postProject(formCreds).then(resp => (expect(resp).to.have.property("id"), projectId = resp['id'], deleteProject(projectId),done() ));
+       		this.timeout(10000);
+    },10000);
 
+    it('should recreate a project', function(done) {
+          var formCreds = {}
+          formCreds.name = 'testname'
+          formCreds.description = 'testdesc'
+          formCreds.language = 'Java'
+          postProject(formCreds).then(resp => (expect(resp).to.have.property("id"), projectId = resp['id'], done() ));
+       		this.timeout(10000);
+    },10000);
+
+    it('should get a project', function() {
+          getProject().then(resp => (expect(resp).to.have.property("id")));
+    });
+
+    it('should upload a test file for a new scan', function() {
+
+          createScan(projectId).then(resp => (expect(resp).to.have.property("id")));
+    });
 
 
 
