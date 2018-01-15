@@ -61,6 +61,8 @@ function getProjects() {
 }
 
 function postProject(params){
+	    	  console.log(getToken());
+
 	return axios.post(PROJECTS_URL,params, {headers: {'Authorization': getToken()}}).then(response => response.data);
 }
 
