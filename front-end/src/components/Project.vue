@@ -56,7 +56,7 @@
             <md-icon >assessment</md-icon>
           </md-avatar>
           <div class="md-list-text-container">
-            <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">Scan: {{scan.title}}</router-link>
+            <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">{{scan.alttitle}}</router-link>
             <p> {{scan.source}}</p>
             <p>{{ scan.id }}</p>
 <!--             <p>{{ scan.description }}</p>
@@ -82,11 +82,19 @@
       <vue-event-calendar :events="scansCalendar"></vue-event-calendar>
     </md-tab>
 
+
+       <md-tab id="tab-graph" md-label="Graphs" to="/components/tabs/graph">
+              <div id='graphthing' style="height:500; width:500px;">
+
+                <h1>Number of dependencies</h1> <line-chart :chart-data="depGraphData"></line-chart>
+            </div>
+       </md-tab>
+
     <md-tab id="tab-client" md-label="Setup Client" to="/components/tabs/client">
       <h2>Quickly setup your code for scanning</h2>
       <h3>Linux/MacOS</h3>
       <pre v-highlightjs="clientLinux"><code class="bash"></code></pre>
-      <h3>Windows</h3>
+      <h3><i class="fa fa-camera-retro fa-lg"></i>Windows</h3>
       <a v-bind:href="clientDownload">Download client</a>
       <p> Then run: </p>
       <pre v-highlightjs="clientWindows"><code class="bash"></code></pre>
@@ -109,12 +117,6 @@
 
 
       </md-tab>
-       <md-tab id="tab-graph" md-label="Graphs" to="/components/tabs/graph">
-              <div id='graphthing' style="height:500; width:500px;">
-
-                <h1>Number of dependencies</h1> <line-chart :chart-data="depGraphData"></line-chart>
-            </div>
-       </md-tab>
   </md-tabs>
 
 
@@ -187,6 +189,7 @@
 
           this.scans.forEach(function (scan) {
             scan.title = scan.created_at.slice(0, scan.created_at.length-8).replace("T", "  ");
+            scan.alttitle = scan.created_at.slice(0, scan.created_at.length-8).replace("T", "  ");
           });
           this.scansCalendar.forEach(function (ascan) {
             ascan.title = ascan.created_at.slice(ascan.created_at.length-13, ascan.created_at.length-8).replace("T", "  ");
@@ -251,12 +254,8 @@
           getDependencies(this.$route.params.id,aScan.id).then(response =>  {
 
             this.values = response;
-            // self.depGraphData['datasets'][0]['data'].push(this.values.length)
-            // self.depGraphData['labels'].push(aScan.created_at.slice(0, aScan.created_at.length-8).replace("T", "  "))
-
             data.push(this.values.length)
             labels.push(aScan.created_at.slice(0, aScan.created_at.length-8).replace("T", "  "))
-
             self.depGraphData = {
               labels: labels,
               datasets: [{
@@ -265,8 +264,6 @@
               data: data
               }]
              }
-
-            // self.depGraphData['labels'].push(self.scans[a].id);
           });
           }
 

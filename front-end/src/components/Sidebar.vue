@@ -40,9 +40,9 @@
       <md-list-item @click= "$router.push('/exploit/2016-6662')" >
         <md-icon>warning</md-icon> <span>Exploit Search</span>
       </md-list-item>
-
+      <md-divider class="md-inset"></md-divider>
       <md-list-item @click= "$router.push('/qr/')" >
-        <md-icon>smartphone</md-icon> <span>Open on phone</span>
+        <md-icon>smartphone</md-icon> <span>Open on smartphone</span>
       </md-list-item>
 
       <md-list-item @click= "$router.push('/desktop/')" >

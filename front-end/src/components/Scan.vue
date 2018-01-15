@@ -194,7 +194,7 @@
       this.get_scan();
       this.graphWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       this.graphHeight = window.innerHeight || document.documentElement.clientHeight  || document.body.clientHeight;
-      setInterval(function () {this.get_dependencies();}.bind(this), 30000); 
+      setInterval(function () {this.get_dependencies();}.bind(this), 60000); 
     },
     watch: {
       '$route': 'fetchData'
@@ -284,7 +284,7 @@
             {
               label: ['Safe','Vuln'],
               backgroundColor: [
-              'rgba(65, 184, 131, .8)',
+              '#2ECC40',
               'red'],
               data: [this.dependencies.length-Object.keys(this.vulns).length,Object.keys(this.vulns).length]
             }

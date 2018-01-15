@@ -20,7 +20,7 @@ const ACCESS_TOKEN = 'jwk_access_token'
 
 //Split this file out for tidiness	
 export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
-	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,editScan,
+	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,
 	gemsLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux};
 
 
