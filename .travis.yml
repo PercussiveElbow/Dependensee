@@ -1,4 +1,4 @@
-before_script: cd server
+before_install: cd server
 language: ruby
 rvm:
  - 2.4
