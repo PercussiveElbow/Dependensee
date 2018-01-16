@@ -5,6 +5,9 @@ RUN apt-get update
 RUN mkdir -p /dependensee
 WORKDIR /dependensee
 COPY Gemfile Gemfile.lock ./
+RUN gem install rubygems-update
+RUN update_rubygems
+RUN gem update --system
 RUN gem install bundler && bundle install
 COPY . ./
 EXPOSE 3000
