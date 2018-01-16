@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {apiSignUp,saveToken,postProject,getToken,getProject,getProfile,getCve,deleteProject,upload,getScans,getScan,getDependencies,getJsonReport,editProject} from '../../../src/utils/api.js'
+import {apiSignUp,saveToken,postProject,getToken,getProject,getProfile,getCve,deleteProject,upload,getScans,getScan,getDependencies,getJsonReport,editProject,deleteScan,getProjects} from '../../../src/utils/api.js'
 import 'url-search-params-polyfill';
 var FormData = require('form-data');
 var chai = require('chai');
@@ -57,6 +57,11 @@ describe('API Tests', function() {
        		this.timeout(10000);
     },10000);
 
+
+    it('should get projects successfully', function() {
+          getProjects().then(resp => (expect(resp.length).to.equal(1)));
+    });
+
     it('should get a project successfully', function() {
           getProject(projectId).then(resp => (expect(resp).to.have.property("id")));
     });
@@ -90,5 +95,8 @@ describe('API Tests', function() {
     	getJsonReport(projectId,scanId).then(resp => { expect(resp).to.have.property("org.asynchttpclient.async-http-client") });
     });
 
+    it('should delete scan successfully', function() {
+    	deleteScan(projectId,scanId).then(resp => { getScans(projectId).then(response => { expect(response.length).to.equal(0) } )});
+    });
 
   });

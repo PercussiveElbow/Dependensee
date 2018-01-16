@@ -1,8 +1,9 @@
 var axios = require('axios')
 
- const ADDRESS  = 'http://127.0.0.1';
- const API_URL = ADDRESS + ':3000/'
- const WEB_URL = ADDRESS + ':8080/'
+const ADDRESS  = 'http://127.0.0.1';
+
+const API_URL = ADDRESS + ':3000/'
+const WEB_URL = ADDRESS + ':8080/'
 
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
@@ -22,7 +23,6 @@ const ACCESS_TOKEN = 'jwk_access_token'
 export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
 	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,
 	gemsLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux};
-
 
 //AUTH
 function apiLogin(params) {
