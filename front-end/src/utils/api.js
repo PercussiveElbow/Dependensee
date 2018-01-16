@@ -74,8 +74,7 @@ function getScans(id){
 	return axios.get(PROJECTS_URL+id+SCANS_URL,{headers: {'Authorization': getToken()}}).then (response => response.data);
 }
 
-function upload(id,body){
-	var source = "Web [" + window.navigator.userAgent + "] "
+function upload(id,body,source){
 	return axios.post(PROJECTS_URL+id+UPLOAD_URL, body, {headers: {'Authorization': getToken(), 'Source': source}, 'Content-Type': 'text/plain'}).then(response =>response.data);
 }
 

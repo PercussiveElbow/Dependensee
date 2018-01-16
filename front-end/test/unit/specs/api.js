@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {apiSignUp,saveToken,postProject,getToken,getProject,getProfile,deleteProject, upload} from '../../../src/utils/api.js'
+import {apiSignUp,saveToken,postProject,getToken,getProject,getProfile,getCve,deleteProject, upload} from '../../../src/utils/api.js'
 import 'url-search-params-polyfill';
 var FormData = require('form-data');
 var chai = require('chai');
@@ -30,8 +30,12 @@ describe('API Tests', function() {
     }, 10000);
 
     it('should get profile sucessfully', function(){
-    	getProfile().then(resp => (expect(resp).to.have.property("name")));
+    	getProfile().then(resp => (expect(resp).to.have.property("name"),expect(resp).to.have.property("email") ) );
 
+    });
+
+    it('should get cve sucessfully', function(){
+    	getCve('2017-14063').then(resp => (expect(resp).to.have.property("desc"), expect(resp).to.have.property("cvss2")));
     });
 
 
@@ -61,7 +65,7 @@ describe('API Tests', function() {
 
     it('should upload a test file for a new scan', function() {
 
-          createScan(projectId).then(resp => (expect(resp).to.have.property("id")));
+          upload(projectId,'','TestRun').then(resp => (expect(resp).to.have.property("id")));
     });
 
 

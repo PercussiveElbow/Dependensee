@@ -209,7 +209,7 @@
       var files = e.target.files || e.dataTransfer.files;
       var self = this;
       var fr = new FileReader(); fr.onload = function(e) { 
-        upload(self.$route.params.id,e.target.result).then(response => {
+        upload(self.$route.params.id,e.target.result,"Web [" + window.navigator.userAgent + "] ").then(response => {
           self.$router.push({ path: '/scan/' + self.project.id+'/'+response['scan_id'] });
           self.hide();
           });
