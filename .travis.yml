@@ -5,5 +5,5 @@ rvm:
 script: 
   - bundle install
   - docker-compose build
-  - docker-compose run rails bundle exec rake db:create
+  - docker-compose run rails bundle exec rake db:setup
   - docker-compose up
