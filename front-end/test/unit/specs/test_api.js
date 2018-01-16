@@ -1,16 +1,13 @@
 import Vue from 'vue'
-import {apiSignUp,saveToken,postProject,getToken,getProject,getProfile,getCve,deleteProject,upload,getScans} from '../../../src/utils/api.js'
+import {apiSignUp,saveToken,postProject,getToken,getProject,getProfile,getCve,deleteProject,upload,getScans,getScan,getDependencies} from '../../../src/utils/api.js'
 import 'url-search-params-polyfill';
 var FormData = require('form-data');
 var chai = require('chai');
 var expect = chai.expect;
 var should = chai.should();
-var FileReader = require('filereader')
 var fs = require('fs');
 
-
 describe('API Tests', function() {
-  describe('#test thing()', function() {
   	var projectId = ''
     var scanId = ''
 
@@ -61,12 +58,12 @@ describe('API Tests', function() {
     },10000);
 
     it('should get a project', function() {
-          getProject().then(resp => (expect(resp).to.have.property("id")));
+          getProject(projectId).then(resp => (expect(resp).to.have.property("id")));
     });
 
     it('should upload a test file for a new scan', function(done) {
 	  var contents = fs.readFileSync('test/unit/specs/pom.xml.test', 'utf8');
-      upload(projectId,contents,"Web [TestRun] ").then(resp => { expect(resp).to.have.property("scan_id"), expect(resp).to.have.property("dependencies"),expect(resp).to.have.property("type"), scanId = resp['scanId'],done()    });
+      upload(projectId,contents,"Web [TestRun] ").then(resp => { expect(resp).to.have.property("scan_id"), expect(resp).to.have.property("dependencies"),expect(resp).to.have.property("type"), scanId = resp['scan_id'],done()    });
       this.timeout(10000);
     },10000);
 
@@ -74,9 +71,12 @@ describe('API Tests', function() {
     	getScans(projectId).then(resp => {expect(resp.length).to.equal(1)});
     });
 
+    it('should get the individual scan', function() {
+    	getScan(projectId,scanId).then(resp => {expect(resp).to.have.property("id")});
+    });
+
+    it('should get dependencies', function() {
+    	getDependencies(projectId,scanId).then(resp => { expect(resp.length).to.equal(6) });
+    });
 
   });
-
-
-
-});
