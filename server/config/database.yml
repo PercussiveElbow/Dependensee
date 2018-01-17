@@ -1,40 +1,40 @@
-#development:
-#  adapter: postgresql
-#  encoding: unicode
-#  database: pg_dev
-#  pool: 10
-#  username: adam
-#  password: postgres
-#
-#test:
-#  adapter: postgresql
-#  encoding: unicode
-#  database: pg_test
-#  pool: 5
-#  username: adam
-#  password: postgres
-#
-#production:
-#  adapter: postgresql
-#  encoding: unicode
-#  database: pg_prod
-#  pool: 5
-#  username: adam
-#  password: postgres
-
-default: &default
-  adapter: postgresql
-  encoding: unicode
-  host: postgres
-  username: postgres
-  password:
-  pool: 5
-
 development:
-  <<: *default
-  database: myapp_development
-
+ adapter: postgresql
+ encoding: unicode
+ database: pg_dev
+ pool: 10
+ username: adam
+ password: postgres
 
 test:
-  <<: *default
-  database: myapp_test
+ adapter: postgresql
+ encoding: unicode
+ database: pg_test
+ pool: 5
+ username: adam
+ password: postgres
+
+production:
+ adapter: postgresql
+ encoding: unicode
+ database: pg_prod
+ pool: 5
+ username: adam
+ password: postgres
+
+# default: &default
+#   adapter: postgresql
+#   encoding: unicode
+#   host: postgres
+#   username: postgres
+#   password:
+#   pool: 5
+
+# development:
+#   <<: *default
+#   database: myapp_development
+
+
+# test:
+#   <<: *default
+#   database: myapp_test
