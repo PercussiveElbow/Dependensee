@@ -8,6 +8,7 @@ class CreateDependencies < ActiveRecord::Migration[5.1]
       t.string :version
       t.string :raw
       t.references :scan, foreign_key: true, type: :uuid
+      t.string :update_to
 
       t.timestamps
     end

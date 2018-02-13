@@ -19,6 +19,7 @@
         </md-button>
         <h2 class="md-title">Scan: {{scan.title}}</h2>
         <md-button class="md-icon-button md-list-action"  @click=view_vulns()><md-icon>file_download</md-icon></md-button>
+        <md-button class="md-icon-button md-list-action"  @click=update_deps()><md-icon>system_update_alt</md-icon></md-button>
       </div>
     </md-toolbar>
   </md-whiteframe>
@@ -150,7 +151,7 @@
 </template>
 
 <script>
-  import {getProject,getScan,upload,getDependencies,getJsonReport,getCve,getPdfReport,getTxtReport,getExploit} from '../utils/api.js';
+  import {getProject,getScan,upload,getDependencies,getJsonReport,getCve,getPdfReport,getTxtReport,getExploit,updateScan} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import PieChart from '../utils/PieChart.js'
   import BarChart from '../utils/BarChart.js'
@@ -235,6 +236,15 @@
               { title: 'TXT', handler: () => { getTxtReport(this.$route.params.project_id,this.$route.params.scan_id) } },
               { title: 'HTML', handler: () => {alert('Html reports not implemented yet')}}
            ]
+          })
+      },
+      update_deps(){
+        this.$modal.show('dialog', {
+            title: 'Update dependencies',
+            buttons: [
+              { title: 'Normal', handler: () => { updateScan(this.$route.params.project_id,this.$route.params.scan_id, 'normal') } },
+              { title: 'Major', handler: () => { updateScan(this.$route.params.project_id,this.$route.params.scan_id, 'Major') } },
+              { title: 'Minor', handler: () => { updateScan(this.$route.params.project_id,this.$route.params.scan_id, 'Minor') } }          ]
           })
       },
       openCVEModal(vuln){

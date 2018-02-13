@@ -85,7 +85,7 @@ class UploadController < ApplicationController
   # PYTHON
   def handle_python
     deps = pip_decode
-    scan = @project.scans.create!(:source => request.headers['source'])
+    scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'none')
 
     deps.each { |dep| scan.dependencies.create(name: dep['name'], version: dep['version'], language: 'python', raw: dep) }
     deps =  Dependency.where(['scan_id = ?', scan.id])

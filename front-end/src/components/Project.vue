@@ -94,7 +94,7 @@
       <h2>Quickly setup your code for scanning</h2>
       <h3>Linux/MacOS</h3>
       <pre v-highlightjs="clientLinux"><code class="bash"></code></pre>
-      <h3><i class="fa fa-camera-retro fa-lg"></i>Windows</h3>
+      <h3>Windows</h3>
       <a v-bind:href="clientDownload">Download client</a>
       <p> Then run: </p>
       <pre v-highlightjs="clientWindows"><code class="bash"></code></pre>

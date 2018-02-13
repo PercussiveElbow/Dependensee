@@ -22,7 +22,7 @@ const ACCESS_TOKEN = 'jwk_access_token'
 //Split this file out for tidiness	
 export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
 	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,
-	gemsLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux};
+	gemsLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux,updateScan};
 
 //AUTH
 function apiLogin(params) {
@@ -72,6 +72,10 @@ function getScan(project_id,scan_id){
 
 function getScans(id){
 	return axios.get(PROJECTS_URL+id+SCANS_URL,{headers: {'Authorization': getToken()}}).then (response => response.data);
+}
+
+function updateScan(id,scan_id,type){
+	return axios.put(PROJECTS_URL+id+SCANS_URL+scan_id,{'needs_update': type}, {headers: {'Authorization': getToken()}} ).then(response => response.data);
 }
 
 function upload(id,body,source){

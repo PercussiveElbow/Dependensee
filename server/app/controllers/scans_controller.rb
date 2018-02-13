@@ -34,7 +34,7 @@ class ScansController < ApplicationController
   private
 
   def scans_params
-    params.permit(:source)
+    params.permit(:source, :needs_update)
   end
 
   def get_project_by_id

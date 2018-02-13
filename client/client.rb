@@ -5,7 +5,7 @@ require 'json'
 # Hard coded for now, these will be changed, shouldn't put api keys in VC but its just dummy accounts whoops/home/adam/RubymineProjects/dependensee/client/client.rb
 TIMEOUT = 360
 SERVER_URL = 'http://127.0.0.1:3000'
-AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZGE5Y2VhOTEtNDhkNC00YTIyLTkxOTctZGYwZDA3ZjA3YTAzIiwiZXhwIjoxNTE2MjgwMjI1fQ.EQ3oDn3sGTZZ_GczWTDAl5dK1WdD1Rq5ub7PklaqEwI'
+AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZGE5Y2VhOTEtNDhkNC00YTIyLTkxOTctZGYwZDA3ZjA3YTAzIiwiZXhwIjoxNTE4NTM1NTgxfQ.0iZ7s2HdyIp3f_-7P6r6wWyQ2a0UlVE3h2CA9ck4u2k'
 ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
 #print "Auth key #{ENV['depAPIKey']}\n"
 
@@ -83,6 +83,11 @@ def output(resp)
       print "Dependency #{dependency} has vulnerability. CVE ID: #{vuln['cve']}\n"
     end
   end
+end
+
+
+def ruby_update
+    code = system("bundle exec rails")
 end
 
 while true
