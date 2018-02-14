@@ -4,7 +4,7 @@
     <Sidebar ref='sidebar'></Sidebar>
 
   <md-whiteframe md-elevation="3" class="main-toolbar">
-    <md-toolbar class="md-large">
+    <md-toolbar class="md-dense">
       <div class="md-toolbar-container">
         <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()" ><md-icon>menu</md-icon></md-button>
         <h2 class="md-title" @click="$router.push({ path: '/project/'+project.id });">Project: {{project.name}}</h2><span style="flex: 1"></span>
@@ -101,7 +101,7 @@
                  {{patched}}</br>
               </span>
               </br>
-              <span v-if="cve.unaffected_versions.length>0" class="md-subheading" style="font-weight: bold">Unaffected versions</span ></br>
+              <span  class="md-subheading" style="font-weight: bold">Unaffected versions</span ></br>
               <span v-for="unaffected in cve.unaffected_versions">
                  {{unaffected}}</br>
               </span>
@@ -300,7 +300,7 @@
               backgroundColor: [
               '#2ECC40',
               'red'],
-              data: [this.dependencies.length-Object.keys(this.vulns).length,Object.keys(this.vulns).length]
+              data: [this.dependencies.length-Object.getOwnPropertyNames(this.vulns).length+1,Object.getOwnPropertyNames(this.vulns).length-1]
             }
           ]
         }

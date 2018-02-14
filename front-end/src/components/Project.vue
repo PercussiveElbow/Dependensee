@@ -4,7 +4,7 @@
     <Sidebar ref='sidebar'></Sidebar>
   
   <md-whiteframe md-elevation="3" class="main-toolbar">
-    <md-toolbar class="md-large">
+    <md-toolbar class="md-dense">
       <div class="md-toolbar-container">
         <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()">
           <md-icon>menu</md-icon>

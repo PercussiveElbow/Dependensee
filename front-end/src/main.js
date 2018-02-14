@@ -6,7 +6,6 @@ import 'vue-material/dist/vue-material.css'
 import './assets/font-mfizz-2.4.1/font-mfizz.css'
 import './assets/gfont/dosis.css'
 import 'vue-event-calendar/dist/style.css'
-import './assets/fontawesome/css/fontawesome.min.css'
 
 import VueResource from 'vue-resource'
 import VueMaterial from 'vue-material'
