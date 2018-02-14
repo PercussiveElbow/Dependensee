@@ -4,7 +4,7 @@
       <md-layout md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
         <md-card-header><div class="md-title">Signup</div></md-card-header>
         <md-card-content>
-          <md-input-container><md-icon>person</md-icon><label>Name</label><md-input v-model="creds.name"></md-input></md-input-container>
+          <md-input-container><md-icon>person</md-icon><label>Name</label><md-input maxlength="25" v-model="creds.name"></md-input></md-input-container>
           <md-input-container><md-icon>mail</md-icon><label>Email</label><md-input v-model="creds.email"></md-input></md-input-container>
           <md-input-container><md-icon>lock</md-icon><label>Password</label><md-input v-model="creds.password" type="password"></md-input></md-input-container>
         </md-card-content>

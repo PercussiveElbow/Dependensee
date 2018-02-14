@@ -5,7 +5,7 @@ require 'json'
 # Hard coded for now, these will be changed, shouldn't put api keys in VC but its just dummy accounts whoops/home/adam/RubymineProjects/dependensee/client/client.rb
 TIMEOUT = 360
 SERVER_URL = 'http://127.0.0.1:3000'
-AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZGE5Y2VhOTEtNDhkNC00YTIyLTkxOTctZGYwZDA3ZjA3YTAzIiwiZXhwIjoxNTE4NTM1NTgxfQ.0iZ7s2HdyIp3f_-7P6r6wWyQ2a0UlVE3h2CA9ck4u2k'
+AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZjA0MjA0MmYtYWMyMC00ODQ3LTkwMmQtMjM1OTA2OGEwNGY3IiwiZXhwIjoxNTE4NzI2NjE5fQ._PdOjIlxCDijn59tdZXetgtGkXU29tq8qhj_N_EmZH0'
 ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
 #print "Auth key #{ENV['depAPIKey']}\n"
 
@@ -75,6 +75,7 @@ end
 
 def output(resp)
   print "Scan completed. Scan id: #{JSON[resp.body]['scan_id']}\n"
+  @scan_id = JSON[resp.body]['scan_id']
   print "Scan completed. Dependencies found: #{JSON[resp.body]['dependencies']}\n"
   print "Scan completed. Vulnerabilities found: #{JSON[resp.body]['vunerability_count']}\n"
   print "Scan completed. Vulnerabilities: \n"
@@ -86,6 +87,16 @@ def output(resp)
 end
 
 
+def check_update(scan_id)
+  uri = URI.parse(SERVER_URL + '/projects/' + @project_id + '/scans/' +scan_id)
+  http = Net::HTTP.new(uri.host, uri.port)
+  request = Net::HTTP::Get.new(uri.request_uri)
+  request['Authorization'] = AUTH_KEY
+  resp = http.request(request)
+  print 'Checking if scan needs update...' + JSON[resp.body]['needs_update']
+end
+
+
 def ruby_update
     code = system("bundle exec rails")
 end
@@ -94,5 +105,6 @@ while true
   print "Beginning scan at #{Time.new.inspect}\n"
   scan
   print "Sleeping for #{TIMEOUT} seconds.\n"
+  check_update(@scan_id)
   sleep TIMEOUT
 end

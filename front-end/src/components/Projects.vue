@@ -23,8 +23,8 @@
       <modal name="create-project" :height="350" :adaptive="true" >
         <div style="padding: 30px; text-align: center">
           <h2 >Add a new project</h2>
-          <md-input-container><md-icon>work</md-icon><label>New Project</label><md-input name v-model="newproject.name"/></md-input-container>
-          <md-input-container><md-icon>description</md-icon><label>Description</label><md-input name v-model="newproject.description"/></md-input-container>
+          <md-input-container><md-icon>work</md-icon><label>New Project</label><md-input maxlength="20" name v-model="newproject.name"/></md-input-container>
+          <md-input-container><md-icon>description</md-icon><label>Description</label><md-input maxlength="30" name v-model="newproject.description"/></md-input-container>
           <select v-model="newproject.language">
             <option disabled value="">Language</option><option>Ruby</option><option>Java</option><option>Python</option>
           </select>

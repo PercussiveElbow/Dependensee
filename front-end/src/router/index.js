@@ -11,8 +11,6 @@ import Qr from '@/components/Qr'
 
 Vue.use(Router);
 
-
-
 export default new Router({
  routes: [
     {
