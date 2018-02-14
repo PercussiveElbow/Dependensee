@@ -48,16 +48,20 @@
         <main class="main-content">
           <div>
             <md-list class="md-double-line">
-                <md-list-item v-for="vuln in vulns">
+
+
+                <h4 style="text-align: left" v-for="(vuln,title) in vulns">{{title}}
+                <md-list-item v-for="thing in vuln">
                   <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" ><md-icon >warning</md-icon></md-avatar>
                   <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon >warning</md-icon></md-avatar>
                   <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon >warning</md-icon></md-avatar>
                   <div class="md-list-text-container">
-                    <a @click=openCVEModal(vuln)>CVE-{{vuln[0].cve}}</a>
-                    <p>Our ver: {{ vuln[0].our_version }}</p>
-                    <p>Patched ver: {{ vuln[0].patched_version }}</p>
+                    <a @click=openCVEModal(vuln)>CVE-{{thing.cve}}</a>
+                    <p>Our ver: {{ thing.our_version }}</p>
+                    <p>Patched ver: {{ thing.patched_version }}</p>
                   </div>
                 </md-list-item>
+              </h4>
             </md-list>
           </div>
         </main>     
@@ -97,7 +101,7 @@
                  {{patched}}</br>
               </span>
               </br>
-              <span class="md-subheading" style="font-weight: bold">Unaffected versions</span ></br>
+              <span v-if="cve.unaffected_versions.length>0" class="md-subheading" style="font-weight: bold">Unaffected versions</span ></br>
               <span v-for="unaffected in cve.unaffected_versions">
                  {{unaffected}}</br>
               </span>

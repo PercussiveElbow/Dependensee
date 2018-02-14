@@ -45,7 +45,7 @@ class UploadController < ApplicationController
   # JAVA
   def handle_java
     deps = pom_decode
-    scan = @project.scans.create!(:source => request.headers['source'])
+    scan =@project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
     deps.each { |dep| scan.dependencies.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], language: 'java', raw: dep) }
 
     deps =  Dependency.where(['scan_id = ?', scan.id])
@@ -65,7 +65,7 @@ class UploadController < ApplicationController
   # RUBY
   def handle_ruby
     deps = gem_decode
-    scan = @project.scans.create!(:source => request.headers['source'])
+    scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
 
     deps.each { |dep| scan.dependencies.create(name: dep.name, version: dep.version, language: 'ruby', raw: dep) }
     deps =  Dependency.where(['scan_id = ?', scan.id])
@@ -85,7 +85,7 @@ class UploadController < ApplicationController
   # PYTHON
   def handle_python
     deps = pip_decode
-    scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'none')
+    scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
 
     deps.each { |dep| scan.dependencies.create(name: dep['name'], version: dep['version'], language: 'python', raw: dep) }
     deps =  Dependency.where(['scan_id = ?', scan.id])
