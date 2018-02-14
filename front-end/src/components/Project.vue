@@ -60,14 +60,16 @@
         </md-tab>
         <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
           <div>
-            <md-switch v-model="boolean">Automatically Scan</md-switch>
+            <md-switch :v-model="settings.scan">Automatically Scan</md-switch>
           </div>
           <div>
             <h3> Scan every: </h3>
-            <md-radio v-model="radio" :value="false">Minute</md-radio>
-            <md-radio v-model="radio" value="my-radio">Hour</md-radio>
-            <md-radio v-model="radio">Day</md-radio>
-            <md-radio v-model="radio" >Week</md-radio>
+            <select v-model="settings.timeout" name="Timeout">
+              <option value=60>Minute</option>
+              <option value=3600>Hour</option>
+              <option value=86400>Day</option>
+              <option value=60 >Week</option>
+            </select>
           </div>
           <md-button class="md-raised md-primary" v-on:click=saveSettings>Save settings</md-button>
         </md-tab>
@@ -85,7 +87,7 @@
 </template>
 
 <script>
-  import {getToken,getProject,getScans,getDependencies,upload,getJsonReport,deleteScan,getClientLinux,getClientDownload} from '../utils/api.js';
+  import {getToken,getProject,getScans,getDependencies,upload,getJsonReport,deleteScan,getClientLinux,getClientDownload,editProject} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import LineChart from '../utils/LineChart'
 
@@ -106,11 +108,14 @@
         clientDownload: '',
         clientLinux: '',
         clientWindows: '',
-        boolean: true,
         depGraphData: {
           labels: [],
           data: []
         },
+        settings: {
+          scan: false,
+          timeout: 3600
+        }
        }
     },
     created() {
@@ -130,10 +135,8 @@
           });},
       get_scans() {
           getScans(this.$route.params.id).then(response =>  {
-
           this.scans = response;
           this.scansCalendar = response;
-
           this.scans.forEach(function (scan) {
             scan.title = scan.created_at.slice(0, scan.created_at.length-8).replace("T", "  ");
             scan.alttitle = scan.created_at.slice(0, scan.created_at.length-8).replace("T", "  ");
@@ -151,6 +154,12 @@
       delete_scan(id) {
         deleteScan(this.$route.params.id,id)
         this.get_scans;
+      },
+      saveSettings(){
+          var formCreds = new FormData();
+          formCreds.append('active',this.settings.scan);
+          formCreds.append('timeout',this.settings.timeout);
+          editProject(this.$route.params.id,formCreds);
       },
       handle_upload_file(e){
         var files = e.target.files || e.dataTransfer.files;
