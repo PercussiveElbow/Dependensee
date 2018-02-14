@@ -1,36 +1,21 @@
 <template>
-<div id="app" v-bind:style="{ 'background-image': 'url(' + background + ')' }">
-  <md-layout md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
-    <md-layout  style=" background-color: black" md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
-      <md-card-header>
-        <div class="md-title">Login</div>
-      </md-card-header>
+  <div id="app" v-bind:style="{ 'background-image': 'url(' + background + ')' }">
+    <md-layout md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
+      <md-layout  style=" background-color: black" md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
+        <md-card-header><div class="md-title">Login</div></md-card-header>
+        <md-card-content>
+          <md-input-container><md-icon>mail</md-icon><label>Email</label><md-input email v-model="creds.email" /></md-input-container>
+          <md-input-container md-has-password><md-icon>lock</md-icon><label>Password</label><md-input type="password" v-model="creds.password"/></md-input-container>
+        </md-card-content>
 
-      <md-card-content>
-        <md-input-container>
-          <md-icon>mail</md-icon>
-          <label>Email</label>
-          <md-input email v-model="creds.email" />
-        </md-input-container>
-
-        <md-input-container md-has-password>
-          <md-icon>lock</md-icon>
-          <label>Password</label>
-          <md-input type="password" v-model="creds.password" />
-        </md-input-container>
-      </md-card-content>
-
-    <md-card-actions>
-      <md-button class="md-raised md-primary" v-on:click="$router.push('/Signup')">Signup</md-button>
-       <md-button class="md-raised md-primary" v-on:click=handleLogin>Login</md-button>
-    </md-card-actions>
+        <md-card-actions>
+          <md-button class="md-raised md-primary" v-on:click="$router.push('/Signup')">Signup</md-button>
+          <md-button class="md-raised md-primary" v-on:click=handleLogin>Login</md-button>
+        </md-card-actions>
+      </md-layout>
     </md-layout>
-  </md-layout>
-
-
-</div>
+  </div>
 </template>
-
 
 <script>
 var  Trianglify = require('trianglify')
@@ -75,7 +60,6 @@ var  Trianglify = require('trianglify')
       },
       created() {
           var key = this.$route.query.key
-
           if(key == undefined) {
           }else{
             console.log("Attempt setting key from QR")
@@ -86,11 +70,4 @@ var  Trianglify = require('trianglify')
           console.log(this.background);
       }
 }
-
-
 </script>
-
-
-<style>
-
-</style

@@ -1,143 +1,90 @@
 <template>
   <div id ='something'>
     <div class="app-viewport" id="file-list">
-    <Sidebar ref='sidebar'></Sidebar>
-  
-  <md-whiteframe md-elevation="3" class="main-toolbar">
-    <md-toolbar class="md-dense">
-      <div class="md-toolbar-container">
-        <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()">
-          <md-icon>menu</md-icon>
-        </md-button>
-  
-        <span style="flex: 1"></span>
-  
-        <md-button class="md-icon-button">
-          <md-icon>search</md-icon>
-        </md-button>
-  
-        <md-button class="md-icon-button">
-          <md-icon>view_module</md-icon>
-        </md-button>
-      </div>
-
-
-      <div class="md-toolbar-container">
-          <md-button class="md-icon-button"  @click="$router.go(-1);">
-          <md-icon>home</md-icon>
-        </md-button>
-        <h2 class="md-title">Project: {{project.name}}</h2>
-        <span style="flex: 1"></span>
-          <md-button @click=show class="md-fab md-mini">
-          <md-icon>file_upload</md-icon>
-        </md-button>
-      </div>
-    </md-toolbar>
-
-  </md-whiteframe>
-
-        <md-tabs>
-      <md-tab id="tab-scans" md-label="Scans" to="/components/tabs/scans">
-
-
-      <main class="main-content">
-
-        <div>
-      <md-list class="md-double-line">
-        <md-list-item v-for="scan in scans">
-
-          <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" >
-            <md-icon >assessment</md-icon>
-          </md-avatar>
-          <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'" >
-            <md-icon >assessment</md-icon>
-          </md-avatar>
-                <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'" >
-            <md-icon >assessment</md-icon>
-          </md-avatar>
-          <div class="md-list-text-container">
-            <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">{{scan.alttitle}}</router-link>
-            <p> {{scan.source}}</p>
-            <p>{{ scan.id }}</p>
-<!--             <p>{{ scan.description }}</p>
- -->          </div>
-
-          <md-button class="md-icon-button md-list-action"  @click=delete_scan(scan.id)>
-            <md-icon>delete</md-icon>
-          </md-button>
-          <md-button class="md-icon-button md-list-action"  @click=view_vulns(scan.id)>
-            <md-icon>file_download</md-icon>
-          </md-button>
-
-        </md-list-item>
-      </md-list>
-      <v-dialog/>
-
-      </div>
-
-      </main>
-    </md-tab>
-
-    <md-tab id="tab-history" md-label="History" to="/components/tabs/history">
-      <vue-event-calendar :events="scansCalendar"></vue-event-calendar>
-    </md-tab>
-
-
-       <md-tab id="tab-graph" md-label="Graphs" to="/components/tabs/graph">
-              <div id='graphthing' style="height:500; width:500px;">
-
-                <h1>Number of dependencies</h1> <line-chart :chart-data="depGraphData"></line-chart>
+      <Sidebar ref='sidebar'></Sidebar>
+      <md-whiteframe md-elevation="3" class="main-toolbar">
+        <md-toolbar class="md-dense">
+          <div class="md-toolbar-container">
+            <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()"><md-icon>menu</md-icon></md-button>
+            <span style="flex: 1"></span>
+            <md-button class="md-icon-button"><md-icon>search</md-icon></md-button>
+            <md-button class="md-icon-button"><md-icon>view_module</md-icon></md-button>
+          </div>
+          <div class="md-toolbar-container">
+            <md-button class="md-icon-button"  @click="$router.go(-1);"><md-icon>home</md-icon></md-button>
+            <h2 class="md-title">Project: {{project.name}}</h2>
+            <span style="flex: 1"></span>
+            <md-button @click=show class="md-fab md-mini"><md-icon>file_upload</md-icon></md-button>
+          </div>
+        </md-toolbar>
+      </md-whiteframe>
+      <md-tabs>
+        <md-tab id="tab-scans" md-label="Scans" to="/components/tabs/scans">
+          <main class="main-content">
+            <div>
+              <md-list class="md-double-line">
+                <md-list-item v-for="scan in scans">
+                  <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'"><md-icon >assessment</md-icon></md-avatar>
+                  <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon >assessment</md-icon></md-avatar>
+                  <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon >assessment</md-icon></md-avatar>
+                  <div class="md-list-text-container">
+                    <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">{{scan.alttitle}}</router-link>
+                    <p> {{scan.source}}</p>
+                    <p>{{ scan.id }}</p>
+        <!--             <p>{{ scan.description }}</p>
+         -->      </div>
+                  <md-button class="md-icon-button md-list-action" @click=delete_scan(scan.id)><md-icon>delete</md-icon></md-button>
+                  <md-button class="md-icon-button md-list-action" @click=view_vulns(scan.id)><md-icon>file_download</md-icon></md-button>
+                </md-list-item>
+              </md-list>
+              <v-dialog/>
             </div>
-       </md-tab>
-
-    <md-tab id="tab-client" md-label="Setup Client" to="/components/tabs/client">
-      <h2>Quickly setup your code for scanning</h2>
-      <h3>Linux/MacOS</h3>
-      <pre v-highlightjs="clientLinux"><code class="bash"></code></pre>
-      <h3>Windows</h3>
-      <a v-bind:href="clientDownload">Download client</a>
-      <p> Then run: </p>
-      <pre v-highlightjs="clientWindows"><code class="bash"></code></pre>
-    </md-tab>
-
-      <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
-
-      <div>
-      <md-switch v-model="boolean">Automatically Scan</md-switch>
-      <md-switch v-model="boolean" class="md-primary">Attempt Update</md-switch>
-      </div>
-
-      <div>
-        <h3> Scan every: </h3>
-        <md-radio v-model="radio" :value="false">Minute</md-radio>
-        <md-radio v-model="radio" value="my-radio">Hour</md-radio>
-        <md-radio v-model="radio">Day</md-radio>
-        <md-radio v-model="radio" >Week</md-radio>
-      </div>
-
-
-      </md-tab>
-  </md-tabs>
-
-
-</div>
-
-<modal name="upload"         :height="200" :adaptive="true" @opened="opened">
-    <div style="padding: 30px; text-align: center">
-          <h2 v-if="project.language == 'Ruby' " >Upload Gemfile</h2>
-          <h2 v-if="project.language  === 'Java' " >Upload Pomfile</h2>
-          <h2 v-if="project.language  === 'Python' " >Upload Requirements.txt</h2>
-    <form enctype="multipart/form-data">
-      <input type="file" @change="handle_upload_file">
-    </form>
+          </main>
+        </md-tab>
+        <md-tab id="tab-history" md-label="History" to="/components/tabs/history">
+          <vue-event-calendar :events="scansCalendar"></vue-event-calendar>
+        </md-tab>
+        <md-tab id="tab-graph" md-label="Graphs" to="/components/tabs/graph">
+          <div id='graphthing' style="height:500; width:500px;">
+            <h1>Number of dependencies</h1> <line-chart :chart-data="depGraphData"></line-chart>
+          </div>
+        </md-tab>
+        <md-tab id="tab-client" md-label="Setup Client" to="/components/tabs/client">
+          <h2>Quickly setup your code for scanning</h2>
+          <h3>Linux/MacOS</h3>
+          <pre v-highlightjs="clientLinux"><code class="bash"></code></pre>
+          <h3>Windows</h3>
+          <a v-bind:href="clientDownload">Download client</a>
+          <p> Then run: </p>
+          <pre v-highlightjs="clientWindows"><code class="bash"></code></pre>
+        </md-tab>
+        <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
+          <div>
+            <md-switch v-model="boolean">Automatically Scan</md-switch>
+            <md-switch v-model="boolean" class="md-primary">Attempt Update</md-switch>
+          </div>
+          <div>
+            <h3> Scan every: </h3>
+            <md-radio v-model="radio" :value="false">Minute</md-radio>
+            <md-radio v-model="radio" value="my-radio">Hour</md-radio>
+            <md-radio v-model="radio">Day</md-radio>
+            <md-radio v-model="radio" >Week</md-radio>
+          </div>
+        </md-tab>
+      </md-tabs>
     </div>
-</modal>
+    <modal name="upload"         :height="200" :adaptive="true" @opened="opened">
+        <div style="padding: 30px; text-align: center">
+              <h2 v-if="project.language == 'Ruby' " >Upload Gemfile</h2>
+              <h2 v-if="project.language  === 'Java' " >Upload Pomfile</h2>
+              <h2 v-if="project.language  === 'Python' " >Upload Requirements.txt</h2>
+        <form enctype="multipart/form-data"><input type="file" @change="handle_upload_file"></form>
+        </div>
+    </modal>
   </div>
-
 </template>
 
 <script>
-
   import {getToken,getProject,getScans,getDependencies,upload,getJsonReport,deleteScan,getClientLinux,getClientDownload} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import LineChart from '../utils/LineChart'
@@ -206,15 +153,15 @@
         this.get_scans;
       },
       handle_upload_file(e){
-      var files = e.target.files || e.dataTransfer.files;
-      var self = this;
-      var fr = new FileReader(); fr.onload = function(e) { 
-        upload(self.$route.params.id,e.target.result,"Web [" + window.navigator.userAgent + "] ").then(response => {
-          self.$router.push({ path: '/scan/' + self.project.id+'/'+response['scan_id'] });
-          self.hide();
-          });
-      }; 
-      fr.readAsText(files[0]);
+        var files = e.target.files || e.dataTransfer.files;
+        var self = this;
+        var fr = new FileReader(); fr.onload = function(e) { 
+          upload(self.$route.params.id,e.target.result,"Web [" + window.navigator.userAgent + "] ").then(response => {
+            self.$router.push({ path: '/scan/' + self.project.id+'/'+response['scan_id'] });
+            self.hide();
+            });
+        }; 
+        fr.readAsText(files[0]);
       },
       show () {this.$modal.show('upload');},
       hide () {this.$modal.hide('upload');},
@@ -241,9 +188,7 @@
           } 
           ]
         }
-
         var self = this;
-
         var data = []
         var labels = []
         var locScans = this.scans;
@@ -266,12 +211,10 @@
              }
           });
           }
-
     }
     }
   } 
 </script>
-
 
 <style scoped>
 html,
@@ -296,24 +239,14 @@ body,
   top: 60px;
   left: 0;
   z-index: 10;
-  
   .md-icon {
     color: #fff;
   }
-}
-
-.md-title {
-  padding-left: 8px;
-  color: #fff;
 }
 
 .main-content {
   position: relative;
   z-index: 1;
   overflow: auto;
-}
-
-.md-tab {
-   background-color: white;
 }
 </style>
