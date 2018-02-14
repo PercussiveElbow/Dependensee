@@ -61,7 +61,6 @@
         <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
           <div>
             <md-switch v-model="boolean">Automatically Scan</md-switch>
-            <md-switch v-model="boolean" class="md-primary">Attempt Update</md-switch>
           </div>
           <div>
             <h3> Scan every: </h3>
@@ -70,6 +69,7 @@
             <md-radio v-model="radio">Day</md-radio>
             <md-radio v-model="radio" >Week</md-radio>
           </div>
+          <md-button class="md-raised md-primary" v-on:click=saveSettings>Save settings</md-button>
         </md-tab>
       </md-tabs>
     </div>

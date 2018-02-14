@@ -6,7 +6,7 @@ class CreateScans < ActiveRecord::Migration[5.1]
       t.string :source
       t.references :project, foreign_key: true, type: :uuid
       # t.references :dependency, foreign_key: true
-      t.string :needs_update
+      t.string :needs_update, default: false
 
       t.timestamps
     end
