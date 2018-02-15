@@ -8,7 +8,7 @@
           <md-input-container md-has-password><md-icon>lock</md-icon><label>Password</label><md-input type="password" v-model="creds.password"/></md-input-container>
         </md-card-content>
         <md-card-actions>
-          <md-button class="md-raised md-primary" v-on:click="$router.push('/Signup')">Signup</md-button>
+          <md-button class="md-raised md-primary" v-on:click="$router.push('/signup')">Signup</md-button>
           <md-button class="md-raised md-primary" v-on:click=handleLogin>Login</md-button>
         </md-card-actions>
       </md-layout>
@@ -42,8 +42,7 @@ var  Trianglify = require('trianglify')
         isSucessfulSignin(resp){
           console.log(resp);
           if(resp.auth_token === null ){
-            //throw error
-            console.log('Signup failed, handle validation response');
+            alert('Signup failed:');
           }else{
             console.log('Token saved');
             saveToken(resp);

@@ -37,13 +37,9 @@ function isValidToken() {
 	var isValid;
 	getProjects( {headers: {'Authorization': getToken()} }).catch(function (error) {
     if (error.response) {
-      this.$router.push('/login');
-      console.log(error.response.data);
-      console.log(error.response.status);
-      console.log(error.response.headers);
-      return "Token not valid"
+      return false
     }else{
-    	return "Token valid"
+    	return true
     }
 	});
 }

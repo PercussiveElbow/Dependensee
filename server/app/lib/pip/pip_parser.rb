@@ -24,7 +24,7 @@ class PipParser < BaseParser
     # TODO add support/ignore for git repo links?
     @pipfile.each_line do |line|
       line = line.gsub("\n",'')
-      name = line.gsub(/[^a-z]/i,'')
+      name = line.gsub(/[^a-z\-]/i,'')
       version = line.gsub(/[^0-9=>.]/i,'')
       deps.push({'name'=>name,'version'=>version,'raw'=>line})
     end
