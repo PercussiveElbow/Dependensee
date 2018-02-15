@@ -67,7 +67,6 @@ var  Trianglify = require('trianglify')
             this.$router.push('/projects');
           }
           this.background = this.backgroundPattern()
-          console.log(this.background);
       }
 }
 </script>

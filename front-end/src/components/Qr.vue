@@ -40,9 +40,7 @@
       Sidebar
     },
     created: function() {
-        this.qr = getQr()
-    },
-    methods: {
+      this.qr = getQr()
     }
 }
 </script>

@@ -13,8 +13,8 @@ module CustomException
   included do
     rescue_from ActiveRecord::RecordInvalid, with: :unprocessable
     rescue_from CustomException::AuthenticationError, with: :no_auth
-    rescue_from CustomException::MissingToken, with: :unprocessable
-    rescue_from CustomException::InvalidToken, with: :unprocessable
+    rescue_from CustomException::MissingToken, with: :no_auth
+    rescue_from CustomException::InvalidToken, with: :no_auth
     rescue_from CustomException::NotFound, with: :not_found
 
     rescue_from ActiveRecord::RecordNotFound do |e|

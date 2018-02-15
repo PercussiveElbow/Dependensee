@@ -2,7 +2,7 @@ import { Pie, mixins } from 'vue-chartjs'
 const { reactiveProp } = mixins
 
 export default {
-   name: 'pie-hmm',
+  name: 'pie-hmm',
   extends: Pie,
   mixins: [reactiveProp],
   props: ['options'],

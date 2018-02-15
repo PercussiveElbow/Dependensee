@@ -42,7 +42,7 @@
       }
     },
     methods: {
-      poll_projects:  function () {
+        poll_projects:  function () {
         var resp =getProjects().then(response =>  {this.items = response;});
       },
       editshow (id) {

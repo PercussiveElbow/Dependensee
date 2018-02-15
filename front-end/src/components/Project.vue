@@ -60,7 +60,7 @@
         </md-tab>
         <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
           <div>
-            <md-switch :v-model="settings.scan">Automatically Scan</md-switch>
+            <md-switch :v-bind="settings.scan" :v-model="settings.scan">Automatically Scan</md-switch>
           </div>
           <div>
             <h3> Scan every: </h3>
@@ -129,6 +129,8 @@
     methods: {
       get_project() {getProject(this.$route.params.id).then(response =>  {
             this.project = response;
+            this.settings.scan = response.active;
+            this.settings.timeout = response.timeout;
             this.clientLinux = getClientLinux() + ' ' + this.project.id;
             this.clientDownload = getClientDownload();
             this.clientWindows = 'ruby quickclient.rb ' + this.project.id;

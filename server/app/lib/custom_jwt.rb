@@ -9,11 +9,12 @@ class CustomJWT
   end
 
   def self.decode(token)
-    body = JWT.decode(token,HMAC)[0]
-    HashWithIndifferentAccess.new body
-
-  rescue JWT::ExpiredSignature, JWT::VerificationError => e
-    raise CustomException::InvalidToken, e.message
+    begin
+      body = JWT.decode(token,HMAC)[0]
+      HashWithIndifferentAccess.new body
+    rescue JWT::ExpiredSignature, JWT::VerificationError,JWT::DecodeError  => e
+      raise CustomException::InvalidToken, 'Invalid Authorization Token'
+    end
   end
 
 end
