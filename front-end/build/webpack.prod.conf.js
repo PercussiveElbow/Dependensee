@@ -12,6 +12,9 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
 const env = config.build.env
 
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
@@ -87,6 +90,8 @@ const webpackConfig = merge(baseWebpackConfig, {
       name: 'manifest',
       chunks: ['vendor']
     }),
+    new UglifyJsPlugin(),
+
     // copy custom static assets
     new CopyWebpackPlugin([
       {
