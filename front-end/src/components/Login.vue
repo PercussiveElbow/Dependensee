@@ -1,13 +1,12 @@
 <template>
   <div id="app" v-bind:style="{ 'background-image': 'url(' + background + ')' }">
-    <md-layout md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
-      <md-layout  style=" background-color: black" md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
+    <md-layout id="child" style="vertical-align: center" md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
+      <md-layout style=" vertical-align:center" md-tag="md-card-media" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
         <md-card-header><div class="md-title">Login</div></md-card-header>
         <md-card-content>
           <md-input-container><md-icon>mail</md-icon><label>Email</label><md-input email v-model="creds.email" /></md-input-container>
           <md-input-container md-has-password><md-icon>lock</md-icon><label>Password</label><md-input type="password" v-model="creds.password"/></md-input-container>
         </md-card-content>
-
         <md-card-actions>
           <md-button class="md-raised md-primary" v-on:click="$router.push('/Signup')">Signup</md-button>
           <md-button class="md-raised md-primary" v-on:click=handleLogin>Login</md-button>
@@ -67,6 +66,21 @@ var  Trianglify = require('trianglify')
             this.$router.push('/projects');
           }
           this.background = this.backgroundPattern()
+          console.log(this.background);
       }
 }
 </script>
+
+<style scoped>
+#app {position: relative;}
+
+#child {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30%;
+    margin: auto;
+}
+</style>

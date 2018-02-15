@@ -1,7 +1,7 @@
 <template>
   <div id='app' v-bind:style="{ 'background-image': 'url(' + background + ')' }" >
-    <md-layout md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
-      <md-layout md-tag="md-card" md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
+    <md-layout  id="child" style="vertical-align: center" md-tag="form" novalidate @submit.stop.prevent="submit" md-align="center">
+      <md-layout tyle=" vertical-align:center" md-tag="md-card-media"  md-column md-flex="30" md-flex-medium="40" md-flex-small="60" md-flex-xsmall="90" class="md-primary">
         <md-card-header><div class="md-title">Signup</div></md-card-header>
         <md-card-content>
           <md-input-container><md-icon>person</md-icon><label>Name</label><md-input maxlength="25" v-model="creds.name"></md-input></md-input-container>
@@ -9,8 +9,8 @@
           <md-input-container><md-icon>lock</md-icon><label>Password</label><md-input v-model="creds.password" type="password"></md-input></md-input-container>
         </md-card-content>
         <md-card-actions>
-          <md-button class="md-raised md-primary" v-on:click="$router.push('/Login')">Login</md-button>
     	    <md-button class="md-raised md-primary" v-on:click=handleSignUp>Sign up</md-button>
+          <md-button class="md-raised md-primary" v-on:click="$router.push('/login')">Login</md-button>
         </md-card-actions>
       </md-layout>
     </md-layout>
@@ -65,3 +65,17 @@
       }
   }
 </script>
+
+<style scoped>
+#app {position: relative;}
+
+#child {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30%;
+    margin: auto;
+}
+</style>
