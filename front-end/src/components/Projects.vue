@@ -7,7 +7,7 @@
           <div class="md-toolbar-container">
             <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()"><md-icon>menu</md-icon></md-button>
             <span style="flex: 1"></span>
-            <md-button class="md-icon-button"><md-icon>search</md-icon></md-button>
+            <md-button class="md-icon-button" @click="$refs.cvesearch.showsearch()"><md-icon>search</md-icon></md-button>
             <md-button class="md-icon-button"><md-icon>view_module</md-icon></md-button>
           </div>
           <div class="md-toolbar-container">
@@ -33,6 +33,7 @@
         </div>
       </modal>
     </div>
+    <CVESearch ref='cvesearch'></CVESearch>
   </div>
 </template>
 
@@ -40,24 +41,23 @@
   import {getToken,getProjects,getProfile,saveToken,postProject} from '../utils/api.js';
   import ProjectList from './ProjectList'
   import Sidebar from './Sidebar'
+  import CVESearch from './CveSearch'
 
   export default {
     name: 'Projects',
     components:  {
       ProjectList,
-      Sidebar
+      Sidebar,
+      CVESearch
     },
-         data() {
+    data() {
       return {
         newproject: {
           name: '',
           language: '',
           description: ''
-        },
-        error: ''
+        }
       }
-    },
-    created: function() {
     },
     methods: {
       create_project: function(newproject) {
@@ -70,7 +70,6 @@
           postProject(formCreds);
           this.hide();
       },
-      openDialog: function(ref) {},
       show(){this.$modal.show('create-project');},
       hide(){this.$modal.hide('create-project');}
   }

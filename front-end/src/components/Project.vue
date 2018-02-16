@@ -7,7 +7,7 @@
           <div class="md-toolbar-container">
             <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()"><md-icon>menu</md-icon></md-button>
             <span style="flex: 1"></span>
-            <md-button class="md-icon-button"><md-icon>search</md-icon></md-button>
+            <md-button class="md-icon-button" @click="$refs.cvesearch.showsearch()"><md-icon>search</md-icon></md-button>
             <md-button class="md-icon-button"><md-icon>view_module</md-icon></md-button>
           </div>
           <div class="md-toolbar-container">
@@ -83,6 +83,7 @@
         <form enctype="multipart/form-data"><input type="file" @change="handle_upload_file"></form>
         </div>
     </modal>
+    <CVESearch ref='cvesearch'></CVESearch>
   </div>
 </template>
 
@@ -90,12 +91,14 @@
   import {getToken,getProject,getScans,getDependencies,upload,getJsonReport,deleteScan,getClientLinux,getClientDownload,editProject} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import LineChart from '../utils/LineChart'
+  import CVESearch from './CveSearch'
 
   export default {
     name: 'Project',
     components:  {
       Sidebar,
-      LineChart
+      LineChart,
+      CVESearch
     },
     data() {
       return {

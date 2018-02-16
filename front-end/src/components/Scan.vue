@@ -8,7 +8,7 @@
           <div class="md-toolbar-container">
             <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()" ><md-icon>menu</md-icon></md-button>
             <h2 class="md-title" @click="$router.push({ path: '/project/'+project.id });">Project: {{project.name}}</h2><span style="flex: 1"></span>
-            <md-button class="md-icon-button"><md-icon>search</md-icon></md-button>
+            <md-button class="md-icon-button" @click="$refs.cvesearch.showsearch()"><md-icon>search</md-icon></md-button>
             <md-button class="md-icon-button"><md-icon>view_module</md-icon></md-button>
           </div>
 
@@ -50,14 +50,13 @@
               <md-list class="md-double-line">
 
 
-                  <h4 style="text-align: left" v-for="(vuln,title) in vulns">{{title}}
+                  <h4 style="text-align: left" v-for="(vuln,title) in vulns">{{title}} [{{vuln[0].our_version}}]
                   <md-list-item v-for="thing in vuln">
                     <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" ><md-icon >warning</md-icon></md-avatar>
                     <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon >warning</md-icon></md-avatar>
                     <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon >warning</md-icon></md-avatar>
                     <div class="md-list-text-container">
                       <a @click=openCVEModal(vuln)>CVE-{{thing.cve}}</a>
-                      <p>Our ver: {{ thing.our_version }}</p>
                       <p>Patched ver: {{ thing.patched_version }}</p>
                     </div>
                   </md-list-item>
@@ -145,6 +144,7 @@
           </div>
       </div>
     </modal>
+    <CVESearch ref='cvesearch'></CVESearch>
   </div>
 </template>
 
@@ -153,13 +153,15 @@
   import Sidebar from './Sidebar'
   import PieChart from '../utils/PieChart.js'
   import BarChart from '../utils/BarChart.js'
+  import CVESearch from './CveSearch'
 
   export default {
     name: 'Scan',
     components:  {
       Sidebar,
       BarChart,
-      PieChart
+      PieChart,
+      CVESearch
     },
     data() {
       return {

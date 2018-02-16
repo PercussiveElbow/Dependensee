@@ -18,7 +18,7 @@
     <md-list>
       <md-list-item @click="$router.push('/Projects')"><md-icon>folder</md-icon> <span>Projects</span></md-list-item>
       <md-list-item @click="$refs.bsidebar.toggle()"><md-icon>file_upload</md-icon> <span>Quick Scan</span></md-list-item>
-      <md-list-item @click= "$router.push('/cve/2017-14063')"><md-icon>search</md-icon> <span>CVE Search</span></md-list-item>
+      <md-list-item @click= "show()"><md-icon>search</md-icon> <span>CVE Search</span></md-list-item>
       <md-list-item @click= "$router.push('/exploit/2016-6662')"><md-icon>warning</md-icon> <span>Exploit Search</span></md-list-item>
       <md-divider class="md-inset"></md-divider>
       <md-list-item @click= "$router.push('/qr/')"><md-icon>smartphone</md-icon> <span>Open on smartphone</span></md-list-item>
@@ -47,7 +47,8 @@ import {clearToken,getProfile} from '../utils/api.js';
       handleLogout() {
         clearToken();
         this.$router.push('/login');
-      }
+      },
+      show(){this.$modal.show('cve-search');}
     }
   }
 </script>

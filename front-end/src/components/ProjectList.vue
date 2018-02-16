@@ -2,7 +2,7 @@
   <div>
     <md-list class="md-double-line">
       <md-list-item v-for="item in items">
-        <md-avatar v-on:click="console.log('test');" md-theme="red" v-if="item.language === 'Ruby'" class="md-avatar-icon md-primary"><i class="icon-ruby"></i></md-avatar>
+        <md-avatar md-theme="red" v-if="item.language === 'Ruby'" class="md-avatar-icon md-primary"><i class="icon-ruby"></i></md-avatar>
         <md-avatar md-theme="orange" v-if="item.language === 'Java'" class="md-avatar-icon md-primary"><i class="icon-java"></i></md-avatar>
         <md-avatar md-theme="green" v-if="item.language === 'Python'" class="md-avatar-icon md-primary"><i class="icon-python"></i></md-avatar>
         <div class="md-list-text-container">
@@ -14,7 +14,7 @@
       </md-list-item>
     </md-list>
     <div>
-      <modal name="edit-project"         :height="350" :adaptive="true" @opened="opened" >
+      <modal name="edit-project" :height="350" :adaptive="true" @opened="opened">
         <div style="padding: 30px; text-align: center">
           <h2 >Edit a Project</h2>
           <md-input-container><md-icon>work</md-icon><label>Edit Project</label><md-input name v-model="editproject.name"/></md-input-container>
@@ -42,34 +42,32 @@
       }
     },
     methods: {
-        poll_projects:  function () {
-        var resp =getProjects().then(response =>  {this.items = response;});
-      },
-      editshow (id) {
-        this.edit_id = id;
-        this.$modal.show('edit-project');
-      }, 
-      hide () {
-        this.edit_id='';
-        this.$modal.hide('edit-project');
-      },
-      edit_project(){
+        poll_projects() {var resp =getProjects().then(response =>  {this.items = response;});},
+        editshow (id) {
+          this.edit_id = id;
+          this.$modal.show('edit-project');
+        }, 
+        hide () {
+          this.edit_id='';
+          this.$modal.hide('edit-project');
+        },
+        edit_project(){
           var formCreds = new FormData();
           formCreds.append('name', this.editproject.name);
           formCreds.append('description', this.editproject.description);
           editProject(this.edit_id,formCreds);
           this.hide();
           this.poll_projects();
+        },
+        delete_project(id) {
+          deleteProject(id)
+          this.poll_projects;
+        },
+        beforeOpen (event) {
+          console.log(event.params.title);
+        }
       },
-      delete_project(id) {
-        deleteProject(id)
-        this.poll_projects;
-      },
-      beforeOpen (event) {
-        console.log(event.params.title);
-      }
-    },
-    created: function () {
+      created: function () {
         this.poll_projects();
         setInterval(function () {this.poll_projects();}.bind(this), 2000); 
     }
