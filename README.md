@@ -11,10 +11,10 @@ It consists of three parts:
 
 
 
-### API Documentation
+## API Documentation
 [in progress]
 
-### Requirements
+## Requirements
 #### Server
 - Ruby w. RubyGems
 - Bundler
@@ -54,7 +54,7 @@ Then access on localhost:8080
 ### Client
 No setup, just run 'ruby client.rb' with a projectID as an optional first argument. (Requires JWT auth key being set up) 
 
-### Sources
+## Sources
 https://github.com/rubysec/ruby-advisory-db
 
 https://github.com/victims/victims-cve-db
@@ -63,7 +63,7 @@ https://github.com/offensive-security/exploit-database
 
 http://cve.mitre.org/data/refs/refmap/source-EXPLOIT-DB.html
 
-### License
+## License
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
