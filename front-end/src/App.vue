@@ -7,13 +7,9 @@
 
 <script>
 var  Trianglify = require('trianglify')
-import {isValidToken} from './utils/api.js';
 
 export default {
   name: 'DependenseeUI',
-  created() {
-    isValidToken(this.$router)
-  }
 }
 </script>
 

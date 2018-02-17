@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import {clearToken,getProfile} from '../utils/api.js';
+import {clearToken,getProfile,isValidToken} from '../utils/api.js';
   export default {
     name: 'Sidebar',
          data() {
@@ -39,6 +39,7 @@ import {clearToken,getProfile} from '../utils/api.js';
     },
     created: function() {
         getProfile().then(response =>  {this.profile = response;});
+        isValidToken(this.$router)
     },
     methods: {
       toggleSidebar() {
