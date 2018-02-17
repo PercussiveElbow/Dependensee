@@ -33,15 +33,12 @@ function apiSignUp(params) {
 	return axios.post(SIGNUP_URL,params).then(response => response.data);
 }
 
-function isValidToken() {
-	var isValid;
+function isValidToken(router) {
+	var thing = router;
 	getProjects( {headers: {'Authorization': getToken()} }).catch(function (error) {
     if (error.response) {
-      return false
-    }else{
-    	return true
-    }
-	});
+    	thing.push('/login')
+    }});
 }
 
 //PROFILE

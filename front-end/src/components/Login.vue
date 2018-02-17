@@ -40,7 +40,6 @@ var  Trianglify = require('trianglify')
           apiLogin(formCreds).then(resp => this.isSucessfulSignin(resp));
         },
         isSucessfulSignin(resp){
-          console.log(resp);
           if(resp.auth_token === null ){
             alert('Signup failed:');
           }else{
@@ -60,12 +59,10 @@ var  Trianglify = require('trianglify')
           var key = this.$route.query.key
           if(key == undefined) {
           }else{
-            console.log("Attempt setting key from QR")
             saveTokenQR(key)
             this.$router.push('/projects');
           }
           this.background = this.backgroundPattern()
-          console.log(this.background);
       }
 }
 </script>

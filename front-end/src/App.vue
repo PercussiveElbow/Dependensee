@@ -12,7 +12,7 @@ import {isValidToken} from './utils/api.js';
 export default {
   name: 'DependenseeUI',
   created() {
-    console.log(isValidToken());
+    isValidToken(this.$router)
   }
 }
 </script>
