@@ -36,5 +36,23 @@ class PipVersionLogic
   #   return patch_ver.to_s.tr('>=<~ ', '')[0,3] == gem_ver.to_s.tr('>=<~ ', '')[0,3]
   # end
 
+  def self.query_pypi(dep_name)
+    url = "https://pypi.python.org/pypi/#{dep_name}/json"
+    uri = URI(url)
+    response = Net::HTTP.get(uri)
+    return JSON.parse(response)['info']['version']
+  end
+
+  def self.get_latest_version(dep_name) # todo fix this horrible implementation
+    $py = Hash.new if $py.nil?
+    if  $py[dep_name].nil? or ((Time.now.to_i - $py[dep_name][1].to_i)> MsgConstants::TIMEOUT)
+      $py[dep_name] = [query_pypi(dep_name), Time.now.to_i]
+    end
+    $py[dep_name][0]
+  end
+
+
+
+
 end
 

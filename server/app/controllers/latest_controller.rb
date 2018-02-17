@@ -11,7 +11,7 @@ class LatestController < ApplicationController
     elsif @project.language == 'Java'
       latest_ver = PomVersionLogic::get_latest_version(@dependency.name)
     elsif @project.language == 'Python'
-      latest_ver = '123'
+      latest_ver = PipVersionLogic::get_latest_version(@dependency.name)
     else
       raise EmptyDependencyException.new('Put an actual error message here')
     end
