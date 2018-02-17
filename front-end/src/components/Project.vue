@@ -11,7 +11,7 @@
             <md-button class="md-icon-button"><md-icon>view_module</md-icon></md-button>
           </div>
           <div class="md-toolbar-container">
-            <md-button class="md-icon-button"  @click="$router.go(-1);"><md-icon>home</md-icon></md-button>
+            <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });"><md-icon>home</md-icon></md-button>
             <h2 class="md-title">Project: {{project.name}}</h2>
             <span style="flex: 1"></span>
             <md-button @click=show class="md-fab md-mini"><md-icon>file_upload</md-icon></md-button>
@@ -75,7 +75,7 @@
         </md-tab>
       </md-tabs>
     </div>
-    <modal name="upload"         :height="200" :adaptive="true" @opened="opened">
+    <modal name="upload"         :height="200" :adaptive="true">
         <div style="padding: 30px; text-align: center">
               <h2 v-if="project.language == 'Ruby' " >Upload Gemfile</h2>
               <h2 v-if="project.language  === 'Java' " >Upload Pomfile</h2>
@@ -118,13 +118,17 @@
         settings: {
           scan: false,
           timeout: 3600
-        }
+        },
+        intervalKill : ''
        }
     },
     created() {
       this.get_project();
       this.get_scans();
-      setInterval(function () {this.get_scans();}.bind(this), 10000); 
+      this.intervalKill = setInterval(function () {this.get_scans();}.bind(this), 10000); 
+    },
+    destroyed() {
+      clearInterval(this.intervalKill);
     },
     watch: {
       '$route': 'fetchData'
@@ -207,7 +211,6 @@
         var labels = []
         var locScans = this.scans;
         for(var a= locScans.length-1; a>=0; a--){
-          console.log(a);
           var values = [];
           var aScan = locScans[a];
           getDependencies(this.$route.params.id,aScan.id).then(response =>  {

@@ -187,7 +187,8 @@
         selecteddep: {
           latestver : ''
         },
-        datacollection: null
+        datacollection: null,
+        intervalKill : ''
       }
     },
     created() {
@@ -197,7 +198,10 @@
       this.get_scan();
       this.graphWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       this.graphHeight = window.innerHeight || document.documentElement.clientHeight  || document.body.clientHeight;
-      setInterval(function () {this.get_dependencies();}.bind(this), 60000);
+      this.intervalKill = setInterval(function () {this.get_dependencies();}.bind(this), 60000);
+    },
+    destroyed() {
+      clearInterval(this.intervalKill);
     },
     watch: {
       '$route': 'fetchData'

@@ -14,7 +14,7 @@
       </md-list-item>
     </md-list>
     <div>
-      <modal name="edit-project" :height="350" :adaptive="true" @opened="opened">
+      <modal name="edit-project" :height="350" :adaptive="true">
         <div style="padding: 30px; text-align: center">
           <h2 >Edit a Project</h2>
           <md-input-container><md-icon>work</md-icon><label>Edit Project</label><md-input name v-model="editproject.name"/></md-input-container>
@@ -38,7 +38,8 @@
           name: '',
           description: ''
         },
-        edit_id: ''
+        edit_id: '',
+        intervalKill: ''
       }
     },
     methods: {
@@ -69,7 +70,10 @@
       },
       created: function () {
         this.poll_projects();
-        setInterval(function () {this.poll_projects();}.bind(this), 2000); 
+        this.intervalKill = setInterval(function () {this.poll_projects();}.bind(this), 2000); 
+      },
+      destroyed() {
+        clearInterval(this.intervalKill);
     }
 }
 </script>

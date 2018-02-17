@@ -10,9 +10,9 @@ var  Trianglify = require('trianglify')
 import {isValidToken} from './utils/api.js';
 
 export default {
-  name: '#app',
+  name: 'DependenseeUI',
   created() {
-      console.log(isValidToken());
+    console.log(isValidToken());
   }
 }
 </script>
