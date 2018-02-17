@@ -1,5 +1,7 @@
 require 'rss'
 require 'open-uri'
+require 'net/http'
+require 'json'
 
 class PomVersionLogic
 
@@ -28,6 +30,26 @@ class PomVersionLogic
   # def self.is_within_minor_ver(gem_ver,patch_ver)
   #   return patch_ver.to_s.tr('>=<~ ', '')[0,3] == gem_ver.to_s.tr('>=<~ ', '')[0,3]
   # end
+
+
+  def self.query_maven(dep_name)
+    last_index = dep_name.rindex('.')
+    group_id = dep_name[0..last_index-1]
+    artifact_id = dep_name[last_index+1..dep_name.length-1]
+
+    url = "http://search.maven.org/solrsearch/select?q=g:%22#{group_id}%22+AND+a:%22#{artifact_id}%22&core=gav&rows=20&wt=json"
+    uri = URI(url)
+    response = Net::HTTP.get(uri)
+    return JSON.parse(response)['response']['docs'][0]['v']
+  end
+
+  def self.get_latest_version(dep_name) # todo fix this horrible implementation
+    $p = Hash.new if $p.nil?
+    if  $p[dep_name].nil? or ((Time.now.to_i - $p[dep_name][1].to_i)> MsgConstants::TIMEOUT)
+      $p[dep_name] = [query_maven(dep_name), Time.now.to_i]
+    end
+    $p[dep_name][0]
+  end
 
 end
 

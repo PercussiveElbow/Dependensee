@@ -2,7 +2,9 @@
 Rails.application.routes.draw do
   resources :projects do
     resources :scans do
-      resources :dependencies
+      resources :dependencies do
+        get 'latest', to: 'latest#show'
+      end
       resources :reports
     end
     resources :upload

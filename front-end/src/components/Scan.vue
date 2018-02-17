@@ -149,7 +149,7 @@
 </template>
 
 <script>
-  import {getProject,getScan,upload,getDependencies,getJsonReport,getCve,getPdfReport,getTxtReport,getExploit,updateScan} from '../utils/api.js';
+  import {getProject,getScan,upload,getDependencies,getJsonReport,getCve,getPdfReport,getTxtReport,getExploit,updateScan,dependencyLatest} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import PieChart from '../utils/PieChart.js'
   import BarChart from '../utils/BarChart.js'
@@ -184,7 +184,9 @@
         },
         cveThing: '',
         activeColor: 'white',
-        selecteddep: {},
+        selecteddep: {
+          latestver : ''
+        },
         datacollection: null
       }
     },
@@ -195,7 +197,7 @@
       this.get_scan();
       this.graphWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       this.graphHeight = window.innerHeight || document.documentElement.clientHeight  || document.body.clientHeight;
-      setInterval(function () {this.get_dependencies();}.bind(this), 60000); 
+      setInterval(function () {this.get_dependencies();}.bind(this), 60000);
     },
     watch: {
       '$route': 'fetchData'
@@ -260,7 +262,11 @@
       },
       openDepModal(dep){
         this.selecteddep=dep;
-        this.$modal.show('depmodal');
+        this.selecteddep.latestver = 'Fetching..'
+        dependencyLatest(this.$route.params.project_id,this.$route.params.scan_id,this.selecteddep.id).then(response =>  {
+          this.selecteddep.latestver = response.version;
+          this.$modal.show('depmodal');
+        });
       },
       maven(dep_name){window.location.href = 'https://search.maven.org/#search%7Cga%7C1%7C'+ dep_name},
       rubygems(dep_name){window.location.href = 'https://rubygems.org/gems/'+ dep_name},

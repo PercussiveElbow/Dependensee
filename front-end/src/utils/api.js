@@ -22,7 +22,7 @@ const ACCESS_TOKEN = 'jwk_access_token'
 //Split this file out for tidiness	
 export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
 	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,
-	gemsLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux,updateScan};
+	dependencyLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux,updateScan};
 
 //AUTH
 function apiLogin(params) {
@@ -71,7 +71,6 @@ function postProject(params){
 }
 
 //SCANS
-
 function getScan(project_id,scan_id){
 	return axios.get(PROJECTS_URL+project_id+SCANS_URL+scan_id, {headers: {'Authorization': getToken()}} ).then(response => response.data);
 }
@@ -163,12 +162,8 @@ function getToken() {
 }
 
 //OTHER 
-function gemsLatest(dep_name){ //probably need to move this to backend, because cors
-        axios.get('https://rubygems.org/gems/' + dep_name + 'versions.atom').then (response => {
-          console.log(response);
-        xmlDoc = parser.parseFromString(text,"text/xml");
-        this.selecteddep.latestver = xmlDoc.getElementsByTagName(response);
-});
+function dependencyLatest(project_id,scan_id,dep_id){
+  return axios.get(PROJECTS_URL+project_id+SCANS_URL + scan_id + DEPENDENCIES_URL + dep_id + '/latest',{headers: {'Authorization': getToken()}} ).then (response => response.data);
 }
 
 function getQr(){

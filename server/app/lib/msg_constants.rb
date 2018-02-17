@@ -48,6 +48,8 @@ class MsgConstants
   PATCHED_VER = 'Safe: '
   LATEST_VER = 'Latest: '
   VERSION_WARNING = '    *Requires major version update'
+  TIMEOUT = 14400
+
 
   # Score constants
   NO_CVE_SCORE = 'No CVE Score found for this issue.'
