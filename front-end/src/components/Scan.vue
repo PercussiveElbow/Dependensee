@@ -132,7 +132,7 @@
           <h1 style ="text-align: center" >{{selecteddep.name}}</h1>
          <span style="font-weight: bold">Version: </span><span>{{selecteddep.version}}</span>
          </br>
-          <span style="font-weight: bold">Latest version: </span><a>{{selecteddep.latestver}}</a>
+          <span style="font-weight: bold">Latest version: </span><a>{{latestver}}</a>
          </br></br>
          <span style="font-weight: bold">Raw: </span><span> {{selecteddep.raw}}</span>
           </br>
@@ -185,10 +185,10 @@
         cveThing: '',
         activeColor: 'white',
         selecteddep: {
-          latestver : ''
         },
         datacollection: null,
-        intervalKill : ''
+        intervalKill : '',
+        latestver : ''
       }
     },
     created() {
@@ -216,7 +216,6 @@
           getScan(this.$route.params.project_id,this.$route.params.scan_id).then(response =>{
             this.scan=response;
             this.scan.title = this.scan.created_at.slice(0, this.scan.created_at.length-8).replace("T", "  ");
-
           })
       },
       get_dependencies() {getDependencies(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.dependencies = response;});},
@@ -266,9 +265,8 @@
       },
       openDepModal(dep){
         this.selecteddep=dep;
-        this.selecteddep.latestver = 'Fetching..'
         dependencyLatest(this.$route.params.project_id,this.$route.params.scan_id,this.selecteddep.id).then(response =>  {
-          this.selecteddep.latestver = response.version;
+          this.latestver = response.version;
           this.$modal.show('depmodal');
         });
       },
@@ -279,14 +277,13 @@
       nvdb(cve_id){window.location.href = 'https://nvd.nist.gov/vuln/detail/'+ cve_id},
       cvedetails(cve_id){window.location.href = 'https://www.cvedetails.com/cve/CVE-'+ cve_id},
       rapid7(cve_id){window.location.href = 'https://www.rapid7.com/db/search?utf8=%E2%9C%93&q=' + cve_id + '&t=a'},
-      cvemodalshow(cve){this.$modal.show('depmodal');},
       openJsonReport(){
         getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {
           window.open(window.URL.createObjectURL(new Blob([JSON.stringify(response)], { type: 'application/json' } )));});
       },
       returnToProj(){$router.push({path: '/project/'+this.$route.params.project_id});},
       getExploitInfo(cve_id){getExploit(cve_id);}, 
-     fillData () {
+      fillData () {
         this.graphData = {
           labels: [],
           datasets: [
@@ -338,9 +335,6 @@
                         }
                 }
             }
-      },
-      getRandomInt () {
-        return Math.floor(Math.random() * (50 - 5 + 1)) + 5
       }
     }
   } 

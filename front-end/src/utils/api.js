@@ -1,7 +1,7 @@
 var axios = require('axios')
 
-// const ADDRESS  = 'http://127.0.0.1';
-const ADDRESS  = 'http://192.168.1.97';
+const ADDRESS  = 'http://127.0.0.1';
+// const ADDRESS  = 'http://192.168.1.97';
 
 const API_URL = ADDRESS + ':3000/'
 const WEB_URL = ADDRESS + ':8080/'
