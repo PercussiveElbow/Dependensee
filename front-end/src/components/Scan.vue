@@ -48,8 +48,10 @@
           <main class="main-content">
             <div>
               <md-list class="md-double-line">
-                  <h4 style="text-align: left" v-for="(vuln,title) in vulns">{{title}} [{{vuln.cves[0].our_version}}]
-                  Safe version: [{{vuln.overall_patch}}]
+                  <div style="text-align: left" v-for="(vuln,title) in vulns">
+                  <span style="font-size: large; font-weight: bold;">{{title}}</span></br>
+                  <span style="color: red">Current version:  {{vuln.cves[0].our_version}}</span></br>
+                  <span style="color: green">Safe version: {{vuln.overall_patch}}</span>
                   <md-list-item v-for="(thing,index) in vuln.cves">
                     <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" ><md-icon >warning</md-icon></md-avatar>
                     <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon >warning</md-icon></md-avatar>
@@ -59,7 +61,7 @@
                       <p>Patched ver: {{thing.patched_version}}</p>
                     </div>
                   </md-list-item>
-                </h4>
+                </div>
               </md-list>
             </div>
           </main>     

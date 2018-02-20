@@ -9,7 +9,7 @@ class GemReport < BaseReport
 
     vulnlist.each do |dep, vulns|
       open(filename, 'a') { |file|
-        for vuln in vulns do
+        for vuln in vulns['cves'] do
           file.puts(dep + "\n")
           #TODO REPLACE WITH LESS HACKY IMPLEMENTATION
           if language == 'Java'
