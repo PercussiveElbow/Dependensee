@@ -30,70 +30,14 @@
           </md-tab>
 
         <md-tab id="tab-vulns" md-label="Vulnerabilities" to="/components/tabs/vulns">
-          <main class="main-content">
-            <div>
-              <md-list class="md-double-line">
-                  <div style="text-align: left" v-for="(vuln,title) in vulns">
-                  <span style="font-size: large; font-weight: bold;">{{title}}</span></br>
-                  <span style="color: red">Current version:  {{vuln.cves[0].our_version}}</span></br>
-                  <span style="color: green">Safe version: {{vuln.overall_patch}}</span>
-                  <md-list-item v-for="(thing,index) in vuln.cves">
-                    <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" ><md-icon >warning</md-icon></md-avatar>
-                    <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon >warning</md-icon></md-avatar>
-                    <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon >warning</md-icon></md-avatar>
-                    <div class="md-list-text-container">
-                      <a @click=openCVEModal(vuln,index,title)>CVE-{{thing.cve}}</a>
-                      <p>Patched ver: {{thing.patched_version}}</p>
-                    </div>
-                  </md-list-item>
-                </div>
-              </md-list>
-            </div>
-          </main>     
+          <VulnList :dependencies.sync=dependencies :vulns.sync=vulns :project.sync=project ></VulnList>
         </md-tab>
         <md-tab id="tab-pages" md-label="Graphs" to="/components/tabs/pages">
-          <ScanGraphs :dependencies.sync=dependencies :vulns.sync=vulns  ref='scanGraphs'></ScanGraphs>
+          <ScanGraphs :dependencies.sync=dependencies :vulns.sync=vulns ref='scanGraphs'></ScanGraphs>
         </md-tab>
       </md-tabs>
     </div>
     <v-dialog/>
-
-    <modal name="cvemodal" :height="550" :adaptive="true" >
-      <div style="padding: 11px; text-align: left">
-              <h1  v-bind:style="{ color: activeColor}" style ="text-align: center" >CVE {{cve.cve_id}}</h1>
-              <h2 style ="text-align: center" >{{cve.title}}</h2>
-              <p>{{selectedvuln.depname}}</p>
-              <span style="font-weight: bold" >CVSS2 Score: </span><span> {{cve.cvss2}}</span></br>
-              <span v-if="project.language === 'Python' | project.language === 'Java'" >{{cve.desc}}</span>
-              </br v-if="project.language === 'Ruby'">
-              <span class="md-subheading" style="font-weight: bold" v-if="project.language === 'Ruby'" @click="$router.push({ path: '/cve/'+cve.id });">Description</span>
-              </br v-if="project.language === 'Ruby'">
-              <span class="md-subheading" style="font-weight: bold" >Versions</span></br>
-              <span style="font-weight: bold" > Our: </span><span>{{selectedvuln.our_version}}</span></br>
-              <span style="font-weight: bold">  Safe: </span>
-              <span v-if="project.language === 'Python' | project.language === 'Java'" v-for="patched in selectedvuln.patched_version">{{patched}},</span>
-              <span v-if="project.language === 'Ruby'" v-for="patched in cve.patched_versions">{{patched}},</span>
-              <br>
-              <span v-if="project.language === 'Ruby'" style="font-weight: bold">  Unaffected: </span>
-              <span v-if="project.language === 'Ruby'" v-for="unaffected in cve.unaffected_versions">{{unaffected}},</span><br v-if="project.language === 'Ruby'">
-              <span style="font-weight: bold"> Latest: </span><span>{{latestver}}</span>
-              </br></br>
-              <span v-if="project.language === 'Python' | project.language === 'Java'" class="md-subheading" style="font-weight: bold">References</span></br>
-              <div v-if="project.language === 'Python' | project.language === 'Java'" v-for="reference in cve.references">
-              <a v-bind:href="reference">{{reference}}</a>
-              </br>
-              </div>
-          <div style="text-align: center">
-  <!--           <span style="font-weight: bold">Open:</span></br>
-   -->      <md-button style="margin: 0; margin-left: 0px; font-size: 11px; min-width: 1%; margin-right: 0px" class="md-primary md-raised" @click="mitre(cve.cve_id)">Mitre</md-button>
-            <md-button style="margin: 0; margin-left: 0px; font-size: 11px; min-width: 1%; margin-right: 0px" @click="nvdb(cve.cve_id)" class="md-primary md-raised">NVDB</md-button>
-            <md-button style="margin: 0; margin-left: 0px; font-size: 11px; min-width: 1%; margin-right: 0px" @click="cvedetails(cve.cve_id)" class="md-primary md-raised">CVEDetails</md-button>
-            <md-button style="margin: 0; margin-left: 0px; font-size: 11px; min-width: 1%; margin-right: 0px" class="md-primary md-raised" @click="rapid7(cve.cve_id)">Rapid7</md-button>
-            <md-button @click="getExploitInfo(cve.cve_id)" style="background-color: red; margin: 0; margin-left: 0px; font-size: 11px; min-width: 1%; margin-right: 0px" class="md-primary md-raised">Exploit</md-button>
-          </div>
-      </div>
-    </modal>
-
     <modal name="depmodal" :responsive="260" :adaptive="true" >
       <div style="padding: 15px; text-align: left">
         <i class="icon-python" style="font-size: 1.75em" v-if="project.language === 'Python'"></i>
@@ -114,16 +58,19 @@
           </div>
       </div>
     </modal>
+    <CVEModal></CVEModal>
     <CVESearch ref='cvesearch'></CVESearch>
   </div>
 </template>
 
 <script>
-  import {getProject,getScan,getDependencies,getJsonReport,getCve,getPdfReport,getTxtReport,getExploit,updateScan,dependencyLatest} from '../utils/api.js';
+  import {getProject,getScan,getDependencies,getJsonReport,getPdfReport,getTxtReport,updateScan} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import CVESearch from './CveSearch'
   import DepList from './DepList'
+  import VulnList from './VulnList'
   import ScanGraphs from './ScanGraphs'
+  import CVEModal from './CVEModal'
 
   export default {
     name: 'Scan',
@@ -131,7 +78,9 @@
       Sidebar,
       CVESearch,
       DepList,
-      ScanGraphs
+      ScanGraphs,
+      VulnList,
+      CVEModal
     },
     data() {
       return {
@@ -140,10 +89,6 @@
         dependencies: [],
         report: {},
         vulns : [],
-        selectedvuln: {},
-        cve: [],
-        cveThing: '',
-        activeColor: 'white',
         selecteddep: {},
         intervalKill : '',
         latestver : ''
@@ -163,9 +108,6 @@
       '$route': 'fetchData'
     },
     methods: {
-      swapComponent: function(component){
-        this.currentComponent = component;
-      },
       get_project() {getProject(this.$route.params.project_id).then(response =>  {this.project = response;});},
       get_scan(){
           this.scan.id = this.$route.params.scan_id;
@@ -182,10 +124,6 @@
             this.$refs.scanGraphs.fillData(this.dependencies,this.vulns)
           })
       },
-      mitre(cve_id){window.location.href = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name='+ cve_id},
-      nvdb(cve_id){window.location.href = 'https://nvd.nist.gov/vuln/detail/'+ cve_id},
-      cvedetails(cve_id){window.location.href = 'https://www.cvedetails.com/cve/CVE-'+ cve_id},
-      rapid7(cve_id){window.location.href = 'https://www.rapid7.com/db/search?utf8=%E2%9C%93&q=' + cve_id + '&t=a'},
       open_vuln_dialog (response) {
         this.report=response;
           this.$modal.show('dialog', {
@@ -207,37 +145,12 @@
               { title: 'Minor', handler: () => { updateScan(this.$route.params.project_id,this.$route.params.scan_id, 'Minor') } }          ]
           })
       },
-      openCVEModal(vuln,index,name){
-        getCve(vuln.cves[index].cve).then(response => {
-          this.cve = response
-          if (parseFloat(this.cve.cvss2) > 8) {this.activeColor = 'firebrick';
-          }else if (parseFloat(this.cve.cvss2) > 4) {this.activeColor = 'orange';
-          }else{
-            this.activeColor = 'black';
-            if(this.cve.cvss2 == null){this.cve.cvss2 = 'Unknown'}
-          }
-        var self = this;
-        this.dependencies.forEach(function (value, i) {
-          self.latestver = 'Fetching..'
-          if(value.name===name){
-              dependencyLatest(self.$route.params.project_id,self.$route.params.scan_id,value.id).then(response =>  {
-              self.latestver = response.version;
-              });
-           } 
-        });
-
-        })
-        this.selectedvuln.our_version = vuln.cves[index].our_version;
-        this.selectedvuln.patched_version = vuln.cves[index].patched_version;
-        this.$modal.show('cvemodal');
-      },
       openJsonReport(){
         getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {
           window.open(window.URL.createObjectURL(new Blob([JSON.stringify(response)], { type: 'application/json' } )));});
       },
-      returnToProj(){$router.push({path: '/project/'+this.$route.params.project_id});},
-      getExploitInfo(cve_id){getExploit(cve_id);}
-    }
+      returnToProj(){$router.push({path: '/project/'+this.$route.params.project_id});}
+     }
   } 
 </script>
 
@@ -292,5 +205,4 @@ body,
   max-height: 100px;
   overflow: auto;
 }
-
 </style>
