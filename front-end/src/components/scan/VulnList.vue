@@ -6,13 +6,13 @@
 	          <span style="font-size: large; font-weight: bold;">{{title}}</span></br>
 	          <span style="color: red">Current version:  {{vuln.cves[0].our_version}}</span></br>
 	          <span style="color: green">Safe version: {{vuln.overall_patch}}</span>
-	          <md-list-item v-for="(thing,index) in vuln.cves">
+	          <md-list-item v-for="(item,index) in vuln.cves">
 	            <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" ><md-icon >warning</md-icon></md-avatar>
 	            <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon >warning</md-icon></md-avatar>
 	            <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon >warning</md-icon></md-avatar>
 	            <div class="md-list-text-container">
-	              <a @click=openCVEModal(vuln,index,title)>CVE-{{thing.cve}}</a>
-	              <p>Patched ver: {{thing.patched_version}}</p>
+	              <a @click=openCVEModal(vuln,index,title)>CVE-{{item.cve}}</a>
+	              <p>Patched ver: {{item.patched_version}}</p>
 	            </div>
 	          </md-list-item>
 	        </div>
@@ -26,17 +26,12 @@
 
 	export default {
 	    name: 'VulnList',
-	    components:  {
-	    },
 	    props: ['vulns','project','dependencies'],
-		mounted() {
-		  const vm = this
-		},
 		data() {
 			return {
 				cve: {},
-				selectedvuln: {},
-				latestver: '',
+				selectedVuln: {},
+				latestVer: '',
 				activeColor: ''
 			}
 		},
@@ -53,13 +48,13 @@
 		          }
 		        var self = this;
 		        this.dependencies.forEach(function (value, i) {
-		          self.latestver = 'Fetching..'
+		          self.latestVer = 'Fetching..'
 		          if(value.name===name){
 		              dependencyLatest(self.$route.params.project_id,self.$route.params.scan_id,value.id).then(response =>  {
-		              self.latestver = response.version;
-				        self.selectedvuln.our_version = vuln.cves[index].our_version;
-				        self.selectedvuln.patched_version = vuln.cves[index].patched_version;
-				        self.$modal.show('cvemodal', {cve: self.cve,project: self.project, latestver: self.latestver, activeColor: self.activeColor, selectedvuln: self.selectedvuln});
+		              self.latestVer = response.version;
+				        self.selectedVuln.our_version = vuln.cves[index].our_version;
+				        self.selectedVuln.patched_version = vuln.cves[index].patched_version;
+				        self.$modal.show('cvemodal', {cve: self.cve,project: self.project, latestVer: self.latestVer, activeColor: self.activeColor, selectedVuln: self.selectedVuln});
 		              });
 		           } 
 		        });
@@ -70,8 +65,3 @@
 	}
 
 </script>
-
-
-<style>
-
-</style>

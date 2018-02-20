@@ -25,9 +25,9 @@
       </md-whiteframe>
 
       <md-tabs>
-          <md-tab id="tab-deps" md-label="Dependencies" to="/components/tabs/deps">
-              <DepList :dependencies.sync=dependencies :project.sync=project></DepList>
-          </md-tab>
+        <md-tab id="tab-deps" md-label="Dependencies" to="/components/tabs/deps">
+          <DepList :dependencies.sync=dependencies :project.sync=project></DepList>
+         </md-tab>
 
         <md-tab id="tab-vulns" md-label="Vulnerabilities" to="/components/tabs/vulns">
           <VulnList :dependencies.sync=dependencies :vulns.sync=vulns :project.sync=project ></VulnList>
