@@ -283,51 +283,32 @@
       fillData () {
         this.graphData = {
           labels: [],
-          datasets: [
-          { label: 'Severity (CVSS2)' ,
-           backgroundColor: '#0074D9', 
-           data: []
-          } ]
+          datasets: [{label: 'Severity (CVSS2)', backgroundColor: '#0074D9', data: []}]
         }
         this.pieData = {
           labels: ['Safe','Vuln'],
-          datasets: [
-            {
-              label: ['Safe','Vuln'],
-              backgroundColor: ['#2ECC40','red'],
+          datasets: [{
+              label: ['Safe','Vuln'],backgroundColor: ['#2ECC40','red'],
               data: [this.dependencies.length-Object.getOwnPropertyNames(this.vulns).length+1,Object.getOwnPropertyNames(this.vulns).length-1]
-            }
-          ]
+            }]
         }
-            var self = this;
-            var data = [];
-            var labels = []
-            var keys = Object.keys(this.vulns);
-            for(var i=0;i<keys.length;i++){
-                var key = keys[i];
-                var len = this.vulns[key].cves.length;
-                var someData = [];
-                for(var j=0; j<len; j++){
-                         var vthing = this.vulns[key].cves[j];
-                         var labelname = this.vulns[key].cves[j].cve;
-                          if(labelname !== undefined){
-                            getCve(labelname).then(response =>  {
-                              if(response['cvss2'] !== undefined){
-                                console.log(vthing.cve)
-                                labels.push(vthing.cve);
-                                data.push(parseFloat(response['cvss2']))
-                              self.graphData = {
-                                labels: labels,
-                                datasets: [{
-                                label: 'Severity (CVSS2)' ,
-                                backgroundColor: '#0074D9', 
-                                data: data
-                                }]
-                               }}
-                            });
-                        }
-                }
-            }
+        var scores = []; var labels = [];
+        var keys = Object.keys(this.vulns);
+        for(var i=0;i<keys.length;i++){
+            for(var j=0; j<this.vulns[keys[i]].cves.length; j++){
+              if(this.vulns[keys[i]].cves[j].cve !== undefined){this.processGraph(this.vulns[keys[i]].cves[j].cve,labels,scores,this.vulns[keys[i]].cves[j])}
+        }}
+      },
+      processGraph(cve_id,labels,scores,aCve){
+        getCve(cve_id).then(response =>  {
+          if(response['cvss2'] !== undefined){
+            labels.push(aCve.cve);
+            scores.push(parseFloat(response['cvss2']))
+            this.graphData = {
+              labels: labels,
+              datasets: [{label: 'Severity (CVSS2)',backgroundColor: '#0074D9', data: scores}]
+            }}
+        });
       }
     }
   } 

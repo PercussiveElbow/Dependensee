@@ -213,22 +213,23 @@
         for(var a= locScans.length-1; a>=0; a--){
           var values = [];
           var aScan = locScans[a];
+          this.process_graph(self,data,values,labels,locScans[a])
+          }
+      },
+      process_graph(self,data,values,labels,aScan){
           getDependencies(this.$route.params.id,aScan.id).then(response =>  {
-
-            this.values = response;
-            data.push(this.values.length)
+            data.push(response.length)
             labels.push(aScan.created_at.slice(0, aScan.created_at.length-8).replace("T", "  "))
             self.depGraphData = {
               labels: labels,
               datasets: [{
-              label: 'Number of dependencies' ,
-              backgroundColor: '#0074D9', 
-              data: data
+                label: 'Number of dependencies' ,
+                backgroundColor: '#0074D9', 
+                data: data
               }]
              }
-          });
-          }
-    }
+        });
+      }
     }
   } 
 </script>
