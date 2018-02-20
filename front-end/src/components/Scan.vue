@@ -50,14 +50,14 @@
               <md-list class="md-double-line">
 
 
-                  <h4 style="text-align: left" v-for="(vuln,title) in vulns">{{title}} [{{vuln[0].our_version}}]
-                  <md-list-item v-for="(thing,index) in vuln">
+                  <h4 style="text-align: left" v-for="(vuln,title) in vulns">{{title}} [{{vuln.cves[0].our_version}}]
+                  <md-list-item v-for="(thing,index) in vuln.cves">
                     <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" ><md-icon >warning</md-icon></md-avatar>
                     <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon >warning</md-icon></md-avatar>
                     <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon >warning</md-icon></md-avatar>
                     <div class="md-list-text-container">
                       <a @click=openCVEModal(vuln,index,title)>CVE-{{thing.cve}}</a>
-                      <p>Patched ver: {{ thing.patched_version }}</p>
+                      <p>Patched ver: {{thing.patched_version}}</p>
                     </div>
                   </md-list-item>
                 </h4>
@@ -75,8 +75,8 @@
     </div>
     <v-dialog/>
 
-    <modal name="cvemodal" :height="500" :adaptive="true" >
-      <div style="padding: 13px; text-align: left">
+    <modal name="cvemodal" :height="600" :adaptive="true" >
+      <div style="padding: 11px; text-align: left">
               <h1  v-bind:style="{ color: activeColor}" style ="text-align: center" >CVE {{cve.cve_id}}</h1>
               <h2 style ="text-align: center" >{{cve.title}}</h2>
               <p>{{selectedvuln.depname}}</p>
@@ -213,7 +213,7 @@
         };
          getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  
           { this.vulns=response;
-                  this.fillData();
+            this.fillData();
           })
       },
       open_vuln_dialog (response) {
@@ -238,7 +238,7 @@
           })
       },
       openCVEModal(vuln,index,name){
-        getCve(vuln[index].cve).then(response => {
+        getCve(vuln.cves[index].cve).then(response => {
           this.cve = response
           if (parseFloat(this.cve.cvss2) > 8) {this.activeColor = 'firebrick';
           }else if (parseFloat(this.cve.cvss2) > 4) {this.activeColor = 'orange';
@@ -257,8 +257,8 @@
         });
 
         })
-        this.selectedvuln.our_version = vuln[index].our_version;
-        this.selectedvuln.patched_version = vuln[index].patched_version;
+        this.selectedvuln.our_version = vuln.cves[index].our_version;
+        this.selectedvuln.patched_version = vuln.cves[index].patched_version;
         this.$modal.show('cvemodal');
       },
       openDepModal(dep){

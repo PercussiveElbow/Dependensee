@@ -42,7 +42,7 @@ class GemReport < BaseReport
         current_gem = dep
         text current_gem ,:size => 25 if current_gem != last_gem or last_gem.nil?
 
-        for vuln in vulns do
+        for vuln in vulns['cves'] do
           text 'CVE ' + vuln.cve,:indent_paragraphs => 20, :size => 18
 
 

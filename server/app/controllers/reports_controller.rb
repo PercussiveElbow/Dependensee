@@ -52,8 +52,8 @@ class ReportsController < ApplicationController
   # OTHER
   def vuln_cleanup
     @vuln_total=0
-    @vuln_list.each { |k, v| @vuln_total+=v.length }
-    @vuln_list.delete_if { |_, v| v.empty? }
+    @vuln_list.each { |k, v| @vuln_total+=v['cves'].length }
+    @vuln_list.delete_if { |_, v| v['cves'].empty? }
   end
 
 end

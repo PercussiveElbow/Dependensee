@@ -17,14 +17,15 @@ class GemScanner < BaseScanner
     vuln_hash = {}
     @deps.each do |spec|
       spec_name = spec.name
-      vuln_hash[spec_name] = []
+      vuln_hash[spec_name] = {}
+      vuln_hash[spec_name]['cves'] = []
       print("\n\n" + MsgConstants::CHECKING_GEM + spec_name)
       gem_ver=spec.version
       RubyCve.where(['dependency_name = ?', spec_name]).each do |cve| #todo sanitize
           print("\n" + '          -CVE' + cve.cve_id)
           unless check_unaffected_vers(gem_ver,cve.unaffected_versions)
             needed_patches = get_needed_patches(gem_ver, cve.patched_versions)
-            vuln_hash[spec_name].push( Vulnerability::new(gem_ver,needed_patches,cve.cve_id))   unless needed_patches.nil?
+            vuln_hash[spec_name]['cves'].push( Vulnerability::new(gem_ver,needed_patches,cve.cve_id))   unless needed_patches.nil?
           end
       end
     end
