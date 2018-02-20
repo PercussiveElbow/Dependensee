@@ -45,7 +45,7 @@
           <vue-event-calendar :events="scansCalendar"></vue-event-calendar>
         </md-tab>
         <md-tab id="tab-graph" md-label="Graphs" to="/components/tabs/graph">
-          <div id='graphthing' style="height:500; width:500px;">
+          <div id='graphthing' responsive:true>
             <h1>Number of dependencies</h1> <line-chart :chart-data="depGraphData"></line-chart>
           </div>
         </md-tab>

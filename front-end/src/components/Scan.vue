@@ -65,7 +65,7 @@
           </main>     
         </md-tab>
         <md-tab id="tab-pages" md-label="Graphs" to="/components/tabs/pages">
-          <div id='graphthing' style="height:500; width:500px;">
+          <div id='graphthing' responsive: true >
                <h1>Vulnerable vs Safe Dependencies</h1> <pie-chart :chart-data="pieData"></pie-chart></br>
                <h1>Vulnerability Severity</h1> <bar-chart :chart-data="graphData"></bar-chart>
           </div>
@@ -74,7 +74,7 @@
     </div>
     <v-dialog/>
 
-    <modal name="cvemodal" :height="600" :adaptive="true" >
+    <modal name="cvemodal" :height="550" :adaptive="true" >
       <div style="padding: 11px; text-align: left">
               <h1  v-bind:style="{ color: activeColor}" style ="text-align: center" >CVE {{cve.cve_id}}</h1>
               <h2 style ="text-align: center" >{{cve.title}}</h2>
@@ -101,16 +101,16 @@
               </div>
           <div style="text-align: center">
   <!--           <span style="font-weight: bold">Open:</span></br>
-   -->          <md-button style="margin-left: 0px; margin-right: 0px" class="md-primary md-raised" @click="mitre(cve.cve_id)">Mitre</md-button>
-            <md-button  style="margin-left: 0px; margin-right: 0px" @click="nvdb(cve.cve_id)" class="md-primary md-raised">NVDB</md-button>
-            <md-button style="margin-left: 0px; margin-right: 0px" @click="cvedetails(cve.cve_id)" class="md-primary md-raised">CVEDetails</md-button>
-            <md-button style="margin-left: 0px; margin-right: 0px" class="md-primary md-raised" @click="rapid7(cve.cve_id)">Rapid7</md-button>
-            <md-button @click="getExploitInfo(cve.cve_id)" style="background-color: red; margin-left: 0px; margin-right: 0px" class="md-primary md-raised">Exploit</md-button>
+   -->      <md-button style="margin: 0; margin-left: 0px; font-size: 11px; min-width: 1%; margin-right: 0px" class="md-primary md-raised" @click="mitre(cve.cve_id)">Mitre</md-button>
+            <md-button style="margin: 0; margin-left: 0px; font-size: 11px; min-width: 1%; margin-right: 0px" @click="nvdb(cve.cve_id)" class="md-primary md-raised">NVDB</md-button>
+            <md-button style="margin: 0; margin-left: 0px; font-size: 11px; min-width: 1%; margin-right: 0px" @click="cvedetails(cve.cve_id)" class="md-primary md-raised">CVEDetails</md-button>
+            <md-button style="margin: 0; margin-left: 0px; font-size: 11px; min-width: 1%; margin-right: 0px" class="md-primary md-raised" @click="rapid7(cve.cve_id)">Rapid7</md-button>
+            <md-button @click="getExploitInfo(cve.cve_id)" style="background-color: red; margin: 0; margin-left: 0px; font-size: 11px; min-width: 1%; margin-right: 0px" class="md-primary md-raised">Exploit</md-button>
           </div>
       </div>
     </modal>
 
-    <modal name="depmodal" :height="260" :adaptive="true" >
+    <modal name="depmodal" :responsive="260" :adaptive="true" >
       <div style="padding: 15px; text-align: left">
         <i class="icon-python" style="font-size: 1.75em" v-if="project.language === 'Python'"></i>
           <i class="icon-java" style="font-size: 1.75em" v-if="project.language === 'Java'"></i>
