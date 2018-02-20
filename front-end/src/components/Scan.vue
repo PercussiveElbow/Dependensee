@@ -26,22 +26,7 @@
 
       <md-tabs>
           <md-tab id="tab-deps" md-label="Dependencies" to="/components/tabs/deps">
-            <main class="main-content">
-              <div>
-                <md-list class="md-double-line">
-                  <md-list-item v-for="dep in dependencies">
-                    <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'"><md-icon>code</md-icon></md-avatar>
-                    <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon>code</md-icon></md-avatar>
-                    <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon>code</md-icon></md-avatar>
-                    <div class="md-list-text-container">
-                      <a @click=openDepModal(dep)>{{dep.name}}</a>
-                      <p>{{ dep.version }}</p>
-                    </div>
-                    <md-button v-if="project.language === 'Java'" class="md-icon-button md-list-action"  @click=maven(dep.name)><md-icon>search</md-icon></md-button>
-                  </md-list-item>
-                </md-list>
-              </div>
-            </main>
+              <DepList :dependencies.sync=dependencies :project.sync=project :selecteddep.sync=selecteddep :latestver.sync=latestver></DepList>
           </md-tab>
 
         <md-tab id="tab-vulns" md-label="Vulnerabilities" to="/components/tabs/vulns">
@@ -67,10 +52,7 @@
           </main>     
         </md-tab>
         <md-tab id="tab-pages" md-label="Graphs" to="/components/tabs/pages">
-          <div id='graphthing' responsive: true >
-               <h1>Vulnerable vs Safe Dependencies</h1> <pie-chart :chart-data="pieData"></pie-chart></br>
-               <h1>Vulnerability Severity</h1> <bar-chart :chart-data="graphData"></bar-chart>
-          </div>
+          <ScanGraphs :dependencies.sync=dependencies :vulns.sync=vulns  ref='scanGraphs'></ScanGraphs>
         </md-tab>
       </md-tabs>
     </div>
@@ -139,17 +121,17 @@
 <script>
   import {getProject,getScan,getDependencies,getJsonReport,getCve,getPdfReport,getTxtReport,getExploit,updateScan,dependencyLatest} from '../utils/api.js';
   import Sidebar from './Sidebar'
-  import PieChart from '../utils/PieChart.js'
-  import BarChart from '../utils/BarChart.js'
   import CVESearch from './CveSearch'
+  import DepList from './DepList'
+  import ScanGraphs from './ScanGraphs'
 
   export default {
     name: 'Scan',
     components:  {
       Sidebar,
-      BarChart,
-      PieChart,
-      CVESearch
+      CVESearch,
+      DepList,
+      ScanGraphs
     },
     data() {
       return {
@@ -157,23 +139,12 @@
         project: {},
         dependencies: [],
         report: {},
-        graphWidth: '',
-        graphHeight: '',
         vulns : [],
         selectedvuln: {},
         cve: [],
-        graphData: {
-          labels: [],
-          data: []
-        },
-        pieData: {
-          labels: [],
-          data: []
-        },
         cveThing: '',
         activeColor: 'white',
         selecteddep: {},
-        datacollection: null,
         intervalKill : '',
         latestver : ''
       }
@@ -183,8 +154,6 @@
       this.get_dependencies();
       this.set_vulns();
       this.get_scan();
-      this.graphWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      this.graphHeight = window.innerHeight || document.documentElement.clientHeight  || document.body.clientHeight;
       this.intervalKill = setInterval(function () {this.get_dependencies();}.bind(this), 60000);
     },
     destroyed() {
@@ -208,15 +177,15 @@
       get_dependencies() {getDependencies(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.dependencies = response;});},
       view_vulns() {getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.open_vuln_dialog(response)})},
       set_vulns(){
-        this.datacollection = {
-          labels: [],
-          datasets: []
-        };
          getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  
           { this.vulns=response;
-            this.fillData();
+            this.$refs.scanGraphs.fillData(this.dependencies,this.vulns)
           })
       },
+      mitre(cve_id){window.location.href = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name='+ cve_id},
+      nvdb(cve_id){window.location.href = 'https://nvd.nist.gov/vuln/detail/'+ cve_id},
+      cvedetails(cve_id){window.location.href = 'https://www.cvedetails.com/cve/CVE-'+ cve_id},
+      rapid7(cve_id){window.location.href = 'https://www.rapid7.com/db/search?utf8=%E2%9C%93&q=' + cve_id + '&t=a'},
       open_vuln_dialog (response) {
         this.report=response;
           this.$modal.show('dialog', {
@@ -262,56 +231,12 @@
         this.selectedvuln.patched_version = vuln.cves[index].patched_version;
         this.$modal.show('cvemodal');
       },
-      openDepModal(dep){
-        this.selecteddep=dep;
-        dependencyLatest(this.$route.params.project_id,this.$route.params.scan_id,this.selecteddep.id).then(response =>  {
-          this.latestver = response.version;
-          this.$modal.show('depmodal');
-        });
-      },
-      maven(dep_name){window.location.href = 'https://search.maven.org/#search%7Cga%7C1%7C'+ dep_name},
-      rubygems(dep_name){window.location.href = 'https://rubygems.org/gems/'+ dep_name},
-      pypi(dep_name){window.location.href = 'https://pypi.python.org/pypi/'+ dep_name},
-      mitre(cve_id){window.location.href = 'https://cve.mitre.org/cgi-bin/cvename.cgi?name='+ cve_id},
-      nvdb(cve_id){window.location.href = 'https://nvd.nist.gov/vuln/detail/'+ cve_id},
-      cvedetails(cve_id){window.location.href = 'https://www.cvedetails.com/cve/CVE-'+ cve_id},
-      rapid7(cve_id){window.location.href = 'https://www.rapid7.com/db/search?utf8=%E2%9C%93&q=' + cve_id + '&t=a'},
       openJsonReport(){
         getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {
           window.open(window.URL.createObjectURL(new Blob([JSON.stringify(response)], { type: 'application/json' } )));});
       },
       returnToProj(){$router.push({path: '/project/'+this.$route.params.project_id});},
-      getExploitInfo(cve_id){getExploit(cve_id);}, 
-      fillData () {
-        this.graphData = {
-          labels: [],
-          datasets: [{label: 'Severity (CVSS2)', backgroundColor: '#0074D9', data: []}]
-        }
-        this.pieData = {
-          labels: ['Safe','Vuln'],
-          datasets: [{
-              label: ['Safe','Vuln'],backgroundColor: ['#2ECC40','red'],
-              data: [this.dependencies.length-Object.getOwnPropertyNames(this.vulns).length+1,Object.getOwnPropertyNames(this.vulns).length-1]
-            }]
-        }
-        var scores = []; var labels = [];
-        var keys = Object.keys(this.vulns);
-        for(var i=0;i<keys.length;i++){
-            for(var j=0; j<this.vulns[keys[i]].cves.length; j++){
-              if(this.vulns[keys[i]].cves[j].cve !== undefined){this.processGraph(this.vulns[keys[i]].cves[j].cve,labels,scores,this.vulns[keys[i]].cves[j])}
-        }}
-      },
-      processGraph(cve_id,labels,scores,aCve){
-        getCve(cve_id).then(response =>  {
-          if(response['cvss2'] !== undefined){
-            labels.push(aCve.cve);
-            scores.push(parseFloat(response['cvss2']))
-            this.graphData = {
-              labels: labels,
-              datasets: [{label: 'Severity (CVSS2)',backgroundColor: '#0074D9', data: scores}]
-            }}
-        });
-      }
+      getExploitInfo(cve_id){getExploit(cve_id);}
     }
   } 
 </script>
@@ -369,5 +294,3 @@ body,
 }
 
 </style>
-
-
