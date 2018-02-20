@@ -48,9 +48,8 @@
           <main class="main-content">
             <div>
               <md-list class="md-double-line">
-
-
                   <h4 style="text-align: left" v-for="(vuln,title) in vulns">{{title}} [{{vuln.cves[0].our_version}}]
+                  Safe version: [{{vuln.overall_patch}}]
                   <md-list-item v-for="(thing,index) in vuln.cves">
                     <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" ><md-icon >warning</md-icon></md-avatar>
                     <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon >warning</md-icon></md-avatar>
@@ -87,7 +86,7 @@
               </br v-if="project.language === 'Ruby'">
               <span class="md-subheading" style="font-weight: bold" >Versions</span></br>
               <span style="font-weight: bold" > Our: </span><span>{{selectedvuln.our_version}}</span></br>
-              <span style="font-weight: bold">  Patched</span>
+              <span style="font-weight: bold">  Safe: </span>
               <span v-if="project.language === 'Python' | project.language === 'Java'" v-for="patched in selectedvuln.patched_version">{{patched}},</span>
               <span v-if="project.language === 'Ruby'" v-for="patched in cve.patched_versions">{{patched}},</span>
               <br>
@@ -288,17 +287,14 @@
           { label: 'Severity (CVSS2)' ,
            backgroundColor: '#0074D9', 
            data: []
-          } 
-          ]
+          } ]
         }
         this.pieData = {
           labels: ['Safe','Vuln'],
           datasets: [
             {
               label: ['Safe','Vuln'],
-              backgroundColor: [
-              '#2ECC40',
-              'red'],
+              backgroundColor: ['#2ECC40','red'],
               data: [this.dependencies.length-Object.getOwnPropertyNames(this.vulns).length+1,Object.getOwnPropertyNames(this.vulns).length-1]
             }
           ]
@@ -309,16 +305,16 @@
             var keys = Object.keys(this.vulns);
             for(var i=0;i<keys.length;i++){
                 var key = keys[i];
-                var len = this.vulns[key].length;
+                var len = this.vulns[key].cves.length;
                 var someData = [];
                 for(var j=0; j<len; j++){
-                         var vthing = this.vulns[key][j];
-                         var labelname = this.vulns[key][j].cve;
-
-                          if( labelname !== undefined){
+                         var vthing = this.vulns[key].cves[j];
+                         var labelname = this.vulns[key].cves[j].cve;
+                          if(labelname !== undefined){
                             getCve(labelname).then(response =>  {
                               if(response['cvss2'] !== undefined){
-                                labels.push(labelname);
+                                console.log(vthing.cve)
+                                labels.push(vthing.cve);
                                 data.push(parseFloat(response['cvss2']))
                               self.graphData = {
                                 labels: labels,
