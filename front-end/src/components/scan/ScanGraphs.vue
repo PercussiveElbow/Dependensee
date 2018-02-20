@@ -6,9 +6,9 @@
 </template>
 
 <script>
-  import {getCve} from '../utils/api.js';
-  import PieChart from '../utils/PieChart.js'
-  import BarChart from '../utils/BarChart.js'
+  import {getCve} from '../../utils/api.js';
+  import PieChart from '../../utils/PieChart.js'
+  import BarChart from '../../utils/BarChart.js'
 
   export default {
     name: 'ScanGraphs',
@@ -22,12 +22,10 @@
 	data() {
 		return {
 			graphData: {
-	          labels: [],
-	          data: []
+	          labels: [],data: []
 	        },
 	        pieData: {
-	          labels: [],
-	          data: []
+	          labels: [],data: []
 	        },
 	        dependencies: [],
 	        vulns: []

@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	  import {getCve,dependencyLatest} from '../utils/api.js';
+	  import {getCve,dependencyLatest} from '../../utils/api.js';
 
 	export default {
 	    name: 'VulnList',

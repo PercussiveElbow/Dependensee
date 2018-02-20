@@ -18,7 +18,7 @@
 </template>
 
 <script>
-	import {dependencyLatest} from '../utils/api.js';
+	import {dependencyLatest} from '../../utils/api.js';
 
   export default {
     name: 'DepList',
@@ -36,11 +36,9 @@
 	methods: {
       openDepModal: function(dep){
         this.localSelectedDep=dep;
-        this.$emit('update:selecteddep', this.localSelectedDep);
         dependencyLatest(this.$route.params.project_id,this.$route.params.scan_id,this.localSelectedDep.id).then(response =>  {
           this.localLatestVer = response.version;
-          this.$emit('update:latestver', this.localLatestVer);
-          this.$modal.show('depmodal');
+          this.$modal.show('depmodal',{latestver: this.localLatestVer, selecteddep: this.localSelectedDep, project: this.project});
         });
       },
       maven(dep_name){window.location.href = 'https://search.maven.org/#search%7Cga%7C1%7C'+ dep_name},

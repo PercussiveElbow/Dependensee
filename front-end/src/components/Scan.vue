@@ -26,7 +26,7 @@
 
       <md-tabs>
           <md-tab id="tab-deps" md-label="Dependencies" to="/components/tabs/deps">
-              <DepList :dependencies.sync=dependencies :project.sync=project :selecteddep.sync=selecteddep :latestver.sync=latestver></DepList>
+              <DepList :dependencies.sync=dependencies :project.sync=project></DepList>
           </md-tab>
 
         <md-tab id="tab-vulns" md-label="Vulnerabilities" to="/components/tabs/vulns">
@@ -36,28 +36,10 @@
           <ScanGraphs :dependencies.sync=dependencies :vulns.sync=vulns ref='scanGraphs'></ScanGraphs>
         </md-tab>
       </md-tabs>
+
     </div>
     <v-dialog/>
-    <modal name="depmodal" :responsive="260" :adaptive="true" >
-      <div style="padding: 15px; text-align: left">
-        <i class="icon-python" style="font-size: 1.75em" v-if="project.language === 'Python'"></i>
-          <i class="icon-java" style="font-size: 1.75em" v-if="project.language === 'Java'"></i>
-          <i class="icon-ruby" style="font-size: 1.75em" v-if="project.language === 'Ruby'"></i>
-          <h1 style ="text-align: center" >{{selecteddep.name}}</h1>
-         <span style="font-weight: bold">Version: </span><span>{{selecteddep.version}}</span>
-         </br>
-          <span style="font-weight: bold">Latest version: </span><a>{{latestver}}</a>
-         </br></br>
-         <span style="font-weight: bold">Raw: </span><span> {{selecteddep.raw}}</span>
-          </br>
-          <div style="text-align: center">
-       <!--      <span style="font-weight: bold">Open on:</span></br> -->
-            <md-button v-if="project.language === 'Java'" class="md-primary md-raised" @click="maven(selecteddep.name)">Maven Central</md-button>
-            <md-button v-if="project.language === 'Python'" class="md-primary md-raised" @click="pypi(selecteddep.name)">Pypi</md-button>
-            <md-button v-if="project.language === 'Ruby'" class="md-primary md-raised" @click="rubygems(selecteddep.name)">Ruby Gems</md-button>
-          </div>
-      </div>
-    </modal>
+    <DepModal></DepModal>
     <CVEModal></CVEModal>
     <CVESearch ref='cvesearch'></CVESearch>
   </div>
@@ -67,10 +49,11 @@
   import {getProject,getScan,getDependencies,getJsonReport,getPdfReport,getTxtReport,updateScan} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import CVESearch from './CveSearch'
-  import DepList from './DepList'
-  import VulnList from './VulnList'
-  import ScanGraphs from './ScanGraphs'
-  import CVEModal from './CVEModal'
+  import DepList from './scan/DepList'
+  import VulnList from './scan/VulnList'
+  import ScanGraphs from './scan/ScanGraphs'
+  import CVEModal from './scan/CVEModal'
+  import DepModal from './scan/DepModal'
 
   export default {
     name: 'Scan',
@@ -80,7 +63,8 @@
       DepList,
       ScanGraphs,
       VulnList,
-      CVEModal
+      CVEModal,
+      DepModal
     },
     data() {
       return {
@@ -89,9 +73,7 @@
         dependencies: [],
         report: {},
         vulns : [],
-        selecteddep: {},
         intervalKill : '',
-        latestver : ''
       }
     },
     created() {
@@ -153,7 +135,6 @@
      }
   } 
 </script>
-
 
 <style scoped>
 html,

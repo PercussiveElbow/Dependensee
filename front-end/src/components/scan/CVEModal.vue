@@ -36,15 +36,10 @@
 </template>
 
 <script>
-  import {getExploit} from '../utils/api.js';
+  import {getExploit} from '../../utils/api.js';
 
 	export default {
-	    name: 'CVEModal',
-	    components:  {
-	    },
-		mounted() {
-		  const vm = this
-		},
+	  name: 'CVEModal',
 		data() {
 			return {
 				cve: [],
@@ -60,17 +55,15 @@
 		  cvedetails(cve_id){window.location.href = 'https://www.cvedetails.com/cve/CVE-'+ cve_id},
 		  rapid7(cve_id){window.location.href = 'https://www.rapid7.com/db/search?utf8=%E2%9C%93&q=' + cve_id + '&t=a'},
 		  getExploitInfo(cve_id){getExploit(cve_id);},
-  		  beforeOpen (event) {
-    		console.log(event.params.foo);
+  		beforeOpen (event) {
     		this.cve=event.params.cve;
     		this.activeColor=event.params.activeColor;
     		this.selectedvuln=event.params.selectedvuln;
     		this.project=event.params.project;
     		this.latestver=event.params.latestver;
-  		  }
+  		}
 		}
 	}
-
 </script>
 
 <style>
