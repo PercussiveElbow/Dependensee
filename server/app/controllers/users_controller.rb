@@ -4,6 +4,14 @@ class UsersController < ApplicationController
 
   # POST /signup
   def create
+    begin
+      param! :name, String, required: true, format: /A-Za-z+/
+      param! :email, String, required: true, format: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+      param! :password, String, required: true
+    rescue
+      raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
+    end
+
     user = User.create!(whitelist)
     token = AuthUser.new(user.email, user.password).call
     response = {message: MsgConstants::ACC_CREATED, auth_token: token }
@@ -13,6 +21,12 @@ class UsersController < ApplicationController
   # POST /login
   def login
     whitelist_login
+    begin
+      param! :email, String, required: true, format: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+      param! :password, String, required: true
+    rescue
+      raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
+    end
     token = AuthUser.new(params[:email], params[:password]).call
     response = {message: MsgConstants::LOGGED_ON, auth_token: token }
     json_response(response, :created)

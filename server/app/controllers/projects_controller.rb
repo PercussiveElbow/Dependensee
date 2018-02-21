@@ -38,6 +38,12 @@ class ProjectsController < ApplicationController
 
   def find_project_by_id
     begin
+      param! :id, String, required: true, format:  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
+    rescue
+      raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
+    end
+
+    begin
       @project = Project.find(params[:id])
     rescue
       Raise CustomException::NotFound, MsgConstants::NOT_FOUND

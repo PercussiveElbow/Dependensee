@@ -7,6 +7,5 @@ class ProfileController < ApplicationController
     response = {email: email, name: name}
     json_response(response)
   end
-  private
 
 end

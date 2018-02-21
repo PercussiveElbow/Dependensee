@@ -23,8 +23,10 @@ class CveController < ApplicationController
 
   def find_cve_by_id
     begin
-      param! :id, String, required: true, format:  /^\d{4}-\d$/
-
+      param! :id, String, required: true, format:  /^\d{4}-(0\d{3}|[1-9]\d{3,})$/
+    rescue
+      raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
+    end
       @cve = RubyCve.where(['cve_id = ?', params[:id]])
       if !@cve.nil? and !@cve.empty?
         @language = 'Ruby'
@@ -39,9 +41,6 @@ class CveController < ApplicationController
           end
         end
       end
-    rescue
-      raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
-    end
   end
 
   # def find_cve_by_name

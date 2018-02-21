@@ -34,7 +34,6 @@ class ReportsController < ApplicationController
       else
       response = ''
     end
-
     json_response(response, :created)
   end
 
