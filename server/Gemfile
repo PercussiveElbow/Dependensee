@@ -16,6 +16,8 @@ gem 'pg'
 gem 'prawn'
 gem 'rack-cors'
 gem 'rubyzip'
+gem 'rails_param'
+
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

@@ -22,19 +22,25 @@ class CveController < ApplicationController
   # end
 
   def find_cve_by_id
-    @cve = RubyCve.where(['cve_id = ?', params[:id]])
-    if !@cve.nil? and !@cve.empty?
-      @language = 'Ruby'
-    else
-      @cve = JavaCve.where(['cve_id = ?', params[:id]])
+    begin
+      param! :id, String, required: true, format:  /^\d{4}-\d$/
+
+      @cve = RubyCve.where(['cve_id = ?', params[:id]])
       if !@cve.nil? and !@cve.empty?
-        @language = 'Java'
+        @language = 'Ruby'
       else
-        @cve = PythonCve.where(['cve_id = ?', params[:id]])
+        @cve = JavaCve.where(['cve_id = ?', params[:id]])
         if !@cve.nil? and !@cve.empty?
-          @language = 'Python'
+          @language = 'Java'
+        else
+          @cve = PythonCve.where(['cve_id = ?', params[:id]])
+          if !@cve.nil? and !@cve.empty?
+            @language = 'Python'
+          end
         end
       end
+    rescue
+      raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
     end
   end
 

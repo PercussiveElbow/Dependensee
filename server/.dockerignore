@@ -4,4 +4,3 @@ Dockerfile
 db/*.sqlite3
 db/*.sqlite3-journal
 .README.md
-.todo.md

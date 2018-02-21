@@ -1,7 +1,7 @@
 var axios = require('axios')
 
-// const ADDRESS  = 'http://127.0.0.1';
-const ADDRESS  = 'http://192.168.1.95';
+const ADDRESS  = 'http://127.0.0.1';
+// const ADDRESS  = 'http://192.168.1.95';
 
 const API_URL = ADDRESS + ':3000/'
 const WEB_URL = ADDRESS + ':8080/'
@@ -23,7 +23,7 @@ const ACCESS_TOKEN = 'jwk_access_token'
 //Split this file out for tidiness	
 export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
 	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,
-	dependencyLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux,updateScan};
+	dependencyLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux,updateScan,canExploit};
 
 //AUTH
 function apiLogin(params) {
@@ -122,6 +122,10 @@ function getCve(cve_id){
 }
 
 //EXPLOIT
+function canExploit(cve_id){
+		cve_id = '2016-6662'
+	return axios.get(EXPLOIT_URL+cve_id, {headers: {'download': 'no'}} ).then (response => response.status);
+}
 function getExploit(cve_id){
 	cve_id = '2016-6662'
 	// return axios.get(EXPLOIT_URL+cve_id).then (response => response.data);

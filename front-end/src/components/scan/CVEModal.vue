@@ -29,24 +29,26 @@
             <md-button  @click="nvdb(cve.cve_id)" class="md-primary md-raised">NVDB</md-button>
             <md-button  @click="cvedetails(cve.cve_id)" class="md-primary md-raised">CVEDetails</md-button>
             <md-button  @click="rapid7(cve.cve_id)" class="md-primary md-raised">Rapid7</md-button>
-            <md-button  @click="getExploitInfo(cve.cve_id)" style="background-color: red;" class="md-primary md-raised">Exploit</md-button>
+            <md-button  @click="getExploitInfo(cve.cve_id)" style="background-color: red;" v-if="exploitFound" class="md-primary md-raised">Exploit</md-button>
           </div>
       </div>
     </modal>
 </template>
 
 <script>
-  import {getExploit} from '../../utils/api.js';
+  import {canExploit,getExploit} from '../../utils/api.js';
 
 	export default {
 	  name: 'CVEModal',
 		data() {
 			return {
 				cve: [],
+        cve_id: '',
 				activeColor: '',
 				selectedVuln: '',
 				project: '',
-				latestVer: ''
+				latestVer: '',
+        exploitFound: false
 			}
 		},
 		methods: {
@@ -57,10 +59,17 @@
 		  getExploitInfo(cve_id){getExploit(cve_id);},
   		beforeOpen (event) {
     		this.cve=event.params.cve;
+        this.cve_id = this.cve.cve_id
     		this.activeColor=event.params.activeColor;
     		this.selectedVuln=event.params.selectedVuln;
     		this.project=event.params.project;
     		this.latestVer=event.params.latestVer;
+        this.exploitFound=false;
+        canExploit(this.cve_id).then( response => {
+            if(response===200){
+              this.exploitFound=true;
+            }
+        });
   		}
 		}
 	}

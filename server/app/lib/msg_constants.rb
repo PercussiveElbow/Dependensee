@@ -11,6 +11,7 @@ class MsgConstants
   DEPENDENCIES_FOUND='Dependencies found'
   VULNERABILITIES_FOUND='Vulnerabilities found'
   LOGGED_ON='Logged on. New Token generated'
+  VALIDATION_ERROR='Validation error in one or more parameters'
 
 
   # Gem Scanning
