@@ -8,7 +8,6 @@
             <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()"><md-icon>menu</md-icon></md-button>
             <span style="flex: 1"></span>
             <md-button class="md-icon-button" @click="$refs.cvesearch.showsearch()"><md-icon>search</md-icon></md-button>
-            <md-button class="md-icon-button"><md-icon>view_module</md-icon></md-button>
           </div>
           <div class="md-toolbar-container">
             <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });"><md-icon>home</md-icon></md-button>

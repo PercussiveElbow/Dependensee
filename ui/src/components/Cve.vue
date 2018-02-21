@@ -9,7 +9,6 @@
             <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()"><md-icon>menu</md-icon></md-button>
             <span style="flex: 1"></span>
             <md-button class="md-icon-button" @click="$refs.cvesearch.showsearch()"><md-icon>search</md-icon></md-button>
-            <md-button class="md-icon-button"><md-icon>view_module</md-icon></md-button>
           </div>
           <div class="md-toolbar-container">
             <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });"><md-icon>home</md-icon></md-button>
@@ -59,11 +58,11 @@
           </div>
 
 
-          <md-button style="margin-left: 0px; margin-right: 0px" class="md-primary md-raised" @click="mitre(cve.cve_id)">Mitre</md-button>
-          <md-button  style="margin-left: 0px; margin-right: 0px" @click="nvdb(cve.cve_id)" class="md-primary md-raised">NVDB</md-button>
-          <md-button style="margin-left: 0px; margin-right: 0px" @click="cvedetails(cve.cve_id)" class="md-primary md-raised">CVEDetails</md-button>
-          <md-button style="margin-left: 0px; margin-right: 0px" class="md-primary md-raised" @click="rapid7(cve.cve_id)">Rapid7</md-button>
-          <md-button @click="getExploitInfo(cve.cve_id)" style="background-color: red; margin-left: 0px; margin-right: 0px" class="md-primary md-raised">Exploit</md-button>
+            <md-button @click="mitre(cve.cve_id)" class="md-primary md-raised">Mitre</md-button>
+            <md-button  @click="nvdb(cve.cve_id)" class="md-primary md-raised">NVDB</md-button>
+            <md-button  @click="cvedetails(cve.cve_id)" class="md-primary md-raised">CVEDetails</md-button>
+            <md-button  @click="rapid7(cve.cve_id)" class="md-primary md-raised">Rapid7</md-button>
+            <md-button  @click="getExploitInfo(cve.cve_id)" style="background-color: red;" v-if="exploitFound" class="md-primary md-raised">Exploit</md-button>
     </div>
   </main>
   </div>
@@ -72,7 +71,7 @@
 </template>
 
 <script>
-  import {getCve} from '../utils/api.js';
+  import {getCve,canExploit,getExploit} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import CVESearch from './CveSearch'
 
@@ -84,11 +83,17 @@
     },
     data() {
       return {
-        cve: ''
+        cve: '',
+        exploitFound: false
        }
     },
     created() {
       this.get_cve();
+       canExploit(this.cve_id).then( response => {
+            if(response===200){
+              this.exploitFound=true;
+            }
+        });
     },
     watch: {
       '$route': 'fetchData'
