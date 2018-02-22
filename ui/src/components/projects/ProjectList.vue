@@ -9,16 +9,16 @@
           <router-link :to="{ path: '/project/'+item.id }">{{item.name}}</router-link>
           <p>{{ item.description }}</p>
         </div>
-        <md-button class="md-icon-button md-list-action" @click=delete_project(item.id)><md-icon>delete</md-icon></md-button>
-        <md-button class="md-icon-button md-list-action" @click=editshow(item.id)><md-icon>edit</md-icon></md-button>
+        <md-button class="md-icon-button md-list-action" @click=delete_project(item.id)><md-tooltip md-direction="top">Delete</md-tooltip><md-icon>delete</md-icon></md-button>
+        <md-button class="md-icon-button md-list-action" @click=editshow(item.id)><md-tooltip md-direction="top">Edit</md-tooltip><md-icon>edit</md-icon></md-button>
       </md-list-item>
     </md-list>
     <div>
       <modal name="edit-project" :height="350" :adaptive="true">
         <div style="padding: 30px; text-align: center">
           <h2 >Edit a Project</h2>
-          <md-input-container><md-icon>work</md-icon><label>Edit Project</label><md-input name v-model="editproject.name"/></md-input-container>
-          <md-input-container><md-icon>description</md-icon><label>Description</label><md-input name v-model="editproject.description"/></md-input-container>
+          <md-input-container><md-icon>work</md-icon><label>Edit Project</label><md-input maxlength="20" name v-model="editproject.name"/></md-input-container>
+          <md-input-container><md-icon>description</md-icon><label>Description</label><md-input maxlength="30" name v-model="editproject.description"/></md-input-container>
           </br>
           <md-button class="md-primary md-raised" v-on:click=edit_project>Save</md-button>
         </div>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import {getToken,getProjects,editProject,deleteProject} from '../utils/api.js';
+  import {getToken,getProjects,editProject,deleteProject} from '../../utils/api.js';
   export default {
     name: 'ProjectList',
     data: function () {
@@ -79,22 +79,10 @@
 </script>
 
 <style scoped>
-.icon-ruby {
-  vertical-align: middle;
-  margin-top: 50px;
-  margin-left: 5px;
-  font-size: 1.9em;
-}
-.icon-java {
-  vertical-align: middle;
-  padding-top: 15px;
-  margin-left: 10px;
-  font-size: 1.75em;
-}
-.icon-python {
-  vertical-align: middle;
-  padding-top: 20px;
-  margin-left: 7px;
-  font-size: 1.75em;
+i {
+    display: block;
+    margin-left: 23%;
+    margin-top: 20%;
+    font-size: 1.5em;
 }
 </style>

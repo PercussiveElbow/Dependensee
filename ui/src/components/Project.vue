@@ -13,7 +13,7 @@
             <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });"><md-icon>home</md-icon></md-button>
             <h2 class="md-title">Project: {{project.name}}</h2>
             <span style="flex: 1"></span>
-            <md-button @click=show class="md-fab md-mini"><md-icon>file_upload</md-icon></md-button>
+            <md-button @click=show class="md-fab md-mini"><md-tooltip md-direction="left">Upload Dependencies</md-tooltip><md-icon>file_upload</md-icon></md-button>
           </div>
         </md-toolbar>
       </md-whiteframe>
@@ -32,7 +32,8 @@
                     <p>{{ scan.id }}</p>
         <!--             <p>{{ scan.description }}</p>
          -->      </div>
-                  <md-button class="md-icon-button md-list-action" @click=delete_scan(scan.id)><md-icon>delete</md-icon></md-button>
+
+                  <md-button class="md-icon-button md-list-action" @click=delete_scan(scan.id)><md-tooltip md-direction="top">Delete</md-tooltip><md-icon>delete</md-icon></md-button>
                   <md-button class="md-icon-button md-list-action" @click=view_vulns(scan.id)><md-icon>file_download</md-icon></md-button>
                 </md-list-item>
               </md-list>
@@ -59,7 +60,7 @@
         </md-tab>
         <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
           <div>
-            <md-switch :v-bind="settings.scan" :v-model="settings.scan">Automatically Scan</md-switch>
+            <md-switch v-bind:model="settings.scan" >Automatically Scan</md-switch>
           </div>
           <div>
             <h3> Scan every: </h3>
@@ -115,7 +116,7 @@
           data: []
         },
         settings: {
-          scan: false,
+          scan: '',
           timeout: 3600
         },
         intervalKill : ''

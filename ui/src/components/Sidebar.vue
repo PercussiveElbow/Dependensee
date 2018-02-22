@@ -11,7 +11,7 @@
             <span>{{profile.name}}</span>
             <span>{{profile.email}}</span>
           </div>
-          <md-button class="md-icon-button md-list-action" @click="handleLogout"><md-icon>exit_to_app</md-icon></md-button>
+          <md-button class="md-icon-button md-list-action" @click="handleLogout"><md-tooltip md-direction="right">Logout</md-tooltip><md-icon>exit_to_app</md-icon></md-button>
         </md-list-item>
       </md-list>
     </md-toolbar>

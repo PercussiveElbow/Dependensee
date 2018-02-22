@@ -11,13 +11,11 @@
           </div>
           <div class="md-toolbar-container">
             <h2 class="md-title">Projects</h2>
-            <md-button @click=show class="md-fab md-mini"><md-icon>add</md-icon></md-button>
+            <md-button @click=show class="md-fab md-mini"><md-tooltip md-direction="right">Create Project</md-tooltip><md-icon>add</md-icon></md-button>
           </div>
         </md-toolbar>
       </md-whiteframe>
-      <main class="main-content">
-          <ProjectList></ProjectList>
-      </main>
+      <main class="main-content"><ProjectList></ProjectList></main>
 
       <modal name="create-project" :height="350" :adaptive="true" >
         <div style="padding: 30px; text-align: center">
@@ -27,8 +25,7 @@
           <select v-model="newproject.language">
             <option disabled value="">Language</option><option>Ruby</option><option>Java</option><option>Python</option>
           </select>
-          </br>
-          <md-button class="md-primary md-raised" v-on:click=create_project>Create</md-button>
+          </br><md-button class="md-primary md-raised" v-on:click=create_project>Create</md-button>
         </div>
       </modal>
     </div>
@@ -38,7 +35,7 @@
 
 <script>
   import {getToken,getProjects,getProfile,saveToken,postProject} from '../utils/api.js';
-  import ProjectList from './ProjectList'
+  import ProjectList from './projects/ProjectList'
   import Sidebar from './Sidebar'
   import CVESearch from './CveSearch'
 
