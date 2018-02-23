@@ -22,7 +22,6 @@
     methods: {
       showsearch(){this.$modal.show('cve-search');},
       search(){
-        console.log("search")
         this.$router.push('/cve/' + this.cvesearch.name);
       }
   	}

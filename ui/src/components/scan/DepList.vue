@@ -10,7 +10,9 @@
 	          <a @click=openDepModal(dep)>{{dep.name}}</a>
 	          <p>{{ dep.version }}</p>
 	        </div>
-	        <md-button v-if="project.language === 'Java'" class="md-icon-button md-list-action"  @click=maven(dep.name)><md-icon>search</md-icon></md-button>
+	        <md-button v-if="project.language === 'Java'" class="md-icon-button md-list-action"  @click=maven(dep.name)><md-tooltip md-direction="left">View on Maven</md-tooltip><md-icon>search</md-icon></md-button>
+	        <md-button v-if="project.language === 'Python'" class="md-icon-button md-list-action"  @click=pypi(dep.name)><md-tooltip md-direction="left">View on PyPi</md-tooltip><md-icon>search</md-icon></md-button>
+	        <md-button v-if="project.language === 'Ruby'" class="md-icon-button md-list-action"  @click=rubygems(dep.name)><md-tooltip md-direction="left">View on RubyGems</md-tooltip><md-icon>search</md-icon></md-button>
 	      </md-list-item>
 	    </md-list>
 	  </div>

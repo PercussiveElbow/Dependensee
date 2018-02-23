@@ -7,7 +7,7 @@
           <div class="md-toolbar-container">
             <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()"><md-icon>menu</md-icon></md-button>
             <span style="flex: 1"></span>
-            <md-button class="md-icon-button" @click="$refs.cvesearch.showsearch()"><md-icon>search</md-icon></md-button>
+            <md-button class="md-icon-button" @click="$refs.cvesearch.showsearch()"><md-tooltip md-direction="left">Search</md-tooltip><md-icon>search</md-icon></md-button>
           </div>
           <div class="md-toolbar-container">
             <h2 class="md-title">Projects</h2>

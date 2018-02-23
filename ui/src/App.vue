@@ -11,13 +11,10 @@ import {isValidToken} from './utils/api.js';
 
 export default {
   name: 'DependenseeUI',
-  created() {
-    isValidToken(this.$router)
-  }
 }
 </script>
 
-<style>
+<style >
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

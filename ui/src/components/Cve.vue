@@ -8,7 +8,7 @@
           <div class="md-toolbar-container">
             <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()"><md-icon>menu</md-icon></md-button>
             <span style="flex: 1"></span>
-            <md-button class="md-icon-button" @click="$refs.cvesearch.showsearch()"><md-icon>search</md-icon></md-button>
+            <md-button class="md-icon-button" @click="$refs.cvesearch.showsearch()"><md-tooltip md-direction="left">Search</md-tooltip><md-icon>search</md-icon></md-button>
           </div>
           <div class="md-toolbar-container">
             <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });"><md-icon>home</md-icon></md-button>
@@ -18,6 +18,7 @@
       </md-whiteframe>
   
       <main class="main-content" style="text-align: left;">
+        <h1>{{error}}</h1>
         <div style="padding: 20px" v-if="cve.language === 'Ruby' || cve.language === 'Java' || cve.language === 'Python'">
           <div v-if="cve.language === 'Ruby'">
             <i class="icon-ruby" style="font-size: 1.75em" ></i>
@@ -56,8 +57,6 @@
             <a v-for="reference in cve.references">{{reference}}</br></a>
             </br>
           </div>
-
-
             <md-button @click="mitre(cve.cve_id)" class="md-primary md-raised">Mitre</md-button>
             <md-button  @click="nvdb(cve.cve_id)" class="md-primary md-raised">NVDB</md-button>
             <md-button  @click="cvedetails(cve.cve_id)" class="md-primary md-raised">CVEDetails</md-button>
@@ -84,7 +83,8 @@
     data() {
       return {
         cve: '',
-        exploitFound: false
+        exploitFound: false,
+        error: ''
        }
     },
     created() {
@@ -92,6 +92,8 @@
        canExploit(this.cve_id).then( response => {
             if(response===200){
               this.exploitFound=true;
+            }else{
+              this.error= 'CVE not found!'
             }
         });
     },
@@ -99,7 +101,11 @@
       '$route': 'fetchData'
     },
     methods: {
-      get_cve() {getCve(this.$route.params.cve_id).then(resp => {this.cve = resp;});},
+      get_cve() {
+        getCve(this.$route.params.cve_id).then(resp => {this.cve = resp;}).catch((error) => {
+          this.error= 'CVE not found!'
+        });
+      },
       getExploitInfo(cve_id){getExploit(cve_id);},
       nvdb(cve_id){window.location.href = 'https://nvd.nist.gov/vuln/detail/'+ cve_id},
       cvedetails(cve_id){window.location.href = 'https://www.cvedetails.com/cve/CVE-'+ cve_id},

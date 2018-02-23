@@ -1,13 +1,17 @@
 <template>
 	    <modal name="cvemodal" :height="550" :adaptive="true" @before-open="beforeOpen">
       <div style="padding: 11px; text-align: left">
-              <h1  v-bind:style="{ color: activeColor}" style ="text-align: center" >CVE {{cve.cve_id}}</h1>
+      <md-button class="md-icon-button md-primary" @click="$modal.hide('cvemodal')">
+        <md-icon>close</md-icon>
+      </md-button>
+              <h1 v-bind:style="{ color: activeColor}" style ="text-align: center" >CVE {{cve.cve_id}}</h1>
               <h2 style ="text-align: center" >{{cve.title}}</h2>
               <p>{{selectedVuln.depname}}</p>
               <span style="font-weight: bold" >CVSS2 Score:</span><span> {{cve.cvss2}}</span></br>
               <span v-if="project.language === 'Python' | project.language === 'Java'" >{{cve.desc}}</span>
-              </br v-if="project.language === 'Ruby'">
-              <span class="md-subheading" style="font-weight: bold" v-if="project.language === 'Ruby'" @click="$router.push({ path: '/cve/'+cve.id });">Description</span>
+              <div v-if="project.language === 'Ruby'">
+                {{cve.desc}}
+              </div>
               </br v-if="project.language === 'Ruby'">
               <span class="md-subheading" style="font-weight: bold" >Versions</span></br>
               <span style="font-weight: bold" > Our: </span><span>{{selectedVuln.our_version}}</span></br>

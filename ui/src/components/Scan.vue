@@ -8,16 +8,15 @@
           <div class="md-toolbar-container">
             <md-button class="md-icon-button" @click="$refs.sidebar.toggleSidebar()" ><md-icon>menu</md-icon></md-button>
             <h2 class="md-title" @click="$router.push({ path: '/project/'+project.id });">Project: {{project.name}}</h2><span style="flex: 1"></span>
-            <md-button class="md-icon-button" @click="$refs.cvesearch.showsearch()"><md-icon>search</md-icon></md-button>
+            <md-button class="md-icon-button" @click="$refs.cvesearch.showsearch()"><md-tooltip md-direction="left">Search</md-tooltip><md-icon>search</md-icon></md-button>
           </div>
           <div class="md-toolbar-container">
             <md-button class="md-icon-button"  @click="$router.push({ path: '/projects/' });"><md-icon>home</md-icon></md-button>
-              <md-button class="md-icon-button"  @click="$router.push({ path: '/project/' + project.id });">
-              <md-icon>keyboard_backspace</md-icon>
-            </md-button>
+            <md-button class="md-icon-button"  @click="$router.push({ path: '/project/' + project.id });">
+            <md-tooltip md-direction="bottom">Back</md-tooltip><md-icon>keyboard_backspace</md-icon></md-button>
             <h2 class="md-title">Scan: {{scan.title}}</h2>
-            <md-button class="md-icon-button md-list-action"  @click=view_vulns()><md-icon>file_download</md-icon></md-button>
-            <md-button class="md-icon-button md-list-action"  @click=update_deps()><md-icon>system_update_alt</md-icon></md-button>
+            <md-button class="md-icon-button md-list-action"  @click=view_vulns()><md-tooltip md-direction="bottom">Reports</md-tooltip><md-icon>file_download</md-icon></md-button>
+            <md-button class="md-icon-button md-list-action"  @click=update_deps()><md-tooltip md-direction="bottom">Update Dependencies</md-tooltip><md-icon>system_update_alt</md-icon></md-button>
           </div>
         </md-toolbar>
       </md-whiteframe>

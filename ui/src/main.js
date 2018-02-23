@@ -30,7 +30,8 @@ Vue.component('qrcode', VueQrcode);
 Vue.material.registerTheme({
   default: {
     primary: 'indigo',
-    accent: 'red'
+    accent: 'red',
+    warn: 'blue'
   },
   green: {	
     primary: 'green',
