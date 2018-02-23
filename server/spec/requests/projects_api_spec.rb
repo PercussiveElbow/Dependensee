@@ -36,7 +36,7 @@ RSpec.describe 'projects API', type: :request do
       end
 
       context 'when the record does not exist' do
-        let(:project_id) { 100 }
+        let(:project_id) { 'c480b6dc-18de-11e8-accf-0ed5f89f718b' }
 
         it 'returns status code 404' do
           expect(response).to have_http_status(404)
@@ -46,17 +46,28 @@ RSpec.describe 'projects API', type: :request do
           expect(response.body).to include("Couldn't find Project")
         end
       end
+    context 'when the record is not a UUID' do
+      let(:project_id) { '100' }
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a not found message' do
+        expect(response.body).to include("Validation error in one or more parameters")
+      end
+    end
   end
 
   describe 'POST /projects' do
-    let(:valid_attributes) do { name: 'AProject', owner: user.id.to_s,language:'testlang'}.to_json end
+    let(:valid_attributes) do { name: 'AProject', owner: user.id.to_s,language:'Java'}.to_json end
 
     context 'when request is valid' do
       before { post '/projects', params: valid_attributes, headers: headers }
 
       it 'creates a projects' do
         expect(json['name']).to eql('AProject')
-        expect(json['language']).to eql('testlang')
+        expect(json['language']).to eql('Java')
         expect(json['owner']).to eql(user.id.to_s)
       end
 
@@ -74,7 +85,7 @@ RSpec.describe 'projects API', type: :request do
 
       it 'returns a validation failure message' do
         expect(response.body)
-            .to match("{\"message\":\"Validation failed: Name can't be blank, Language can't be blank\"}")
+            .to match("{\"message\":\"Validation failed: Name can't be blank, Name is too short (minimum is 3 characters), Language can't be blank, Language is not included in the list\"}")
       end
     end
     end

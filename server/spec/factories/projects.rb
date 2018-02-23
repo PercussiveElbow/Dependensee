@@ -1,8 +1,8 @@
 
 FactoryGirl.define do
   factory :project do
-    name {Faker::Lorem.word}
+    name {'ATestProject'}
     owner {Faker::Lorem.word}
-    language {Faker::Lorem.word}
+    language {'Java'}
   end
 end

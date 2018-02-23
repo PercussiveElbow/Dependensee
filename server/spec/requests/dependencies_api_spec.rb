@@ -25,7 +25,7 @@ RSpec.describe 'dependencies API' do
     end
 
     context 'when project does not exist' do
-      let(:project_id) { 0 }
+      let(:project_id) { '2663776a-18e7-11e8-accf-0ed5f89f718b' }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -51,7 +51,7 @@ RSpec.describe 'dependencies API' do
     end
 
     context 'when dependency does not exist' do
-      let(:id) { 100 }
+      let(:id) { '2663776a-18e7-11e8-accf-0ed5f89f718b' }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -106,7 +106,7 @@ RSpec.describe 'dependencies API' do
     end
 
     context 'when the dependency does not exist' do
-      let(:id) { 0 }
+      let(:id) { '2663776a-18e7-11e8-accf-0ed5f89f718b' }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)

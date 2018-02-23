@@ -40,7 +40,7 @@ RSpec.describe AuthReq do
 
         # TODO: implement proper expired signature catch!!
         it 'raises ExceptionHandler::InvalidToken' do
-          expect { request_obj.call }.to raise_error(CustomException::InvalidToken, /Signature has expired/)
+          expect { request_obj.call }.to raise_error(CustomException::InvalidToken, /Invalid Authorization Token/)
         end
       end
     end

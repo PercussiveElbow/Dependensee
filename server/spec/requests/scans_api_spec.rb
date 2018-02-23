@@ -23,7 +23,7 @@ RSpec.describe 'scans API', type: :request do
     end
 
     context 'when project does not exist' do
-      let(:project_id) { 0 }
+      let(:project_id) { 'c480ba7e-18de-11e8-accf-0ed5f89f718b' }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -48,7 +48,7 @@ RSpec.describe 'scans API', type: :request do
     end
 
     context 'when scan does not exist' do
-      let(:id) { 0 }
+      let(:id) { 'c480ba7e-18de-11e8-accf-0ed5f89f718b' }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -106,7 +106,7 @@ RSpec.describe 'scans API', type: :request do
     end
 
     context 'when the scan does not exist' do
-      let(:id) { 0 }
+      let(:id) { '2663776a-18e7-11e8-accf-0ed5f89f718b' }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)

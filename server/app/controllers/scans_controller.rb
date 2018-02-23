@@ -15,12 +15,14 @@ class ScansController < ApplicationController
 
   # POST /projects/:project_id/scans
   def create
+    param! :needs_update,String, default: "no"
     @scan = @project.scans.create!(scans_params)
     json_response(@scan, :created)
   end
 
   # PUT /projects/:project_id/scans/:id
   def update
+    param! :needs_update,String, default: "no"
     @scan.update(scans_params)
     head :no_content
   end
