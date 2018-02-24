@@ -1,6 +1,7 @@
 # spec/lib/pip/pip_scanner_spec.rb
 require 'rails_helper'
 require_relative '../../../app/lib/pip/pip_scanner'
+require_relative '../../../app/lib/pip/pip_parser'
 require 'fileutils'
 
 RSpec.describe 'PipScanner' do

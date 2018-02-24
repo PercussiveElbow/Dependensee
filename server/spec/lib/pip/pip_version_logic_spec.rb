@@ -45,4 +45,7 @@ RSpec.describe PipVersionLogic do
     expect(PipVersionLogic::is_vuln?('0.9.9', ['<1.0.0,==1.1.1'],'')).to eql(false)
   end
 
+  it 'should query pypi correctly ' do
+    puts PipVersionLogic.get_latest_version('selenium')
+  end
 end

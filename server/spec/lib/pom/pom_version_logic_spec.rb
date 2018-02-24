@@ -36,5 +36,8 @@ RSpec.describe PomVersionLogic do
     expect(PomVersionLogic::is_vuln?('1.1.1', ['<1.0.0'],'')).to eql(false)
   end
 
+  it 'should query maven correctly ' do
+    puts PomVersionLogic.get_latest_version('org.asynchttpclient.async-http-client')
+  end
 
 end
