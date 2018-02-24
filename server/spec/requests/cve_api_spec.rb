@@ -22,7 +22,7 @@ RSpec.describe 'CVE API', type: :request do
     end
 
     context 'when the java cve does not exist' do
-      let(:cve_id) { 'fakecve' }
+      let(:cve_id) { '2017-1234' }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -48,7 +48,7 @@ RSpec.describe 'CVE API', type: :request do
     end
 
     context 'when the python cve does not exist' do
-      let(:cve_id) { 'fakecve' }
+      let(:cve_id) { '2017-1234' }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -61,7 +61,7 @@ RSpec.describe 'CVE API', type: :request do
 
 
     context 'when the ruby cve exists' do
-      let(:cve_id) { '2017-9050'}
+      let(:cve_id) { '2016-2098'}
       it 'returns the cve' do
         expect(json).not_to be_empty
         expect(json['cve_id']).to eq(cve_id)
@@ -73,7 +73,7 @@ RSpec.describe 'CVE API', type: :request do
     end
 
     context 'when the ruby cve does not exist' do
-      let(:cve_id) { 'fakecve' }
+      let(:cve_id) { '2017-1234' }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -84,7 +84,17 @@ RSpec.describe 'CVE API', type: :request do
       end
     end
 
+    context 'when the cve id is malformed' do
+      let(:cve_id) {'ABC-.,123ABC'}
 
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a validation message' do
+        expect(json['message']).to match(/Validation error in one or more parameters/)
+      end
+    end
   end
 end
 
