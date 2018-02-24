@@ -1,4 +1,6 @@
 require_relative '../lib/gem/gem_version_logic'
+require_relative '../lib/pom/pom_version_logic'
+require_relative '../lib/pip/pip_version_logic'
 
 
 class LatestController < ApplicationController
@@ -12,8 +14,6 @@ class LatestController < ApplicationController
       latest_ver = PomVersionLogic::get_latest_version(@dependency.name)
     elsif @project.language == 'Python'
       latest_ver = PipVersionLogic::get_latest_version(@dependency.name)
-    else
-      raise EmptyDependencyException.new('Put an actual error message here')
     end
     response = JSON.pretty_generate({version: latest_ver.to_s })
     json_response(response, :created)

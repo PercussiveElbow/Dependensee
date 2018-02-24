@@ -1,7 +1,7 @@
-# spec/requests/latest_api_spec.rb
+# spec/requests/reports_api_spec.rb
 require 'rails_helper'
 
-RSpec.describe 'latest API' do
+RSpec.describe 'reports API' do
   let(:user) { create(:user) }
 
   let! (:project) {create(:project)}
@@ -25,20 +25,18 @@ RSpec.describe 'latest API' do
   let(:python_scan_id) { python_scan.id}
   let!(:python_dependency) { create(:dependency, scan_id: python_scan.id, version: '1.2.3', name: 'selenium', language: 'ruby') }
   let(:python_id) { python_dependency.id }
-
-
   let(:headers) { valid_headers }
 
-  describe 'GET /projects/:project_id/scans/:scan_id/dependencies/:id/latest/' do
-    before { get "/projects/#{project_id}/scans/#{scan_id}/dependencies/#{id}/latest", params: {}, headers: headers }
+  describe 'GET /projects/:project_id/scans/:scan_id/reports/json' do
+    before { get "/projects/#{project_id}/scans/#{scan_id}/reports/json", params: {}, headers: headers }
 
-    context 'when project,scan,dependency exists' do
+    context 'when project exists' do
       it 'returns status code 200' do
         expect(response).to have_http_status(201)
       end
 
-      it 'returns a version' do
-        expect(json['version']).not_to be_nil
+      it 'returns all dependencies' do
+        expect(json.size).to eq(1)
       end
     end
 
@@ -88,49 +86,6 @@ RSpec.describe 'latest API' do
       end
     end
 
-    context 'when project and scan exist but the dependency is malformed' do
-      let(:id) {'a'}
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
-      end
-
-      it 'returns a validation message' do
-        expect(json['message']).to match(/Validation error in one or more parameters/)
-      end
-
-    end
-
   end
-
-  describe 'GET /projects/:ruby_project_id/scans/:ruby_scan_id/dependencies/:ruby_id/latest/' do
-    before { get "/projects/#{ruby_project_id}/scans/#{ruby_scan_id}/dependencies/#{ruby_id}/latest", params: {}, headers: headers }
-
-    context 'when project,scan,dependency exists ruby version' do
-      it 'returns status code 200' do
-        expect(response).to have_http_status(201)
-      end
-
-      it 'returns a version' do
-        expect(json['version']).not_to be_nil
-      end
-    end
-
-  end
-
-  describe 'GET /projects/:python_project_id/scans/:python_scan_id/dependencies/:python_id/latest/' do
-    before { get "/projects/#{python_project_id}/scans/#{python_scan_id}/dependencies/#{python_id}/latest", params: {}, headers: headers }
-
-    context 'when project,scan,dependency exists ruby version' do
-      it 'returns status code 200' do
-        expect(response).to have_http_status(201)
-      end
-
-      it 'returns a version' do
-        expect(json['version']).not_to be_nil
-      end
-    end
-
-  end
-
 
 end

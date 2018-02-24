@@ -16,6 +16,12 @@ class UploadController < ApplicationController
 
   def find_project_by_id
     begin
+      param! :project_id, String, required: true, format:  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
+    rescue
+      raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
+    end
+
+    begin
       @project = Project.find(params[:project_id])
     rescue
       Raise CustomException::NotFound, MsgConstants::NOT_FOUND
@@ -23,8 +29,6 @@ class UploadController < ApplicationController
   end
 
   def upload_headers
-    # request.headers.permit('source')
-
     if request.headers['source'].nil? or  request.headers['source'].empty?
       request.headers['source'] = 'API'
     end

@@ -50,6 +50,7 @@ RSpec.describe 'dependencies API' do
 
     context 'when project exists but the scan does not exist' do
       let(:scan_id) {'2663776a-18e7-11e8-accf-0ed5f89f718b'}
+
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
       end

@@ -33,6 +33,19 @@ RSpec.describe 'scans API', type: :request do
         expect(response.body).to match(/Couldn't find Project/)
       end
     end
+
+
+    context 'when project id is malformed' do
+      let(:project_id) { 'a' }
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a not found message' do
+        expect(json['message']).to match(/Validation error in one or more parameters/)
+      end
+    end
   end
 
   describe 'GET /projects/:project_id/scans/:id' do
@@ -56,6 +69,18 @@ RSpec.describe 'scans API', type: :request do
 
       it 'returns a not found message' do
         expect(response.body).to include("Couldn't find Scan")
+      end
+    end
+
+    context 'when scan id is malformed' do
+      let(:id) { 'a' }
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a not found message' do
+        expect(json['message']).to match(/Validation error in one or more parameters/)
       end
     end
   end
