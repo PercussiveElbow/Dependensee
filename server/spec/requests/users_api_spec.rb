@@ -3,11 +3,11 @@ require 'rails_helper'
 
 RSpec.describe 'Users API', type: :request do
   let(:user) { build(:user) }
+  let(:user_existing) { create(:user, name: 'abc', email: 'test123@gmail.com', password: 'apassword', password_confirmation: 'apassword').save! }
   let(:headers) { valid_headers.except('Authorization') }
   let(:valid_attributes) do
     attributes_for(:user, password_confirmation: user.password)
   end
-  let(:login_attributes) {valid_attributes.without(:name).without(:password_confirmation)}
 
   describe 'POST /signup' do
     context 'valid request' do
@@ -42,7 +42,21 @@ RSpec.describe 'Users API', type: :request do
 
   describe 'POST /login' do
     context 'valid request' do
-      before { post '/login', params: login_attributes.to_json, headers: headers }
+      before { post '/login', params: {name:  'abc', email: 'eioefiwfiowefiwo'}.to_json, headers: headers }
+
+      it 'returns a 422 when validation fails' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns failure message' do
+        expect(json['message']).to match(/Validation error in one or more parameters/)
+      end
+    end
+  end
+
+  describe 'POST /login' do
+    context 'valid request' do
+      before { post '/login', params: {email: 'test123@gmail.com',password: 'apassword'}.to_json, headers: headers }
 
       it 'logs in successfully' do
         expect(response).to have_http_status(201)

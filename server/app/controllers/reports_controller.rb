@@ -18,8 +18,6 @@ class ReportsController < ApplicationController
         @vuln_list = PomScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
       elsif @project.language == 'Python'
         @vuln_list = PipScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
-      else
-        raise EmptyDependencyException.new('Put an actual error message here')
       end
       vuln_cleanup
       overall_version

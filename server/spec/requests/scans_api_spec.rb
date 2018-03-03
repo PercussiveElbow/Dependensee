@@ -99,7 +99,6 @@ RSpec.describe 'scans API', type: :request do
     context 'when an invalid request' do
       let(:invalid_headers) { { name: 'rejrhgrhghughugur'}.to_json }
 
-      # TODO Implement this, currently there' no validation on scan creation fields
       before { post "/projects/#{project_id}/scans", params: {}, headers: headers }
       #
       # it 'returns status code 422' do
