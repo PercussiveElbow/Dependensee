@@ -11,7 +11,7 @@ services:
         links:
           - postgres
         volumes:
-          - /tmp
+        - tmp:/tmp
       postgres:
         image: postgres:9.4
         ports:
