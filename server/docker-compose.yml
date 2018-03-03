@@ -10,11 +10,10 @@ services:
               condition: service_healthy
         links:
           - postgres
-
-           volumes:
-      - type: volume
-        source: tmpvolume
-        target: /tmp
+        volumes:
+          - type: volume
+            source: tmpdata
+            target: /tmp
       postgres:
         image: postgres:9.4
         ports:
