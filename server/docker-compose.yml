@@ -2,7 +2,7 @@ version: '2.1'
 services:
       rails:
         build: .
-        command: "rails server -p 80 -b '0.0.0.0'"
+        command: "df -h"
         ports:
           - "80:80"
         depends_on:
