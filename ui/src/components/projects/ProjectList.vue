@@ -1,7 +1,7 @@
 <template>
   <div>
     <md-list class="md-double-line">
-      <md-list-item v-for="item in items">
+      <md-list-item v-for="item in items" v-bind:key="item.name">
         <md-avatar md-theme="red" v-if="item.language === 'Ruby'" class="md-avatar-icon md-primary"><i class="icon-ruby"></i></md-avatar>
         <md-avatar md-theme="orange" v-if="item.language === 'Java'" class="md-avatar-icon md-primary"><i class="icon-java"></i></md-avatar>
         <md-avatar md-theme="green" v-if="item.language === 'Python'" class="md-avatar-icon md-primary"><i class="icon-python"></i></md-avatar>

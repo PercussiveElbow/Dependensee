@@ -2,7 +2,7 @@
 	<main class="main-content">
 	  <div>
 	    <md-list class="md-double-line">
-	      <md-list-item v-for="dep in dependencies">
+	      <md-list-item v-for="dep in dependencies" v-bind:key="dep.name">
 	        <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'"><md-icon>code</md-icon></md-avatar>
 	        <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon>code</md-icon></md-avatar>
 	        <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon>code</md-icon></md-avatar>

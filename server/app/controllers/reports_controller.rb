@@ -79,8 +79,8 @@ class ReportsController < ApplicationController
         if(!cve.patched_version.nil?)
           cve.patched_version.each do |patch_ver|
             if(!patch_ver.include? ',' ) #todo fix
-              ver = Gem::Version.new(patch_ver.gsub('>', '').gsub(' ','').gsub('=',''))
-              if (ver >= Gem::Version.new(overall_patch.gsub('>', '').gsub(' ','').gsub('=','') ))
+              ver = Gem::Version.new(patch_ver.gsub('>', '').gsub(' ','').gsub('=','').gsub('~',''))
+              if (ver >= Gem::Version.new(overall_patch.gsub('>', '').gsub(' ','').gsub('=','').gsub('~','') ))
                 overall_patch = patch_ver
               end
             end

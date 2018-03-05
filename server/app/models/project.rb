@@ -4,5 +4,4 @@ class Project < ApplicationRecord
   validates :name, length: { minimum: 3, maximum: 20 }
   validates :description, length: { maximum: 30 }
   validates :language, inclusion: { in: %w(Java Ruby Python) }
-
 end

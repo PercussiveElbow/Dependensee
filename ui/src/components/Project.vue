@@ -22,7 +22,7 @@
           <main class="main-content">
             <div>
               <md-list class="md-double-line">
-                <md-list-item v-for="scan in scans">
+                <md-list-item v-for="scan in scans" v-bind:key="scan.id">
                   <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'"><md-icon >assessment</md-icon></md-avatar>
                   <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon >assessment</md-icon></md-avatar>
                   <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon >assessment</md-icon></md-avatar>

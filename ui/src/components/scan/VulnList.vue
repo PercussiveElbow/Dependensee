@@ -2,11 +2,11 @@
 	<main class="main-content">
 	    <div>
 	      <md-list class="md-double-line">
-	          <div style="text-align: left" v-for="(vuln,title) in vulns">
+	          <div style="text-align: left" v-for="(vuln,title) in vulns" v-bind:key="title">
 	          <span style="font-size: large; font-weight: bold;">{{title}}</span></br>
 	          <span style="color: red">Current version:  {{vuln.cves[0].our_version}}</span></br>
 	          <span style="color: green">Safe version: {{vuln.overall_patch}}</span>
-	          <md-list-item v-for="(item,index) in vuln.cves">
+	          <md-list-item v-for="(item,index) in vuln.cves" v-bind:key="item.cve">
 	            <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" ><md-icon >warning</md-icon></md-avatar>
 	            <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon >warning</md-icon></md-avatar>
 	            <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon >warning</md-icon></md-avatar>
