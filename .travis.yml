@@ -7,4 +7,4 @@ script:
   - docker-compose up -d postgres
   - sleep 20
   - docker-compose run rails bundle exec rake db:setup
-  - docker-compose up rails
+  - docker-compose run bundle exec rspec

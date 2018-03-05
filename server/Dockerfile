@@ -1,7 +1,6 @@
 FROM ruby
 MAINTAINER amackey01@qub.ac.uk
 RUN apt-get update
-# && apt-get install -y sqlite3 libsqlite3-dev libxml2-dev libxslt1-dev
 RUN mkdir -p /dependensee
 WORKDIR /dependensee
 COPY Gemfile Gemfile.lock ./
