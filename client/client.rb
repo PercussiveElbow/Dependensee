@@ -1,6 +1,7 @@
 require 'net/http'
 require 'uri'
 require 'json'
+require 'fileutils'
 
 # Hard coded for now, these will be changed, shouldn't put api keys in VC but its just dummy accounts whoops
 SERVER_URL = 'http://127.0.0.1:3000'
@@ -9,15 +10,14 @@ ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
 @auto_scan = false;
 @timeout = 3600;
 @needs_update = 'no'
-#print "Auth key #{ENV['depAPIKey']}\n"
 
 def scan
-  if File.exists?(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
-    maven_project
+  if File.exists?(File.expand_path File.dirname(__FILE__) + '/requirements.txt.test')
+    pip_project
   elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/Gemfile.lock.test')
     gem_project
-  elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/requirements.txt.test')
-    pip_project
+  elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
+    maven_project
   else
       raise StandardError.new 'No Dependency file found. Exiting.'
   end
@@ -82,7 +82,7 @@ def output(resp)
   print "Vulnerabilities: \n"
   for dependency,vulns in JSON.parse(JSON[resp.body]['vulnerabilities'])
     for cve in vulns['cves']
-      print "             Dependency #{dependency} has vulnerability. CVE ID: #{cve['cve']}\n"
+      print "             Dependency #{dependency} has vulnerability. CVE ID: #{cve['cve']}  Minimum safe version: #{vulns['overall_patch']}\n"
     end
   end
   print "================================\n\n"
@@ -109,17 +109,58 @@ def check_config(scan_id)
   @timeout = JSON[resp.body]['timeout'] 
   print 'Checking auto-scan timeout...: ' + @timeout.to_s + ' seconds' + "\n"
   print "========DONE UPDATING CONFIG========\n\n"
+  needs_update?
 end
 
+def needs_update?
+  if @needs_update=='any'
+      print "Update needed"
+  else
+    print "No update needed currently\n"
+  end
+end
 
 def ruby_update
+    dir = "backup/#{Time.now.to_i}"
+    FileUtils.mkdir_p dir
+    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/Gemfile.lock.test'), dir)
     code = system("bundle exec rails")
 end
 
+def java_update
+    dir = "backup/#{Time.now.to_i}"
+    FileUtils.mkdir_p dir
+    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/pom.xml.test'), dir)
+end
+
+def python_update
+    dir = "backup/#{Time.now.to_i}"
+    FileUtils.mkdir_p dir
+    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/requirements.txt.test'), dir)
+
+end
+
+def get_dependencies
+  uri = URI.parse(SERVER_URL + '/projects/' + @project_id + '/scans/' + @scan_id + '/dependencies')
+  http = Net::HTTP.new(uri.host, uri.port)
+  request = Net::HTTP::Get.new(uri.request_uri)
+  request['Authorization'] = AUTH_KEY
+  resp = http.request(request)
+
+  deps = JSON.parse(resp.body)
+  for dep in deps do
+    if !dep['update_to'].nil? and dep['update_to'] != 'null'
+      print "#{dep['name']} update to: #{dep['update_to']}\n"
+    end
+  end
+end
+
 while true
+  java_update
   print "=====CLIENT STARTED: Beginning at #{Time.new.inspect}========\n"
   scan
   check_config(@scan_id)
   print "Sleeping for #{@timeout} seconds.\n"
+  get_dependencies
   sleep @timeout
 end

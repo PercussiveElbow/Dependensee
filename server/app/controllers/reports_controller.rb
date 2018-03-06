@@ -2,6 +2,7 @@ require_relative '../lib/pom/pom_scanner'
 require_relative '../lib/gem/gem_scanner'
 require_relative '../lib/pip/pip_scanner'
 require_relative '../lib/gem/gem_report'
+require_relative '../lib/common/generic_version_logic'
 
 class ReportsController < ApplicationController
   before_action :get_project_by_id
@@ -19,8 +20,8 @@ class ReportsController < ApplicationController
       elsif @project.language == 'Python'
         @vuln_list = PipScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
       end
-      vuln_cleanup
-      overall_version
+      deps =  Dependency.where(['scan_id = ?', @scan.id])
+      @vuln_list = GenericVersionLogic::finish_version_logic(deps,@vuln_list)
       if params[:id] == 'json'
         response = @vuln_list.to_json
       elsif params[:id] == 'pdf'
@@ -60,34 +61,6 @@ class ReportsController < ApplicationController
       @scan = @project.scans.find(params[:scan_id]) if @project
     rescue
       Raise CustomException::NotFound, MsgConstants::NOT_FOUND
-    end
-  end
-
-  # OTHER
-  def vuln_cleanup
-    @vuln_total=0
-    @vuln_list.each { |k, v| @vuln_total+=v['cves'].length }
-    @vuln_list.delete_if { |_, v| v['cves'].empty? }
-  end
-
-  def overall_version
-    @vuln_list.each do |dep,vh|
-      overall_patch = '0.0.0'
-      our_ver = vh['cves'][0] if !vh['cves'].empty?
-      vh['cves'].each do |cve|
-
-        if(!cve.patched_version.nil?)
-          cve.patched_version.each do |patch_ver|
-            if(!patch_ver.include? ',' ) #todo fix
-              ver = Gem::Version.new(patch_ver.gsub('>', '').gsub(' ','').gsub('=','').gsub('~',''))
-              if (ver >= Gem::Version.new(overall_patch.gsub('>', '').gsub(' ','').gsub('=','').gsub('~','') ))
-                overall_patch = patch_ver
-              end
-            end
-          end
-        end
-      end
-      vh['overall_patch'] = overall_patch
     end
   end
 
