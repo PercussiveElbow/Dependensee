@@ -1,0 +1,39 @@
+version: '2.1'
+services:
+      rails:
+        build: .
+        command: "rails server -p 3000 -b '0.0.0.0'"
+        ports:
+          - "8080:3000"
+        depends_on:
+            postgres:
+              condition: service_healthy
+        links:
+          - postgres
+        volumes:
+        - tmp:/tmp
+        healthcheck:
+          test: ["CMD-SHELL","curl http://localhost:3000 || exit 1"] 
+          interval: 60s
+          timeout: 60s
+          retries: 3
+        environment:
+          VIRTUAL_HOST: dependensee.tech
+          LETSENCRYPT_HOST: dependensee.tech
+          LETSENCRYPT_EMAIL: contact@dependensee.tech
+      postgres:
+        image: postgres:9.4
+        ports:
+          - "5432"
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U postgres"]
+          interval: 3s
+          timeout: 30s
+          retries: 3 
+volumes:
+  tmp:
+
+networks:
+    default:
+       external:
+         name: webproxy
