@@ -4,7 +4,7 @@ require 'json'
 
 # Hard coded for now, these will be changed, shouldn't put api keys in VC but its just dummy accounts whoops
 SERVER_URL = 'http://127.0.0.1:3000'
-AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZjc0NTE1YTUtMGUzMy00MjAxLWExNTctNTU4ZmQzMDhkNWM5IiwiZXhwIjoxNTE4NzMwMzYwfQ.1buBU_Q_lcoD3g-wxVRADME_J3ILEwiaF8K4YRa2kts'
+AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiY2QxZjA5MzYtY2FkZS00NjZjLWIyNDktZDBlOWNiZTVlODQ5IiwiZXhwIjoxNTIwNDM2NjU1fQ.iPolbsrc1OrOAUQ7h2iuZEKuzRNsk0_r9QPMA8A2E5Q'
 ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
 @auto_scan = false;
 @timeout = 3600;
@@ -61,7 +61,7 @@ end
 
 def post(language,body)
   create_new_project(language) if(@project_id.nil? or @project_id.empty?)
-  print "Attempting to upload dependencies and scan..\n"
+  print "Attempting to upload dependencies..\n"
   uri = URI.parse(SERVER_URL + '/projects/' + @project_id + '/upload')
   http = Net::HTTP.new(uri.host, uri.port)
   request = Net::HTTP::Post.new(uri.request_uri)
@@ -81,8 +81,8 @@ def output(resp)
   print "Vulnerabilities found: #{JSON[resp.body]['vunerability_count']}\n"
   print "Vulnerabilities: \n"
   for dependency,vulns in JSON.parse(JSON[resp.body]['vulnerabilities'])
-    for vuln in vulns
-      print "             Dependency #{dependency} has vulnerability. CVE ID: #{vuln['cve']}\n"
+    for cve in vulns['cves']
+      print "             Dependency #{dependency} has vulnerability. CVE ID: #{cve['cve']}\n"
     end
   end
   print "================================\n\n"
@@ -96,7 +96,7 @@ def check_config(scan_id)
   request = Net::HTTP::Get.new(uri.request_uri)
   request['Authorization'] = AUTH_KEY
   resp = http.request(request)
-  @needs_update = JSON[resp.body]['needs_update'] ? "true" : "false"
+  @needs_update = JSON[resp.body]['needs_update']
   print 'Checking if scan needs update...: ' + "#{@needs_update}\n"
 
   uri = URI.parse(SERVER_URL + '/projects/' + @project_id)
@@ -117,7 +117,7 @@ def ruby_update
 end
 
 while true
-  print "Beginning scan at #{Time.new.inspect}\n"
+  print "=====CLIENT STARTED: Beginning at #{Time.new.inspect}========\n"
   scan
   check_config(@scan_id)
   print "Sleeping for #{@timeout} seconds.\n"
