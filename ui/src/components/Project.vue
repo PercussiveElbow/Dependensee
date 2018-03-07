@@ -29,10 +29,8 @@
                   <div class="md-list-text-container">
                     <router-link :to="{ path: '/scan/' + project.id+'/'+scan.id }">{{scan.alttitle}}</router-link>
                     <p> {{scan.source}}</p>
-                    <p>{{ scan.id }}</p>
-        <!--             <p>{{ scan.description }}</p>
-         -->      </div>
-
+                    <p>{{ scan.id }}</p>     
+                  </div>
                   <md-button class="md-icon-button md-list-action" @click=delete_scan(scan.id)><md-tooltip md-direction="top">Delete</md-tooltip><md-icon>delete</md-icon></md-button>
                   <md-button class="md-icon-button md-list-action" @click=view_vulns(scan.id)><md-icon>file_download</md-icon></md-button>
                 </md-list-item>
@@ -60,7 +58,7 @@
         </md-tab>
         <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
           <div>
-            <md-switch v-bind:model="settings.scan" >Automatically Scan</md-switch>
+            <md-switch v-model="settings.scan" >Automatically Scan</md-switch>
           </div>
           <div>
             <h3> Scan every: </h3>
@@ -68,7 +66,7 @@
               <option value=60>Minute</option>
               <option value=3600>Hour</option>
               <option value=86400>Day</option>
-              <option value=60 >Week</option>
+              <option value=604800>Week</option>
             </select>
           </div>
           <md-button class="md-raised md-primary" v-on:click=saveSettings>Save settings</md-button>
@@ -116,7 +114,7 @@
           data: []
         },
         settings: {
-          scan: '',
+          scan: false,
           timeout: 3600
         },
         intervalKill : ''

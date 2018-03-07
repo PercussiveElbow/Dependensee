@@ -10,6 +10,7 @@ ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
 @auto_scan = false;
 @timeout = 3600;
 @needs_update = 'no'
+@lang='' #add check if existing project mismatches found file
 
 def scan
   if File.exists?(File.expand_path File.dirname(__FILE__) + '/requirements.txt.test')
@@ -19,35 +20,39 @@ def scan
   elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
     maven_project
   else
-      raise StandardError.new 'No Dependency file found. Exiting.'
+    raise StandardError.new 'No Dependency file found. Exiting.'
+    exit 1
   end
 end
 
 def gem_project
+  @lang='Ruby'
   print "Gemfile found \n"
   body = [] << File.read(File.expand_path File.dirname(__FILE__) + '/Gemfile.lock.test')
   post('Ruby',body)
 end
 
 def maven_project
+  @lang='Java'
   print "Pomfile found \n"
   body = [] << File.read(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
   post('Java',body)
 end
 
 def pip_project
-  print "Pip dependencies found \n"
+  @lang='Python'
+  print "Requirements.txt found \n"
   body = [] << File.read(File.expand_path File.dirname(__FILE__) + '/requirements.txt.test')
   post('Python',body)
 end
 
-def create_new_project(language)
+def create_new_project
   print "=======CREATING NEW PROJECT======\n"
   uri = URI.parse(SERVER_URL + '/projects/')
   http = Net::HTTP.new(uri.host, uri.port)
   request = Net::HTTP::Post.new(uri.request_uri)
   request['Authorization'] = AUTH_KEY
-  request.body=URI.encode_www_form({name: File.basename(Dir.getwd), language: language, active: true, timeout: 3600 })
+  request.body=URI.encode_www_form({name: File.basename(Dir.getwd), language: @lang, active: true, timeout: 3600 })
 
   resp = http.request(request)
   if resp.code.to_s == 201.to_s
@@ -60,7 +65,7 @@ def create_new_project(language)
 end
 
 def post(language,body)
-  create_new_project(language) if(@project_id.nil? or @project_id.empty?)
+  create_new_project if(@project_id.nil? or @project_id.empty?)
   print "Attempting to upload dependencies..\n"
   uri = URI.parse(SERVER_URL + '/projects/' + @project_id + '/upload')
   http = Net::HTTP.new(uri.host, uri.port)
@@ -70,10 +75,10 @@ def post(language,body)
   os = RbConfig::CONFIG['host_os'] + " #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
   request['Source'] = "Client [#{os}]"
   resp = http.request(request)
-  output(resp)
+  print_scan(resp)
 end
 
-def output(resp)
+def print_scan(resp)
   print "=========SCAN INFORMATION========\n"
   print "Scan id: #{JSON[resp.body]['scan_id']}\n"
   @scan_id = JSON[resp.body]['scan_id']
@@ -117,27 +122,8 @@ def needs_update?
       print "Update needed"
   else
     print "No update needed currently\n"
+    get_dependencies
   end
-end
-
-def ruby_update
-    dir = "backup/#{Time.now.to_i}"
-    FileUtils.mkdir_p dir
-    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/Gemfile.lock.test'), dir)
-    code = system("bundle exec rails")
-end
-
-def java_update
-    dir = "backup/#{Time.now.to_i}"
-    FileUtils.mkdir_p dir
-    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/pom.xml.test'), dir)
-end
-
-def python_update
-    dir = "backup/#{Time.now.to_i}"
-    FileUtils.mkdir_p dir
-    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/requirements.txt.test'), dir)
-
 end
 
 def get_dependencies
@@ -147,20 +133,59 @@ def get_dependencies
   request['Authorization'] = AUTH_KEY
   resp = http.request(request)
 
-  deps = JSON.parse(resp.body)
-  for dep in deps do
+  for dep in JSON.parse(resp.body) do
     if !dep['update_to'].nil? and dep['update_to'] != 'null'
-      print "#{dep['name']} update to: #{dep['update_to']}\n"
+      # print "#{dep['name']} update to: #{dep['update_to']}\n"
+      update(dep['name'],dep['update_to'])
     end
   end
 end
 
+def update(dep_name,update_version)
+  dir = "backup/#{Time.now.to_i}"
+  FileUtils.mkdir_p dir
+  case @lang
+  when 'Java'
+    java_update(dep_name,update_version,dir)
+  when 'Ruby'
+    ruby_update(dep_name,update_version,dir)
+  when 'Python'
+    python_update(dep_name,update_version,dir)
+  end
+end
+
+def ruby_update(dep_name,update_version,dir)
+    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/Gemfile.lock.test'), dir)
+    # code = system("bundle exec rails")
+end
+
+def java_update(dep_name,update_version,dir)
+    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/pom.xml.test'), dir)
+end
+
+def python_update(dep_name,version,dir)
+    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/requirements.txt.test'), dir)
+    filename = "backup/#{Time.now.to_i}/requirements.txt.test"
+    File.open(filename, "r") do |file_handle|
+        file_handle.each_line do |line|
+            if line.include? dep_name
+              # line = line.gsub("\n",'')
+              print "Replaced line: " +   line + " with: " + dep_name + version + "\n"
+              print line + "\n"
+              # print text + "\ns"
+              replaced = File.read(filename).gsub(/#{line}/, dep_name + version)
+              File.open(filename, "w") {|file| file.puts replaced }
+            end
+        end
+    end
+
+end
+
 while true
-  java_update
   print "=====CLIENT STARTED: Beginning at #{Time.new.inspect}========\n"
   scan
   check_config(@scan_id)
   print "Sleeping for #{@timeout} seconds.\n"
-  get_dependencies
+  needs_update?
   sleep @timeout
 end

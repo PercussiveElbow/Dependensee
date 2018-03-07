@@ -15,8 +15,8 @@
             <md-button class="md-icon-button"  @click="$router.push({ path: '/project/' + project.id });">
             <md-tooltip md-direction="bottom">Back</md-tooltip><md-icon>keyboard_backspace</md-icon></md-button>
             <h2 class="md-title">Scan: {{scan.title}}</h2>
-            <md-button class="md-icon-button md-list-action"  @click=view_vulns()><md-tooltip md-direction="bottom">Reports</md-tooltip><md-icon>file_download</md-icon></md-button>
-            <md-button class="md-icon-button md-list-action"  @click=update_deps()><md-tooltip md-direction="bottom">Update Dependencies</md-tooltip><md-icon>system_update_alt</md-icon></md-button>
+            <md-button class="md-icon-button md-list-action"  @click=view_vulns()><md-tooltip md-direction="bottom">Reports</md-tooltip><md-icon>assignment</md-icon></md-button>
+            <md-button class="md-icon-button md-list-action"  @click=update_deps()><md-tooltip md-direction="bottom">Update Dependencies</md-tooltip><md-icon>publish</md-icon></md-button>
           </div>
         </md-toolbar>
       </md-whiteframe>
