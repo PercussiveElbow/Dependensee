@@ -2,10 +2,12 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'fileutils'
+require 'rexml/document'
+include REXML
 
 # Hard coded for now, these will be changed, shouldn't put api keys in VC but its just dummy accounts whoops
-SERVER_URL = 'http://127.0.0.1:3000'
-AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiY2QxZjA5MzYtY2FkZS00NjZjLWIyNDktZDBlOWNiZTVlODQ5IiwiZXhwIjoxNTIwNDM2NjU1fQ.iPolbsrc1OrOAUQ7h2iuZEKuzRNsk0_r9QPMA8A2E5Q'
+SERVER_URL = 'http://127.0.0.1:3000/api'
+AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZTQyZWU5Y2ItMzdhZi00NGNjLTljODMtMDU5NjBmMjhhMTA4IiwiZXhwIjoxNTIwNTM5MzUwfQ.ANlRKjGWXM3Md-FwyMYg4S8hm_YxE7vQKbPhG_lxcYQ'
 ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
 @auto_scan = false;
 @timeout = 3600;
@@ -13,12 +15,12 @@ ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
 @lang='' #add check if existing project mismatches found file
 
 def scan
-  if File.exists?(File.expand_path File.dirname(__FILE__) + '/requirements.txt.test')
-    pip_project
+  if File.exists?(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
+    maven_project
   elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/Gemfile.lock.test')
     gem_project
-  elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
-    maven_project
+  elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/requirements.txt.test')
+    pip_project
   else
     raise StandardError.new 'No Dependency file found. Exiting.'
     exit 1
@@ -57,6 +59,8 @@ def create_new_project
   resp = http.request(request)
   if resp.code.to_s == 201.to_s
     @project_id =  JSON[resp.body]['id']
+  elsif resp.code.to_s ==401.to_s
+    raise StandardError.new 'Error when creating project, auth key invalid'
   else
     raise StandardError.new 'Error when creating project'
   end
@@ -161,6 +165,25 @@ end
 
 def java_update(dep_name,update_version,dir)
     FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/pom.xml.test'), dir)
+    groupId = dep_name.rpartition('.')[0]
+    artifactId = dep_name.rpartition('.')[2]
+
+    if update_version.include? '='
+      #fine to update it to that version
+      update_version = update_version.gsub(/[^.0-9]+/,'')
+    else 
+      #assume it needs to be bigger,  need to check it's a legit version though.
+    end
+
+    xmlfile = File.new('pom.xml.test')
+    xmldoc = Document.new(xmlfile)
+    XPath.each(xmldoc, "//dependency") do|node|
+        if node.elements['groupId'].text == groupId and node.elements['artifactId'].text == artifactId
+          puts "Found #{dep_name} in pomfile with unsafe version #{node.elements['version'].text} replacing with #{update_version}"
+          node.elements['version'].text = update_version
+      end
+    end
+  xmldoc.write(File.open(dir + "/pom.xml.test", "w"))
 end
 
 def python_update(dep_name,version,dir)
@@ -186,6 +209,5 @@ while true
   scan
   check_config(@scan_id)
   print "Sleeping for #{@timeout} seconds.\n"
-  needs_update?
   sleep @timeout
 end
