@@ -54,7 +54,6 @@ module Untitled1
       config.after_initialize do
         # ran_int = Random.rand(100).to_s
         ran_int = 'development'
-
         print "\n======DOWNLOADING SOURCES======\n"
         # Clone the RubyCVE Git Repo
         $ruby_db = GemDB::new(ran_int)
