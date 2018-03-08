@@ -29,8 +29,8 @@ RSpec.describe 'latest API' do
 
   let(:headers) { valid_headers }
 
-  describe 'GET /projects/:project_id/scans/:scan_id/dependencies/:id/latest/' do
-    before { get "/projects/#{project_id}/scans/#{scan_id}/dependencies/#{id}/latest", params: {}, headers: headers }
+  describe 'GET /api/projects/:project_id/scans/:scan_id/dependencies/:id/latest/' do
+    before { get "/api/projects/#{project_id}/scans/#{scan_id}/dependencies/#{id}/latest", params: {}, headers: headers }
 
     context 'when project,scan,dependency exists' do
       it 'returns status code 200' do
@@ -102,8 +102,8 @@ RSpec.describe 'latest API' do
 
   end
 
-  describe 'GET /projects/:ruby_project_id/scans/:ruby_scan_id/dependencies/:ruby_id/latest/' do
-    before { get "/projects/#{ruby_project_id}/scans/#{ruby_scan_id}/dependencies/#{ruby_id}/latest", params: {}, headers: headers }
+  describe 'GET /api/projects/:ruby_project_id/scans/:ruby_scan_id/dependencies/:ruby_id/latest/' do
+    before { get "/api/projects/#{ruby_project_id}/scans/#{ruby_scan_id}/dependencies/#{ruby_id}/latest", params: {}, headers: headers }
 
     context 'when project,scan,dependency exists ruby version' do
       it 'returns status code 200' do
@@ -117,8 +117,8 @@ RSpec.describe 'latest API' do
 
   end
 
-  describe 'GET /projects/:python_project_id/scans/:python_scan_id/dependencies/:python_id/latest/' do
-    before { get "/projects/#{python_project_id}/scans/#{python_scan_id}/dependencies/#{python_id}/latest", params: {}, headers: headers }
+  describe 'GET /api/projects/:python_project_id/scans/:python_scan_id/dependencies/:python_id/latest/' do
+    before { get "/api/projects/#{python_project_id}/scans/#{python_scan_id}/dependencies/#{python_id}/latest", params: {}, headers: headers }
 
     context 'when project,scan,dependency exists ruby version' do
       it 'returns status code 200' do

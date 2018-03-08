@@ -9,8 +9,8 @@ RSpec.describe 'scans API', type: :request do
   let(:id) { scans.first.id }
   let(:headers) { valid_headers }
 
-  describe 'GET /projects/:project_id/scans' do
-    before { get "/projects/#{project_id}/scans", params: {}, headers: headers }
+  describe 'GET /api/projects/:project_id/scans' do
+    before { get "/api/projects/#{project_id}/scans", params: {}, headers: headers }
 
     context 'when project exists' do
       it 'returns status code 200' do
@@ -48,8 +48,8 @@ RSpec.describe 'scans API', type: :request do
     end
   end
 
-  describe 'GET /projects/:project_id/scans/:id' do
-    before { get "/projects/#{project_id}/scans/#{id}", params: {}, headers: headers }
+  describe 'GET /api/projects/:project_id/scans/:id' do
+    before { get "/api/projects/#{project_id}/scans/#{id}", params: {}, headers: headers }
     context 'when scan exists' do
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
@@ -85,11 +85,11 @@ RSpec.describe 'scans API', type: :request do
     end
   end
 
-  describe 'POST /projects/:project_id/scans' do
+  describe 'POST /api/projects/:project_id/scans' do
     let(:valid_attributes) { {source: 'Test'}.to_json }
 
     context 'when request attributes are valid' do
-      before do post "/projects/#{project_id}/scans", params: valid_attributes, headers: headers end
+      before do post "/api/projects/#{project_id}/scans", params: valid_attributes, headers: headers end
 
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
@@ -111,11 +111,11 @@ RSpec.describe 'scans API', type: :request do
     end
   end
 
-  describe 'PUT /projects/:project_id/scans/:id' do
+  describe 'PUT /api/projects/:project_id/scans/:id' do
     let(:valid_attributes) { { name: 'Test', version: '1.2.3', language: 'ruby', raw: 'fewf', done: false }.to_json }
 
     before do
-      put "/projects/#{project_id}/scans/#{id}", params: valid_attributes, headers: headers
+      put "/api/projects/#{project_id}/scans/#{id}", params: valid_attributes, headers: headers
     end
 
     context 'when scan exists' do
@@ -142,8 +142,8 @@ RSpec.describe 'scans API', type: :request do
     end
   end
 
-  describe 'DELETE /projects/:project_id/scans/:id' do
-    before { delete "/projects/#{project_id}/scans/#{id}", params: {}, headers: headers }
+  describe 'DELETE /api/projects/:project_id/scans/:id' do
+    before { delete "/api/projects/#{project_id}/scans/#{id}", params: {}, headers: headers }
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
     end

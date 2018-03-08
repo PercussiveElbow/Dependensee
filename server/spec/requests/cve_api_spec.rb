@@ -5,8 +5,8 @@ RSpec.describe 'CVE API', type: :request do
   let(:user) { create(:user) }
   let(:headers) { valid_headers }
 
-  describe 'GET /cve/:id' do
-    before { get "/cve/#{cve_id}", params: {}, headers: headers }
+  describe 'GET /api/cve/:id' do
+    before { get "/api/cve/#{cve_id}", params: {}, headers: headers }
 
     context 'when the java cve exists' do
       let(:cve_id) { '2017-14063' }
