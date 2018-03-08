@@ -14,7 +14,7 @@ RSpec.describe 'reports API' do
   let!(:ruby_scan) { create(:scan, project_id: ruby_project.id) }
   let(:ruby_project_id) { ruby_project.id }
   let(:ruby_scan_id) { ruby_scan.id}
-  let!(:ruby_dependency) { create(:dependency, scan_id: ruby_scan.id, version: '4.2.0', name: 'activemodel', language: 'Ruby') }
+  let!(:ruby_dependency) { create(:dependency, scan_id: ruby_scan.id, version: '4.2.0', name: 'activerecord', language: 'Ruby') }
 
   let! (:python_project) {create(:project, language: 'Python')}
   let!(:python_scan) { create(:scan, project_id: python_project.id) }
@@ -109,6 +109,7 @@ RSpec.describe 'reports API' do
       end
 
       it 'returns all dependencies' do
+        puts json
         expect(json.size).to eq(1)
       end
     end
