@@ -56,6 +56,7 @@ RSpec.describe 'Users API', type: :request do
 
   describe 'POST /api/login' do
     context 'valid request' do
+      before(:each) {post '/api/signup', params: user_existing.to_json, headers: headers}
       before { post '/api/login', params: {email: 'test123@gmail.com',password: 'apassword'}.to_json, headers: headers }
 
       it 'logs in successfully' do
@@ -63,7 +64,7 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'returns auth key' do
-        expect(json['message']).to match(/Account created/)
+        expect(json['message']).to match("Logged on. New Token generated")
       end
 
       it 'returns auth token' do
