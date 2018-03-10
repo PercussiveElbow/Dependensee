@@ -33,19 +33,19 @@ RSpec.describe GemVersionLogic do
   end
 
   it 'should test unaffected' do
-    expect(GemVersionLogic::is_unaffected('4.0.0','>=3.0.0')).to eql(true)
+    expect(GemVersionLogic::unaffected?('4.0.0','>=3.0.0')).to eql(true)
   end
 
   it 'should test unaffected not' do
-    expect(GemVersionLogic::is_unaffected('3.0.0','>=4.0.0')).to eql(false)
+    expect(GemVersionLogic::unaffected?('3.0.0','>=4.0.0')).to eql(false)
   end
 
   it 'should test unaffected minor' do
-    expect(GemVersionLogic::is_unaffected('3.0.1','~>3.0.0')).to eql(true)
+    expect(GemVersionLogic::unaffected?('3.0.1','~>3.0.0')).to eql(true)
   end
 
   it 'should test unaffected minor not' do
-    expect(GemVersionLogic::is_unaffected('4.0.1','~>3.0.0')).to eql(false)
+    expect(GemVersionLogic::unaffected?('4.0.1','~>3.0.0')).to eql(false)
   end
 
   it 'should test if is within minor version' do
@@ -61,20 +61,20 @@ RSpec.describe GemVersionLogic do
   end
 
   it 'should test if it is safe version under' do
-    expect(GemVersionLogic::is_unaffected('1.0','<=1.1')).to eql(true)
+    expect(GemVersionLogic::unaffected?('1.0','<=1.1')).to eql(true)
   end
 
   it 'should test if it is safe version under 2' do
-    expect(GemVersionLogic::is_unaffected('1.0','<1.1')).to eql(true)
+    expect(GemVersionLogic::unaffected?('1.0','<1.1')).to eql(true)
   end
 
-  it 'should query rubygems correctly ' do
-    puts GemVersionLogic.get_latest_version('activerecord')
+  it 'should query rubygems correctly ' do #todo find better test method since java can have lettering
+    # expect(GemVersionLogic.get_latest_version('activerecord')).to match()
   end
 
   #todo check if both these need fixed
   it 'should return false if contains a comma' do
-    expect(GemVersionLogic::is_unaffected('1.0','<1.1,>=5.0.0')).to eql(false)
+    expect(GemVersionLogic::unaffected?('1.0','<1.1,>=5.0.0')).to eql(false)
   end
 
   it 'should return false if just greater than' do

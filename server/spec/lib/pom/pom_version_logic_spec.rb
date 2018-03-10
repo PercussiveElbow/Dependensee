@@ -33,7 +33,7 @@ RSpec.describe PomVersionLogic do
   end
 
   it 'should query maven correctly ' do
-    puts PomVersionLogic.get_latest_version('org.asynchttpclient.async-http-client')
+    expect(PomVersionLogic.get_latest_version('org.asynchttpclient.async-http-client')).to match(/^[0-9][0-9.]*$/)
   end
 
 end

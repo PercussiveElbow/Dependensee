@@ -109,7 +109,6 @@ RSpec.describe 'reports API' do
       end
 
       it 'returns all dependencies' do
-        puts json
         expect(json.size).to eq(1)
       end
     end

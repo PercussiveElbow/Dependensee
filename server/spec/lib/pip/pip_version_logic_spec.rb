@@ -42,6 +42,6 @@ RSpec.describe PipVersionLogic do
   end
 
   it 'should query pypi correctly ' do
-    puts PipVersionLogic.get_latest_version('selenium')
+    expect(PipVersionLogic.get_latest_version('selenium')).to match(/^[0-9][0-9.]*$/)
   end
 end

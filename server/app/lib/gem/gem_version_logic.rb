@@ -6,6 +6,22 @@ class GemVersionLogic
   TIMEOUT = 14400
 
 
+  def self.is_vuln?(dep_ver,vuln_ver,unaffected)
+    vuln = false
+    vuln_ver.each { |ver|
+      if GemVersionLogic::affected?(ver, dep_ver.gsub(/[^0-9.]/, ''))
+        vuln=true; break;
+      end
+    }
+    if !fixed_in.nil?
+      fixed_in.each { |fixed_ver|
+        if GemVersionLogic::unaffected?(fixed_ver,dep_ver.gsub(/[^0-9.]/, ''))
+          vuln=false; break;
+        end
+      }
+    end
+    return vuln
+  end
 
   def self.is_above_patched_ver(gem_ver, patch_ver)
     if patch_ver.include? '>='
@@ -18,7 +34,7 @@ class GemVersionLogic
   end
 
 
-  def self.is_unaffected(gem_ver, safe_ver) #replace with switch, add pess case too
+  def self.unaffected?(gem_ver, safe_ver) #replace with switch, add pess case too
     if safe_ver.include? ',' #case for a between
       print('Analysis failed, fix this') # TODO FIX
       return false

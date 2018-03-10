@@ -31,7 +31,7 @@ class BaseDB
       $git_timestamp = Time.now.to_i
       needs_save=true
     else
-      print("\nNo need to update #{@log_name}\n")
+      # print("\nNo need to update #{@log_name}\n")
     end
     needs_save
   end

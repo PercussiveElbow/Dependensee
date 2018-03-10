@@ -51,7 +51,7 @@ class GemScanner < BaseScanner
   def check_unaffected_vers(gem_version, unaffected_vers)
     unless unaffected_vers.nil? or gem_version.nil?
       unaffected_vers.each do |safe_ver|
-          return true if GemVersionLogic::is_unaffected(gem_version, safe_ver)
+          return true if GemVersionLogic::unaffected?(gem_version, safe_ver)
       end
     end
     false
