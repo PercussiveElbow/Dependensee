@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :scan do
     source { Faker::Lorem::word }
     project_id nil

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :dependency do
     name { Faker::Lorem::word }
     version { Faker::Number.digit }

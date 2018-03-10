@@ -12,8 +12,8 @@
 # the additional setup, and require it from the spec files that actually need
 # it.
 #
-require 'factory_girl_rails'
-require 'support/factory_girl'
+require 'factory_bot_rails'
+require 'support/factory_bot'
 require 'support/controller_spec_helper'
 require 'support/req_spec_helper'
 
