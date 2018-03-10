@@ -1,4 +1,4 @@
-# app/lib/json_web_token.rb
+# app/lib/custom_jwt.rb
 
 class CustomJWT
   HMAC = Rails.application.secrets.secret_key_base
@@ -12,7 +12,7 @@ class CustomJWT
     begin
       body = JWT.decode(token,HMAC)[0]
       HashWithIndifferentAccess.new body
-    rescue JWT::ExpiredSignature, JWT::VerificationError,JWT::DecodeError  => e
+    rescue JWT::ExpiredSignature, JWT::VerificationError,JWT::DecodeError  => _
       raise CustomException::InvalidToken, 'Invalid Authorization Token'
     end
   end

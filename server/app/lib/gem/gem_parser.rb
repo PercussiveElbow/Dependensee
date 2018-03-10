@@ -22,10 +22,10 @@ class GemParser < BaseParser
 
   def load_deps
     specs = @lockfile.specs
-    for spec in specs do
+    specs.each { |spec|
       spec
       # raise(CustomException::DependencyFileError, MsgConstants::DEPENDENCY_FILE_ERROR) if !dep['groupId'].force_encoding("UTF-8").ascii_only? or dep['groupId'].length > 50 or dep['artifactId'].length > 50
-    end
+    }
   end
 
 end

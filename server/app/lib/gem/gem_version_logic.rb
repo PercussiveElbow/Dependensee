@@ -4,6 +4,9 @@ require 'open-uri'
 class GemVersionLogic
   # Constant that I should really change
   TIMEOUT = 14400
+
+
+
   def self.is_above_patched_ver(gem_ver, patch_ver)
     if patch_ver.include? '>='
       return Gem::Version.new(gem_ver) >= Gem::Version.new(patch_ver.gsub('>=', '').gsub(' ',''))

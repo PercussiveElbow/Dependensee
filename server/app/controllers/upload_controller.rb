@@ -8,11 +8,9 @@ require_relative '../lib/common/generic_version_logic'
 
 class UploadController < ApplicationController
   before_action :find_project_by_id,:upload_headers
-  before_action only: [:show, :update, :destroy]
 
   def create
-    response = what_language?
-    json_response(response, :created)
+    json_response(process_dep_upload, :created)
   end
 
   def find_project_by_id
@@ -35,21 +33,23 @@ class UploadController < ApplicationController
     end
   end
 
-  def what_language?
-    if @project.language == 'Ruby'
-      handle_ruby
-    elsif @project.language == 'Java'
-      handle_java
-    elsif @project.language == 'Python'
-      handle_python
-    else
-      raise EmptyDependencyException.new('No dependencies found in your POST body.')
+  def process_dep_upload
+    case @project.language
+      when 'Ruby'
+        handle_ruby
+      when 'Java'
+        handle_java
+      when 'Python'
+        handle_python
+      else
+        raise EmptyDependencyException.new('No dependencies found in your POST body.')
     end
   end
 
   # JAVA
   def handle_java
-    deps = pom_decode
+    deps = PomParser::load_from_post(request.raw_post).load_deps
+    raise EmptyDependencyException.new('No jars found in your POST body.') if deps.empty?
     @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
 
     deps.each { |dep| @scan.dependencies.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], language: 'java', raw: dep) }
@@ -61,16 +61,10 @@ class UploadController < ApplicationController
     JSON.pretty_generate({type: MsgConstants::POMFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
 
-  def pom_decode
-    deps = PomParser::load_from_post(request.raw_post).load_deps
-    raise EmptyDependencyException.new('No jars found in your POST body.') if deps.empty?
-    deps
-  end
-
-
   # RUBY
   def handle_ruby
-    deps = gem_decode
+    deps = GemParser::load_from_post(request.raw_post).load_deps
+    raise EmptyDependencyException.new('No gems found in your POST body.') if deps.empty?
     @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
 
     deps.each { |dep| @scan.dependencies.create(name: dep.name, version: dep.version, language: 'ruby', raw: dep) }
@@ -82,15 +76,10 @@ class UploadController < ApplicationController
     JSON.pretty_generate({type: MsgConstants::GEMFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
 
-  def gem_decode
-    deps = GemParser::load_from_post(request.raw_post).load_deps
-    raise EmptyDependencyException.new('No gems found in your POST body.') if deps.empty?
-    deps
-  end
-
   # PYTHON
   def handle_python
-    deps = pip_decode
+    deps = PipParser::load_from_post(request.raw_post).load_deps
+    raise EmptyDependencyException.new('No pip dependencies found in your POST body.') if deps.empty?
     @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
 
     deps.each { |dep| @scan.dependencies.create(name: dep['name'], version: dep['version'], language: 'python', raw: dep) }
@@ -101,15 +90,9 @@ class UploadController < ApplicationController
     JSON.pretty_generate({type: MsgConstants::PIPFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
 
-  def pip_decode
-    deps = PipParser::load_from_post(request.raw_post).load_deps
-    raise EmptyDependencyException.new('No pip dependencies found in your POST body.') if deps.empty?
-    deps
-  end
-
   def vuln_total
     @vuln_total=0
-    @vuln_list.each { |k, v| @vuln_total+=v['cves'].length }
+    @vuln_list.each { |_, v| @vuln_total+=v['cves'].length }
   end
 
 end

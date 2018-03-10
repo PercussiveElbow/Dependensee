@@ -12,7 +12,7 @@
 	            <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon >warning</md-icon></md-avatar>
 	            <div class="md-list-text-container">
 	              <a @click=openCVEModal(vuln,index,title)>CVE-{{item.cve}}</a>
-	              <p>Patched ver: {{item.patched_version}}</p>
+	              <ul>Patched versions: <li style="display:inline" v-for="patched_ver in item.patched_version">{{patched_ver}},  </li></ul>
 	            </div>
 	          </md-list-item>
 	        </div>

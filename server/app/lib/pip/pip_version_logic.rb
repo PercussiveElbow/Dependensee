@@ -21,15 +21,8 @@ class PipVersionLogic
     return vuln
   end
 
-  #
-  # def self.is_within_minor_ver(gem_ver,patch_ver)
-  #   return patch_ver.to_s.tr('>=<~ ', '')[0,3] == gem_ver.to_s.tr('>=<~ ', '')[0,3]
-  # end
-
   def self.query_pypi(dep_name)
-    url = "https://pypi.python.org/pypi/#{dep_name}/json"
-    uri = URI(url)
-    response = Net::HTTP.get(uri)
+    response = Net::HTTP.get(URI("https://pypi.python.org/pypi/#{dep_name}/json"))
     return JSON.parse(response)['info']['version']
   end
 
@@ -40,9 +33,6 @@ class PipVersionLogic
     end
     $py[dep_name][0]
   end
-
-
-
 
 end
 

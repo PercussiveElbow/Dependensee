@@ -9,7 +9,7 @@ class GemReport < BaseReport
 
     vulnlist.each do |dep, vulns|
       open(filename, 'a') { |file|
-        for vuln in vulns['cves'] do
+        vulns['cves'].each { |vuln|
           file.puts(dep + "\n")
           #TODO REPLACE WITH LESS HACKY IMPLEMENTATION
           if language == 'Java'
@@ -25,7 +25,7 @@ class GemReport < BaseReport
           file.puts(cve_info.cvss2.to_s + "\n")
           file.puts(MsgConstants::GEM_VERSION + vuln.our_version + MsgConstants::PATCHED_VERSION + vuln.patched_version.to_s + "\n")
           file.puts(cve_info.desc + "\n")
-        end
+        }
       }
     end
     print MsgConstants::NEWLINES + MsgConstants::TEXT_SAVED + filename + "\n"
@@ -42,8 +42,8 @@ class GemReport < BaseReport
         current_gem = dep
         text current_gem ,:size => 25 if current_gem != last_gem or last_gem.nil?
 
-        for vuln in vulns['cves'] do
-          text 'CVE ' + vuln.cve,:indent_paragraphs => 20, :size => 18
+        vulns['cves'].each { |vuln|
+          text 'CVE ' + vuln.cve, :indent_paragraphs => 20, :size => 18
 
 
           #TODO REPLACE WITH LESS HACKY IMPLEMENTATION
@@ -68,9 +68,13 @@ class GemReport < BaseReport
           end
 
           # CVE SCORE
-          if cve_score.nil?; text MsgConstants::SCORE + MsgConstants::NO_CVE_SCORE,:color => MsgConstants::GREY, :indent_paragraphs => 40 else text  MsgConstants::SCORE + cve_score.to_s,:color => cve_color, :size => 16, :indent_paragraphs => 40 end
+          if cve_score.nil?;
+            text MsgConstants::SCORE + MsgConstants::NO_CVE_SCORE, :color => MsgConstants::GREY, :indent_paragraphs => 40
+          else
+            text MsgConstants::SCORE + cve_score.to_s, :color => cve_color, :size => 16, :indent_paragraphs => 40
+          end
 
-          text MsgConstants::VERSIONS,:indent_paragraphs => 40, :size => 16
+          text MsgConstants::VERSIONS, :indent_paragraphs => 40, :size => 16
           gem_name = current_gem
           latest_ver = ''
           # latest_ver = GemVersionLogic::get_latest_version(gem_name)
@@ -85,14 +89,14 @@ class GemReport < BaseReport
             if GemVersionLogic::is_within_minor_ver(patched_ver_index, vuln.our_version)
               text MsgConstants::PATCHED_VER + patched_ver_index.to_s, :color => MsgConstants::GREEN, :indent_paragraphs => 60
             else
-              text MsgConstants::PATCHED_VER + patched_ver_index.to_s + MsgConstants::VERSION_WARNING, :color => MsgConstants::RED,:indent_paragraphs => 60
+              text MsgConstants::PATCHED_VER + patched_ver_index.to_s + MsgConstants::VERSION_WARNING, :color => MsgConstants::RED, :indent_paragraphs => 60
             end
           end
 
           # GEM DESCRIPTION
           desc = cve_info.desc.nil? ? '' : cve_info.desc
-          text "\n" + desc + "\n\n", :style => :italic,:indent_paragraphs => 40
-        end
+          text "\n" + desc + "\n\n", :style => :italic, :indent_paragraphs => 40
+        }
       end
     end
     print "\n" + MsgConstants::PDF_SAVED + filename + "\n"

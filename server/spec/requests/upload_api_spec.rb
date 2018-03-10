@@ -13,6 +13,9 @@ RSpec.describe 'upload API' do
   let! (:python_project) {create(:project, language: 'Python')}
   let(:python_project_id) { python_project.id }
 
+  let! (:java_project) {create(:project, language: 'Java')}
+  let(:java_project_id) {java_project.id}
+
   let(:headers) { valid_headers }
 
   describe 'POST /api/projects/:project_id/upload/' do
@@ -52,6 +55,14 @@ RSpec.describe 'upload API' do
       end
     end
 
+  end
+
+  describe 'POST /api/projects/:java_project_id/upload/' do
+    context 'when dependencies are all empty' do
+      it 'raises an EmptyDependencyException' do
+        expect{post "/api/projects/#{java_project_id}/upload/",  params: File.read(File.expand_path(File.dirname(__FILE__) + '../../resources/pom.xml.empty.test')) , headers: { 'Content-Type' => 'text/plain', 'Authorization' => valid_headers['Authorization']} }.to raise_error(CustomException::EmptyDependencyException)
+      end
+    end
   end
 
 

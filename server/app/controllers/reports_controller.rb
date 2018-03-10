@@ -6,32 +6,31 @@ require_relative '../lib/common/generic_version_logic'
 
 class ReportsController < ApplicationController
   before_action :get_project_by_id
-  before_action :set_project_scan, only: [:index, :show, :update, :destroy]
+  before_action :set_project_scan, only: [:index, :show]
 
   def index
     json_response(error:'Specify a report type')
   end
 
   def show
-      if @project.language == 'Ruby'
+    case @project.language
+      when 'Ruby'
         @vuln_list = GemScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
-      elsif @project.language == 'Java'
+      when 'Java'
         @vuln_list = PomScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
-      elsif @project.language == 'Python'
+      when 'Python'
         @vuln_list = PipScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
-      end
-      deps =  Dependency.where(['scan_id = ?', @scan.id])
-      @vuln_list = GenericVersionLogic::finish_version_logic(deps,@vuln_list)
-      if params[:id] == 'json'
+    end
+    @vuln_list = GenericVersionLogic::finish_version_logic(Dependency.where(['scan_id = ?', @scan.id]),@vuln_list)
+    case params[:id]
+      when 'json'
         response = @vuln_list.to_json
-      elsif params[:id] == 'pdf'
-        doc = GemReport::gen_pdf(@vuln_list,@project.language) #TODO ADD JAVA/MAVEN VERSION PROPERLY!
-        return send_file(doc, :filename => "report.pdf", :type => "application/pdf")
-      elsif params[:id] == 'txt'
-        doc = GemReport::gen_txt(@vuln_list,@project.language)
-        return send_file(doc, :filename => "report.txt", :type => "application/text")
+      when 'pdf' #TODO ADD JAVA/MAVEN VERSION PROPERLY!
+        return send_file(GemReport::gen_pdf(@vuln_list,@project.language), :filename => "report.pdf", :type => "application/pdf")
+      when 'txt'
+        return send_file(GemReport::gen_txt(@vuln_list,@project.language), :filename => "report.txt", :type => "text/plain")
       else
-      response = ''
+        response = ''
     end
     json_response(response, :created)
   end
