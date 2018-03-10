@@ -12,11 +12,20 @@ class GemParser < BaseParser
   end
 
   def self.load_from_post(body)
-    self.new(Bundler::LockfileParser.new(body.to_s))
+    begin
+      lockfile = Bundler::LockfileParser.new(body.to_s)
+    rescue
+      raise(CustomException::DependencyFileError, MsgConstants::DEPENDENCY_FILE_ERROR)
+    end
+      self.new(lockfile)
   end
 
   def load_deps
-    @lockfile.specs
+    specs = @lockfile.specs
+    for spec in specs do
+      spec
+      # raise(CustomException::DependencyFileError, MsgConstants::DEPENDENCY_FILE_ERROR) if !dep['groupId'].force_encoding("UTF-8").ascii_only? or dep['groupId'].length > 50 or dep['artifactId'].length > 50
+    end
   end
 
 end

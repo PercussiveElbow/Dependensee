@@ -12,7 +12,7 @@ class MsgConstants
   VULNERABILITIES_FOUND='Vulnerabilities found'
   LOGGED_ON='Logged on. New Token generated'
   VALIDATION_ERROR='Validation error in one or more parameters'
-
+  DEPENDENCY_FILE_ERROR='Validation failed when decoding dependency file.'
 
   # Gem Scanning
   CHECKING_GEM = 'Checking gem: '

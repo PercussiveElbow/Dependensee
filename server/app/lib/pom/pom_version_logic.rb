@@ -5,32 +5,64 @@ require 'json'
 
 class PomVersionLogic
 
+  #todo check for the 2 digit occurance. check if any strings contain more than one comma
   def self.is_vuln?(dep_ver,vuln_ver,fixed_in)
     vuln = false
     vuln_ver.each { |ver|
-      if self.is_below_vuln_ver(ver, dep_ver)
-        vuln=true; break;
+      if self.affected?(ver, dep_ver)
+         vuln=true; break;
+      end
+    }
+
+    fixed_in.each { |fixed_ver|
+      if affected?(fixed_ver,dep_ver)
+        vuln=false; break;
       end
     }
     return vuln
   end
 
-  def self.is_below_vuln_ver(vuln_ver,dep_ver)
-    if vuln_ver.include? ',' #case for a between
-      print('Analysis failed, fix this') # TODO FIX
-      return false
+  def self.affected?(vuln_ver,dep_ver)
+    return_val = vuln_ver.include?(',') ? self.comma_split(vuln_ver,dep_ver) : self.version_logic(vuln_ver,dep_ver)
+    return_val
+  end
+
+  def self.comma_split(vuln_ver,dep_ver)
+    if vuln_ver.count(',') > 1
+      vuln_ver
     end
-    if vuln_ver.include? '<' ##There's no nice way to do >=, should really
-      if vuln_ver.include? '<='; return (Gem::Version.new(dep_ver) < Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))) | (Gem::Version.new(dep_ver) == Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, '')))
-      else return Gem::Version.new(dep_ver) < Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))
+    first_ver = vuln_ver.rpartition(',')[0]
+    second_ver = vuln_ver.rpartition(',')[2]
+    if first_ver.include? '>'
+      second_ver = first_ver.include?('>=') ? '>='.concat(second_ver)  : '>'.concat(second_ver);
+    elsif first_ver.include? '<'
+      second_ver = first_ver.include?('<=') ? '<='.concat(second_ver)  : '<'.concat(second_ver);
+    else
+      puts 'Invalid vuln ver'
+    end
+    return self.version_logic(first_ver,dep_ver) || self.version_logic(second_ver,dep_ver)
+  end
+
+
+  def self.version_logic(vuln_ver,dep_ver)
+    if vuln_ver.include? '<'
+      if vuln_ver.include? '<='
+        return (Gem::Version.new(dep_ver) < Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))) || (Gem::Version.new(dep_ver) == Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, '')))
+      else
+        return Gem::Version.new(dep_ver) < Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))
       end
+    elsif vuln_ver.include? '>'
+      if vuln_ver.include? '>='
+        return Gem::Version.new(dep_ver) > Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, '')) || (Gem::Version.new(dep_ver) == Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, '')))
+      else
+        return Gem::Version.new(dep_ver) > Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))
+      end
+    elsif vuln_ver.include? '=='
+      return Gem::Version.new(dep_ver) == Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))
+    else
+        puts 'Invalid vuln ver'
     end
   end
-  #
-  # def self.is_within_minor_ver(gem_ver,patch_ver)
-  #   return patch_ver.to_s.tr('>=<~ ', '')[0,3] == gem_ver.to_s.tr('>=<~ ', '')[0,3]
-  # end
-
 
   def self.query_maven(dep_name)
     last_index = dep_name.rindex('.')

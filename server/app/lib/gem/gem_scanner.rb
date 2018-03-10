@@ -19,10 +19,10 @@ class GemScanner < BaseScanner
       spec_name = spec.name
       vuln_hash[spec_name] = {}
       vuln_hash[spec_name]['cves'] = []
-      print("\n\n" + MsgConstants::CHECKING_GEM + spec_name)
+      # print("\n\n" + MsgConstants::CHECKING_GEM + spec_name)
       gem_ver=spec.version
       RubyCve.where(['dependency_name = ?', spec_name]).each do |cve| #todo sanitize
-          print("\n" + '          -CVE' + cve.cve_id)
+          # print("\n" + '          -CVE' + cve.cve_id)
           unless check_unaffected_vers(gem_ver,cve.unaffected_versions)
             needed_patches = get_needed_patches(gem_ver, cve.patched_versions)
             vuln_hash[spec_name]['cves'].push( Vulnerability::new(gem_ver,needed_patches,cve.cve_id))   unless needed_patches.nil?
@@ -43,14 +43,14 @@ class GemScanner < BaseScanner
         end
 
         if GemVersionLogic::is_above_patched_ver(gem_version, patched_version)
-          print "\n" + MsgConstants::SAFE_PATCHED ; return nil
+        #   print "\n" + MsgConstants::SAFE_PATCHED ; return nil
         else
           needed_patches.push(patched_version)
         end
       end
-      needed_patches.each do |vuln|
-        print "\n" + MsgConstants::VULNERABILITY_FOUND + MsgConstants::GEM_VERSION + gem_version.to_s + MsgConstants::PATCHED_VERSION + vuln.to_s + ' '
-      end
+      # needed_patches.each do |vuln|
+      #   print "\n" + MsgConstants::VULNERABILITY_FOUND + MsgConstants::GEM_VERSION + gem_version.to_s + MsgConstants::PATCHED_VERSION + vuln.to_s + ' '
+      # end
     end
     needed_patches
   end
@@ -59,7 +59,6 @@ class GemScanner < BaseScanner
     unless unaffected_vers.nil? or gem_version.nil?
       unaffected_vers.each do |safe_ver|
         if GemVersionLogic::is_unaffected(gem_version, safe_ver)
-          print  "\n" + MsgConstants::SAFE_UNAFFECTED
           return true
         end
       end

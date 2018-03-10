@@ -9,6 +9,7 @@ module CustomException
   class EmptyDependencyException < StandardError; end
   class NotFound < StandardError; end
   class ValidationError < StandardError; end
+  class DependencyFileError < StandardError; end
 
 
   included do
@@ -18,6 +19,7 @@ module CustomException
     rescue_from CustomException::InvalidToken, with: :no_auth
     rescue_from CustomException::NotFound, with: :not_found
     rescue_from CustomException::ValidationError, with: :unprocessable
+    rescue_from CustomException::DependencyFileError, with: :unprocessable
 
     rescue_from ActiveRecord::RecordNotFound do |e|
       json_response({ message: e.message }, :not_found)
