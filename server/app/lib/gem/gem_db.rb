@@ -17,7 +17,7 @@ class GemDB < BaseDB
       Dir.glob(@db_location + '/gems/' + '**/*.{yml,YML}') do |file|
         yaml = YAML.load_file(file)
         if yaml['cve'].nil?
-          #osvdb deal with these later
+          #TODO OSVDB future feature
         else
           RubyCve::new(:dependency_name => yaml['gem'], :cve_id => yaml['cve'], :date => yaml['date'], :desc => yaml['description'], :cvss2 => yaml['cvss_v2'], :unaffected_versions => yaml['unaffected_versions'].to_a, :patched_versions => yaml['patched_versions'].to_a).save! if RubyCve.where(['cve_id = ?', yaml['cve'].to_s]).empty?
         end

@@ -20,8 +20,6 @@ class PipParser < BaseParser
 
   def parse_deps
     deps = Array.new
-
-    # TODO add support/ignore for git repo links?
     @pipfile.each_line do |line|
       line = line.gsub("\n",'')
       name = line.gsub(/[^a-z\-]/i,'')

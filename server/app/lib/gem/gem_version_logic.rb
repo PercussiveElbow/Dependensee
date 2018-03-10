@@ -5,7 +5,6 @@ class GemVersionLogic
   # Constant that I should really change
   TIMEOUT = 14400
 
-
   def self.is_vuln?(dep_ver,vuln_ver,unaffected)
     vuln = false
     vuln_ver.each { |ver|

@@ -19,7 +19,7 @@ class PomVersionLogic
         vuln=false; break;
       end
     }
-    return vuln
+    vuln
   end
 
   def self.affected?(vuln_ver,dep_ver)
@@ -40,7 +40,7 @@ class PomVersionLogic
     else
       puts 'Invalid vuln ver'
     end
-    return self.version_logic(first_ver,dep_ver) || self.version_logic(second_ver,dep_ver)
+    self.version_logic(first_ver,dep_ver) || self.version_logic(second_ver,dep_ver)
   end
 
 
@@ -68,11 +68,7 @@ class PomVersionLogic
     last_index = dep_name.rindex('.')
     group_id = dep_name[0..last_index-1]
     artifact_id = dep_name[last_index+1..dep_name.length-1]
-
-    url = "http://search.maven.org/solrsearch/select?q=g:%22#{group_id}%22+AND+a:%22#{artifact_id}%22&core=gav&rows=20&wt=json"
-    uri = URI(url)
-    response = Net::HTTP.get(uri)
-    return JSON.parse(response)['response']['docs'][0]['v']
+    JSON.parse(Net::HTTP.get( URI("http://search.maven.org/solrsearch/select?q=g:%22#{group_id}%22+AND+a:%22#{artifact_id}%22&core=gav&rows=20&wt=json")))['response']['docs'][0]['v']
   end
 
   def self.get_latest_version(dep_name) # todo fix this horrible implementation

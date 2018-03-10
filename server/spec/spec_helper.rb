@@ -17,6 +17,11 @@ require 'support/factory_bot'
 require 'support/controller_spec_helper'
 require 'support/req_spec_helper'
 
+require 'simplecov'
+require 'simplecov-console'
+SimpleCov.formatter = SimpleCov.formatter = SimpleCov::Formatter::Console
+SimpleCov.start
+
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|

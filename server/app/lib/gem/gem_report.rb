@@ -1,7 +1,6 @@
 require_relative '../common/base_report'
 require_relative '../msg_constants'
 
-
 class GemReport < BaseReport
 
   def self.gen_txt(vulnlist,language)

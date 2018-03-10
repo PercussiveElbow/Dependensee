@@ -22,8 +22,7 @@ class PipVersionLogic
   end
 
   def self.query_pypi(dep_name)
-    response = Net::HTTP.get(URI("https://pypi.python.org/pypi/#{dep_name}/json"))
-    return JSON.parse(response)['info']['version']
+    return JSON.parse( Net::HTTP.get(URI("https://pypi.python.org/pypi/#{dep_name}/json")))['info']['version']
   end
 
   def self.get_latest_version(dep_name) # todo fix this horrible implementation
