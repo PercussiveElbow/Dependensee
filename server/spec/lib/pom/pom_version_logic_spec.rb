@@ -24,6 +24,10 @@ RSpec.describe PomVersionLogic do
     expect(PomVersionLogic::is_vuln?('0.0.9', ['<=1.0.0'],[])).to eql(true)
   end
 
+  it 'should return is vuln 3' do
+    expect(PomVersionLogic::is_vuln?('1.0.1', ['>1.0.0'],[])).to eql(true)
+  end
+
   it 'should return less than vuln 1' do
     expect(PomVersionLogic::is_vuln?('0.0.9', ['<1.0.0'],[])).to eql(true)
   end

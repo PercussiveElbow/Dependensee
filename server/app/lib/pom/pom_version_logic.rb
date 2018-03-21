@@ -5,7 +5,6 @@ require 'json'
 
 class PomVersionLogic
 
-  #todo check for the 2 digit occurance. check if any strings contain more than one comma
   def self.is_vuln?(dep_ver,vuln_ver,fixed_in)
     vuln = false
     vuln_ver.each { |ver|
@@ -64,18 +63,22 @@ class PomVersionLogic
   end
 
   def self.query_maven(dep_name)
-    last_index = dep_name.rindex('.')
-    group_id = dep_name[0..last_index-1]
-    artifact_id = dep_name[last_index+1..dep_name.length-1]
-    JSON.parse(Net::HTTP.get( URI("http://search.maven.org/solrsearch/select?q=g:%22#{group_id}%22+AND+a:%22#{artifact_id}%22&core=gav&rows=20&wt=json")))['response']['docs'][0]['v']
+      last_index = dep_name.rindex('.')
+      group_id = dep_name[0..last_index-1]
+      artifact_id = dep_name[last_index+1..dep_name.length-1]
+      JSON.parse(Net::HTTP.get( URI("http://search.maven.org/solrsearch/select?q=g:%22#{group_id}%22+AND+a:%22#{artifact_id}%22&core=gav&rows=20&wt=json")))['response']['docs'][0]['v']
   end
 
-  def self.get_latest_version(dep_name) # todo fix this horrible implementation
-    $p = Hash.new if $p.nil?
-    if  $p[dep_name].nil? or ((Time.now.to_i - $p[dep_name][1].to_i)> MsgConstants::TIMEOUT)
-      $p[dep_name] = [query_maven(dep_name), Time.now.to_i]
+  def self.get_latest_version(dep_name)
+    begin
+      $p = Hash.new if $p.nil?
+      if  $p[dep_name].nil? or ((Time.now.to_i - $p[dep_name][1].to_i)> MsgConstants::TIMEOUT)
+        $p[dep_name] = [query_maven(dep_name), Time.now.to_i]
+      end
+      return $p[dep_name][0]
+    rescue
+      return 'Latest version unavailable'
     end
-    $p[dep_name][0]
   end
 
 end
