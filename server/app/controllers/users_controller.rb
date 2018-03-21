@@ -3,9 +3,9 @@ class UsersController < ApplicationController
   skip_before_action :auth_req
 
   api :POST, '/signup/', 'Signup'
-  param :email, String, :required=>true
-  param :name, String, :required=>true
-  param :password, String, :required=>true
+  param :email, String, :desc=> 'Email for account', :required=>true
+  param :name, String, :desc=> 'Name for account', :required=>true
+  param :password, String, :desc=> 'Password for account', :required=>true
   param :password_confirmation, String, :required=>true
   def create
     begin
@@ -22,8 +22,8 @@ class UsersController < ApplicationController
   end
 
   api :POST, '/login/', 'Login'
-  param :email, String, :required=>true
-  param :password, String, :required=>true
+  param :email, String, :desc=> 'Email of account', :required=>true
+  param :password, String, :desc=> 'Password of account', :required=>true
   def login
     whitelist_login
     begin

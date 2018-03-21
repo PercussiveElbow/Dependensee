@@ -13,7 +13,6 @@ class PomVersionLogic
          vuln=true; break;
       end
     }
-
     fixed_in.each { |fixed_ver|
       if affected?(fixed_ver,dep_ver)
         vuln=false; break;

@@ -4,30 +4,30 @@ class DependenciesController < ApplicationController
   before_action :set_dependency, only: [:show, :update, :destroy]
 
   def_param_group :project_and_scan do
-    param :project_id, String, :required => true
-    param :scan_id, String, :required => true
+    param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
+    param :scan_id, String,:desc=> 'Scan ID (UUID)', :required => true
   end
 
   def_param_group :dependency_params do
-    param :name, String
-    param :raw, String
-    param :version, String
+    param :name, String, :desc=> 'Name of Dependency', :required => true
+    param :raw, String, :desc=> 'Raw body of Dependency from file'
+    param :version, String, :desc=> 'Version of Dependency', :required => true
   end
 
-  api :GET, '/projects/:project_id/scans/:scan_id/dependencies/', 'Dependencies Get'
+  api :GET, '/projects/:project_id/scans/:scan_id/dependencies/', 'Get all Dependencies'
   param_group :project_and_scan
   def index
     json_response(@scan.dependencies)
   end
 
-  api :GET, '/projects/:project_id/scans/:scan_id/dependencies/:id', 'Dependencies Get'
+  api :GET, '/projects/:project_id/scans/:scan_id/dependencies/:id', 'Get a Dependency'
   param_group :project_and_scan
-  param :id, String
+  param :id, String,:desc=> 'Dependency ID (UUID)', :required => true
   def show
     json_response(@dependency)
   end
 
-  api :POST, '/projects/:project_id/scans/:scan_id/dependencies/', 'Dependencies Post'
+  api :POST, '/projects/:project_id/scans/:scan_id/dependencies/', 'Create a Dependency'
   param_group :project_and_scan
   param_group :dependency_params
   def create
@@ -35,18 +35,18 @@ class DependenciesController < ApplicationController
     json_response(@dependency, :created)
   end
 
-  api :PUT, '/projects/:project_id/scans/:scan_id/dependencies/:id', 'Dependencies Update'
+  api :PUT, '/projects/:project_id/scans/:scan_id/dependencies/:id', 'Update a Dependency'
   param_group :project_and_scan
   param_group :dependency_params
-  param :id, String, :required =>true
+  param :id, String,:desc=> 'Dependency ID (UUID)', :required => true
   def update
     @dependency.update(dependency_params)
     head :no_content
   end
 
-  api :DELETE, '/projects/:project_id/scans/:scan_id/dependencies/:id', 'Dependencies Delete'
+  api :DELETE, '/projects/:project_id/scans/:scan_id/dependencies/:id', 'Delete a Dependency'
   param_group :project_and_scan
-  param :id, String, :required => true
+  param :id, String,:desc=> 'Dependency ID (UUID)', :required => true
   def destroy
     @dependency.destroy
     head :no_content

@@ -1,43 +1,43 @@
 class ProjectsController < ApplicationController
   before_action :find_project_by_id, only: [:show, :update, :destroy]
 
-  api :GET, '/projects/', 'Projects Get'
+  api :GET, '/projects/', 'Get all Projects'
   def index
     @projects = current_user.projects
     json_response(@projects)
   end
 
-  api :POST, '/projects/:id', 'Projects Create'
-  param :language, String, :required => true
-  param :description, String
-  param :timeout, Integer
-  param :name, String, :required => true
+  api :POST, '/projects/:id', 'Create a Project'
+  param :language, ['Java','Ruby','Python'], :desc => 'Language' ,:required => true
+  param :description, String, :desc => 'Description for the project'
+  param :timeout, Integer, :desc => 'Timeout between scans (seconds) '
+  param :name, String, :desc => 'Name of the project', :required => true
   #param :active, Boolean
   def create
     @project = current_user.projects.create!(whitelist)
     json_response(@project, :created)
   end
 
-  api :GET, '/projects/:id', 'Projects Get'
-  param :id, String, :required => true
+  api :GET, '/projects/:id', 'Get a Project'
+  param :id, String, :desc => 'Project ID (UUID) ', :required => true
   def show
     json_response(@project)
   end
 
-  api :PUT, '/projects/:id', 'Projects Update'
-  param :id, String, :required => true
-  param :language, String
-  param :description, String
-  param :timeout, Integer
-  param :name, String
+  api :PUT, '/projects/:id', 'Update an existing Project'
+  param :id, String, :desc => 'Project ID (UUID) ', :required => true
+  param :language, ['Java','Ruby','Python'], :desc => 'Language' ,:required => true
+  param :description, String, :desc => 'Description for the project'
+  param :timeout, Integer, :desc => 'Timeout between scans (seconds) '
+  param :name, String, :desc => 'Name of the project', :required => true
   #param :active, Boolean
   def update
     @project.update(whitelist)
     head :no_content
   end
 
-  api :DELETE, '/projects/:id', 'Projects Delete'
-  param :id, String, :required => true
+  api :DELETE, '/projects/:id', 'Delete a Project'
+  param :id, String, :desc => 'Project ID (UUID) ', :required => true
   def destroy
     @project.destroy
     head :no_content

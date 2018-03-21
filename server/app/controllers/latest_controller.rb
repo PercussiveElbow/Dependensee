@@ -7,6 +7,14 @@ class LatestController < ApplicationController
   before_action :get_project_by_id,:set_project_scan
   before_action :set_project_dependency,  only: [:show]
 
+  def_param_group :project_and_scan do
+    param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
+    param :scan_id, String,:desc=> 'Scan ID (UUID)', :required => true
+  end
+
+  api :GET, '/projects/:project_id/scans/:scan_id/dependencies/:id/latest', 'Get the latest version of the Dependency'
+  param_group :project_and_scan
+  param :id, String,:desc=> 'Dependency ID (UUID)', :required => true
   def show
     if @project.language == 'Ruby'
       latest_ver = GemVersionLogic::get_latest_version(@dependency.name)

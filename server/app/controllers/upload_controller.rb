@@ -9,6 +9,7 @@ require_relative '../lib/common/generic_version_logic'
 class UploadController < ApplicationController
   before_action :find_project_by_id,:upload_headers
 
+  api :POST, '/projects/:project_id/upload/', 'Upload a file to load dependencies from'
   def create
     json_response(process_dep_upload, :created)
   end

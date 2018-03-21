@@ -73,8 +73,12 @@ RSpec.describe GemVersionLogic do
   end
 
   #todo check if both these need fixed
-  it 'should return false if contains a comma' do
-    expect(GemVersionLogic::unaffected?('1.0','<1.1,>=5.0.0')).to eql(false)
+  it 'should return true if contains a comma and is unaffected' do
+    expect(GemVersionLogic::unaffected?('1.0','<1.1,>=5.0.0')).to eql(true)
+  end
+
+  it 'should return false if contains a comma and is affected' do
+    expect(GemVersionLogic::unaffected?('2.0','<1.1,>=5.0.0')).to eql(false)
   end
 
   it 'should return false if just greater than' do

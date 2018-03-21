@@ -6,12 +6,11 @@ require_relative '../lib/common/generic_version_logic'
 
 class ReportsController < ApplicationController
   before_action :get_project_by_id
-  before_action :set_project_scan, only: [:index, :show]
+  before_action :set_project_scan, only: [:show]
 
-  def index
-    json_response(error:'Specify a report type')
-  end
-
+  api :GET, '/projects/:project_id/scans/:format', 'Generate a Report for this Scan'
+  param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
+  param :format, ['json','pdf','txt'], :required => true
   def show
     case @project.language
       when 'Ruby'
