@@ -3,7 +3,7 @@ var axios = require('axios')
 const API_URL = 'https://dependensee.tech/api/v1/'
 const WEB_URL = 'https://ui.dependensee.tech/'
 // const ADDRESS  = 'http://127.0.0.1';
-// const API_RUL = ADDRESS + ':3000/api/v1'
+// const API_URL = ADDRESS + ':3000/api/v1/'
 // const WEB_URL = ADDRESS + ':8080/'
 
 const LOGIN_URL = API_URL + 'login/';
@@ -44,12 +44,12 @@ function isValidToken(router) {
 
 //PROFILE
 function getProfile() {
-	return axios.get(API_URL + PROFILE_URL, {headers: {'Authorization': getToken()} }).then(response => response.data);
+	return common_get(API_URL + PROFILE_URL)
 }
 
 //PROJECTS
 function getProject(id) {
-	return axios.get(PROJECTS_URL+id,{headers: {'Authorization': getToken()}}).then(response => response.data);
+	return common_get(PROJECTS_URL+id)
 }
 
 function editProject(id,params) {
@@ -57,11 +57,11 @@ function editProject(id,params) {
 }
 
 function deleteProject(id){
-	return axios.delete(PROJECTS_URL+id,{headers: {'Authorization': getToken()}}).then(response => response.data);
+	return common_delete(PROJECTS_URL+id)
 }
 
 function getProjects() {
-	return axios.get(PROJECTS_URL,{headers: {'Authorization': getToken()}}).then(response => response.data);
+	return common_get(PROJECTS_URL);
 }
 
 function postProject(params){
@@ -70,11 +70,11 @@ function postProject(params){
 
 //SCANS
 function getScan(project_id,scan_id){
-	return axios.get(PROJECTS_URL+project_id+SCANS_URL+scan_id, {headers: {'Authorization': getToken()}} ).then(response => response.data);
+	return common_get(PROJECTS_URL+project_id+SCANS_URL+scan_id);
 }
 
 function getScans(id){
-	return axios.get(PROJECTS_URL+id+SCANS_URL,{headers: {'Authorization': getToken()}}).then (response => response.data);
+	return common_get(PROJECTS_URL+id+SCANS_URL);
 }
 
 function updateScan(id,scan_id,type){
@@ -86,17 +86,17 @@ function upload(id,body,source){
 }
 
 function deleteScan(id,scan_id){
-	return axios.delete(PROJECTS_URL+id+SCANS_URL+scan_id, {headers: {'Authorization': getToken()}}).then (response => response.data);
+	return common_delete(PROJECTS_URL+id+SCANS_URL+scan_id)
 }
 
 //DEPENDENCIES
 function getDependencies(project_id,scan_id){
-	return axios.get(PROJECTS_URL+project_id+SCANS_URL + scan_id + DEPENDENCIES_URL,{headers: {'Authorization': getToken()}} ).then (response => response.data);
+	return common_get(PROJECTS_URL+project_id+SCANS_URL + scan_id + DEPENDENCIES_URL);
 }
 
 //REPORTS
 function getJsonReport(project_id,scan_id){
-		return axios.get(PROJECTS_URL+project_id+SCANS_URL + scan_id + JSON_REPORT_URL,{headers: {'Authorization': getToken()}} ).then (response => response.data);
+	return common_get(PROJECTS_URL+project_id+SCANS_URL + scan_id + JSON_REPORT_URL);
 }
 function getPdfReport(project_id,scan_id){
 	return axios.get(PROJECTS_URL+project_id+SCANS_URL + scan_id + PDF_REPORT_URL,{headers: {'Authorization': getToken()}} ).then (
@@ -118,7 +118,7 @@ function getTxtReport(project_id,scan_id){
 
 //CVE
 function getCve(cve_id){
-	return axios.get(CVE_URL+cve_id).then (response => response.data);
+	return common_get(CVE_URL+cve_id);
 }
 
 //EXPLOIT
@@ -174,4 +174,12 @@ function getClientLinux(){
 }
 function getClientDownload(){
 	return WEB_URL + 'static/quickclient.rb'
+}
+
+function common_get(get_string){
+	return axios.get(get_string,{headers: {'Authorization': getToken()}}).then(response => response.data);
+}
+
+function common_delete(delete_string){
+	return axios.delete(delete_string, {headers: {'Authorization': getToken()}}).then (response => response.data);
 }
