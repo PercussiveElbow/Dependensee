@@ -18,8 +18,8 @@ RSpec.describe 'upload API' do
 
   let(:headers) { valid_headers }
 
-  describe 'POST /api/projects/:project_id/upload/' do
-    before { post "/api/projects/#{project_id}/upload/",  params: File.read(File.expand_path(File.dirname(__FILE__) + '../../resources/pom.xml.test')) , headers: { 'Content-Type' => 'text/plain', 'Authorization' => valid_headers['Authorization']} }
+  describe 'POST /api/v1/projects/:project_id/upload/' do
+    before { post "/api/v1/projects/#{project_id}/upload/",  params: File.read(File.expand_path(File.dirname(__FILE__) + '../../resources/pom.xml.test')) , headers: { 'Content-Type' => 'text/plain', 'Authorization' => valid_headers['Authorization']} }
 
     context 'when project,scan,dependency exists' do
       it 'returns status code 200' do
@@ -57,17 +57,17 @@ RSpec.describe 'upload API' do
 
   end
 
-  describe 'POST /api/projects/:java_project_id/upload/' do
+  describe 'POST /api/v1/projects/:java_project_id/upload/' do
     context 'when dependencies are all empty' do
       it 'raises an EmptyDependencyException' do
-        expect{post "/api/projects/#{java_project_id}/upload/",  params: File.read(File.expand_path(File.dirname(__FILE__) + '../../resources/pom.xml.empty.test')) , headers: { 'Content-Type' => 'text/plain', 'Authorization' => valid_headers['Authorization']} }.to raise_error(CustomException::EmptyDependencyException)
+        expect{post "/api/v1/projects/#{java_project_id}/upload/",  params: File.read(File.expand_path(File.dirname(__FILE__) + '../../resources/pom.xml.empty.test')) , headers: { 'Content-Type' => 'text/plain', 'Authorization' => valid_headers['Authorization']} }.to raise_error(CustomException::EmptyDependencyException)
       end
     end
   end
 
 
-  describe 'POST /api/projects/:ruby_project_id/upload' do
-    before { post "/api/projects/#{ruby_project_id}/upload/",  params: File.read(File.expand_path(File.dirname(__FILE__) + '../../resources/Gemfile.lock.test')) , headers: { 'Content-Type' => 'text/plain', 'Authorization' => valid_headers['Authorization']} }
+  describe 'POST /api/v1/projects/:ruby_project_id/upload' do
+    before { post "/api/v1/projects/#{ruby_project_id}/upload/",  params: File.read(File.expand_path(File.dirname(__FILE__) + '../../resources/Gemfile.lock.test')) , headers: { 'Content-Type' => 'text/plain', 'Authorization' => valid_headers['Authorization']} }
 
     context 'when project,scan,dependency exists' do
       it 'returns status code 200' do
@@ -77,8 +77,8 @@ RSpec.describe 'upload API' do
     end
   end
 
-  describe 'POST /api/projects/:python_project_id/upload' do
-    before { post "/api/projects/#{python_project_id}/upload/",  params: File.read(File.expand_path(File.dirname(__FILE__) + '../../resources/requirements.txt.test')) , headers: { 'Content-Type' => 'text/plain', 'Authorization' => valid_headers['Authorization']} }
+  describe 'POST /api/v1/projects/:python_project_id/upload' do
+    before { post "/api/v1/projects/#{python_project_id}/upload/",  params: File.read(File.expand_path(File.dirname(__FILE__) + '../../resources/requirements.txt.test')) , headers: { 'Content-Type' => 'text/plain', 'Authorization' => valid_headers['Authorization']} }
 
     context 'when project,scan,dependency exists' do
       it 'returns status code 200' do

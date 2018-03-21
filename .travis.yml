@@ -7,4 +7,7 @@ script:
   - docker-compose up -d postgres
   - sleep 20
   - docker-compose run rails bundle exec rake db:setup
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter && ./cc-test-reporter before-build
   - docker-compose run rails bundle exec rspec
+  - sudo sed -i 's#/dependensee#/home/travis/build/PercussiveElbow/Dependensee/server#g' coverage/.resultset.json
+  - ./cc-test-reporter after-build

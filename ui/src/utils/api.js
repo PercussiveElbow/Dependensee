@@ -1,14 +1,10 @@
 var axios = require('axios')
 
-//const ADDRESS  = 'http://127.0.0.1';
+const API_URL = 'https://dependensee.tech/api/v1/'
+const WEB_URL = 'https://ui.dependensee.tech/'
 // const ADDRESS  = 'http://127.0.0.1';
-
-// const API_URL = ADDRESS + ':3000/api/'
-const API_URL = 'https://dependensee.tech/api/'
-
+// const API_RUL = ADDRESS + ':3000/api/v1'
 // const WEB_URL = ADDRESS + ':8080/'
-//const WEB_URL = ADDRESS + ':3000/app'
-const WEB_URL = 'https://dependensee.tech/ui/'
 
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';

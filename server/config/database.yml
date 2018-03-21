@@ -32,9 +32,12 @@ default: &default
 
 development:
   <<: *default
-  database: myapp_development
-
+  database: dependensee_development
 
 test:
   <<: *default
-  database: myapp_test
+  database: dependensee_test
+
+production:
+  <<: *default
+  database: dependensee_production

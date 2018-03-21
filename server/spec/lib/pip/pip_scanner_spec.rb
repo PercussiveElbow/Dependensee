@@ -11,7 +11,7 @@ RSpec.describe 'PipScanner' do
     deps_hash = parser.load_deps
     deps_final = []
     deps_hash.each { |dep|
-      deps_final.push(Dependency.create(name: dep['name'], version: dep['version'], language: 'python', raw: dep) )
+      deps_final.push(Dependency.create(name: dep['name'], version: dep['version'], raw: dep) )
     }
 
     scanner = PipScanner::new(deps_final)

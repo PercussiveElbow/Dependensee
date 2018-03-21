@@ -8,7 +8,7 @@ include REXML
 
 ####################START CONFIG#########################
 @config_check_timeout = 60     #60 seconds by defaul
-SERVER_URL = 'http://127.0.0.1:3000/api'
+SERVER_URL = 'http://127.0.0.1:3000/api/v1'
 #change auth key to env variable
 # AUTH_KEY = ENV['DEPENDENSEE_API_KEY']
 AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZTQyZWU5Y2ItMzdhZi00NGNjLTljODMtMDU5NjBmMjhhMTA4IiwiZXhwIjoxNTIwNTM5MzUwfQ.ANlRKjGWXM3Md-FwyMYg4S8hm_YxE7vQKbPhG_lxcYQ'

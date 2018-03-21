@@ -52,7 +52,7 @@ class UploadController < ApplicationController
     raise EmptyDependencyException.new('No jars found in your POST body.') if deps.empty?
     @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
 
-    deps.each { |dep| @scan.dependencies.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], language: 'java', raw: dep) }
+    deps.each { |dep| @scan.dependencies.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], raw: dep) }
     deps =  Dependency.where(['scan_id = ?', @scan.id])
 
     @vuln_list = PomScanner::new(deps).scan
@@ -67,7 +67,7 @@ class UploadController < ApplicationController
     raise EmptyDependencyException.new('No gems found in your POST body.') if deps.empty?
     @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
 
-    deps.each { |dep| @scan.dependencies.create(name: dep.name, version: dep.version, language: 'ruby', raw: dep) }
+    deps.each { |dep| @scan.dependencies.create(name: dep.name, version: dep.version, raw: dep) }
     deps =  Dependency.where(['scan_id = ?', @scan.id])
 
     @vuln_list = GemScanner::new(deps).scan
@@ -82,7 +82,7 @@ class UploadController < ApplicationController
     raise EmptyDependencyException.new('No pip dependencies found in your POST body.') if deps.empty?
     @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
 
-    deps.each { |dep| @scan.dependencies.create(name: dep['name'], version: dep['version'], language: 'python', raw: dep) }
+    deps.each { |dep| @scan.dependencies.create(name: dep['name'], version: dep['version'], raw: dep) }
     deps =  Dependency.where(['scan_id = ?', @scan.id])
     @vuln_list = PipScanner::new(deps).scan
     @vuln_list = GenericVersionLogic::finish_version_logic(deps,@vuln_list)

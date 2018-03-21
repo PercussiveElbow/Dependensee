@@ -4,7 +4,8 @@ class CveController < ApplicationController
   before_action :find_cve_by_id, only: [:show]
   skip_before_action :auth_req
 
-  # GET /cve/:cve_id
+  api :GET, '/cve/:cve_id/', 'CVE Get'
+  param :id, String, :required=>true
   def show
     resp = @cve.as_json
     if !resp.empty?

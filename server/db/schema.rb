@@ -18,7 +18,6 @@ ActiveRecord::Schema.define(version: 20171129201725) do
 
   create_table "dependencies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
-    t.string "language"
     t.string "version"
     t.string "raw"
     t.string "update_to"

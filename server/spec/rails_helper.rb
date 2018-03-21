@@ -42,10 +42,6 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
 
-
-
-
-
   # db
   ran_int = 'test'
   $ruby_db = GemDB::new(ran_int)
@@ -104,8 +100,6 @@ RSpec.configure do |config|
       DatabaseCleaner.cleaning do
         example.run
       end
-
-
 
       config.include ReqSpecHelper
       config.include ControllerSpecHelper

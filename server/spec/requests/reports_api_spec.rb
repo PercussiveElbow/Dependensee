@@ -8,24 +8,24 @@ RSpec.describe 'reports API' do
   let!(:scan) { create(:scan, project_id: project.id) }
   let(:project_id) { project.id }
   let(:scan_id) { scan.id}
-  let!(:dependency) { create(:dependency, scan_id: scan.id, version: '1.2.3', name: 'org.asynchttpclient.async-http-client', language: 'Java') }
+  let!(:dependency) { create(:dependency, scan_id: scan.id, version: '1.2.3', name: 'org.asynchttpclient.async-http-client') }
 
   let! (:ruby_project) {create(:project, language: 'Ruby')}
   let!(:ruby_scan) { create(:scan, project_id: ruby_project.id) }
   let(:ruby_project_id) { ruby_project.id }
   let(:ruby_scan_id) { ruby_scan.id}
-  let!(:ruby_dependency) { create(:dependency, scan_id: ruby_scan.id, version: '4.2.0', name: 'activerecord', language: 'Ruby') }
+  let!(:ruby_dependency) { create(:dependency, scan_id: ruby_scan.id, version: '4.2.0', name: 'activerecord') }
 
   let! (:python_project) {create(:project, language: 'Python')}
   let!(:python_scan) { create(:scan, project_id: python_project.id) }
   let(:python_project_id) { python_project.id }
   let(:python_scan_id) { python_scan.id}
-  let!(:python_dependency) { create(:dependency, scan_id: python_scan.id, version: '==14.0.0', name: 'Twisted', language: 'Python') }
+  let!(:python_dependency) { create(:dependency, scan_id: python_scan.id, version: '==14.0.0', name: 'Twisted') }
 
   let(:headers) { valid_headers }
 
-  describe 'GET /api/projects/:project_id/scans/:scan_id/reports/json' do
-    before { get "/api/projects/#{project_id}/scans/#{scan_id}/reports/json", params: {}, headers: headers }
+  describe 'GET /api/v1/projects/:project_id/scans/:scan_id/reports/json' do
+    before { get "/api/v1/projects/#{project_id}/scans/#{scan_id}/reports/json", params: {}, headers: headers }
 
     context 'when project exists' do
       it 'returns status code 200' do
@@ -86,8 +86,8 @@ RSpec.describe 'reports API' do
   end
 
 
-  describe 'GET /api/projects/:python_project_id/scans/:python_scan_id/reports/json' do
-    before { get "/api/projects/#{python_project_id}/scans/#{python_scan_id}/reports/json", params: {}, headers: headers }
+  describe 'GET /api/v1/projects/:python_project_id/scans/:python_scan_id/reports/json' do
+    before { get "/api/v1/projects/#{python_project_id}/scans/#{python_scan_id}/reports/json", params: {}, headers: headers }
 
     context 'when project exists' do
       it 'returns status code 200' do
@@ -100,8 +100,8 @@ RSpec.describe 'reports API' do
     end
   end
 
-  describe 'GET /api/projects/:ruby_project_id/scans/:ruby_scan_id/reports/json' do
-    before { get "/api/projects/#{ruby_project_id}/scans/#{ruby_scan_id}/reports/json", params: {}, headers: headers }
+  describe 'GET /api/v1/projects/:ruby_project_id/scans/:ruby_scan_id/reports/json' do
+    before { get "/api/v1/projects/#{ruby_project_id}/scans/#{ruby_scan_id}/reports/json", params: {}, headers: headers }
 
     context 'when project exists' do
       it 'returns status code 200' do

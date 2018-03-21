@@ -2,7 +2,7 @@ version: '2.1'
 services:
       rails:
         build: .
-        command: "rails server -p 3000 -b '0.0.0.0'"
+        command: "rails server -e production -p 3000 -b '0.0.0.0'"
         ports:
           - "8080:3000"
         depends_on:
@@ -21,6 +21,7 @@ services:
           VIRTUAL_HOST: dependensee.tech
           LETSENCRYPT_HOST: dependensee.tech
           LETSENCRYPT_EMAIL: contact@dependensee.tech
+          SECRET_KEY_BASE: ${RAILS_SECRET}
       postgres:
         image: postgres:9.4
         ports:

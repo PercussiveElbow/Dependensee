@@ -5,8 +5,8 @@ RSpec.describe 'profile API', type: :request do
   let(:user) { create(:user) }
   let(:headers) { valid_headers }
 
-  describe 'GET /api/profile' do
-    before { get '/api/profile', params: {}, headers: headers }
+  describe 'GET /api/v1/profile' do
+    before { get '/api/v1/profile', params: {}, headers: headers }
 
     it 'returns profile' do
       expect(json).not_to be_empty

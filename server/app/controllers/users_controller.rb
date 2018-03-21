@@ -2,7 +2,11 @@
 class UsersController < ApplicationController
   skip_before_action :auth_req
 
-  # POST /signup
+  api :POST, '/signup/', 'Signup'
+  param :email, String, :required=>true
+  param :name, String, :required=>true
+  param :password, String, :required=>true
+  param :password_confirmation, String, :required=>true
   def create
     begin
       # param! :name, String, required: true, format: /A-Za-z+/
@@ -17,7 +21,9 @@ class UsersController < ApplicationController
     json_response(response, :created)
   end
 
-  # POST /login
+  api :POST, '/login/', 'Login'
+  param :email, String, :required=>true
+  param :password, String, :required=>true
   def login
     whitelist_login
     begin

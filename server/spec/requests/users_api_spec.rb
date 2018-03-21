@@ -9,9 +9,9 @@ RSpec.describe 'Users API', type: :request do
     attributes_for(:user, password_confirmation: user.password)
   end
 
-  describe 'POST /api/signup' do
+  describe 'POST /api/v1/signup' do
     context 'valid request' do
-      before { post '/api/signup', params: valid_attributes.to_json, headers: headers }
+      before { post '/api/v1/signup', params: valid_attributes.to_json, headers: headers }
 
       it 'creates new user' do
         expect(response).to have_http_status(201)
@@ -27,7 +27,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'invalid request' do
-      before { post '/api/signup', params: {}, headers: headers }
+      before { post '/api/v1/signup', params: {}, headers: headers }
 
       it 'doesnt create user' do
         expect(response).to have_http_status(422)
@@ -40,9 +40,9 @@ RSpec.describe 'Users API', type: :request do
   end
 
 
-  describe 'POST /api/login' do
+  describe 'POST /api/v1/login' do
     context 'valid request' do
-      before { post '/api/login', params: {name:  'abc', email: 'eioefiwfiowefiwo'}.to_json, headers: headers }
+      before { post '/api/v1/login', params: {name:  'abc', email: 'eioefiwfiowefiwo'}.to_json, headers: headers }
 
       it 'returns a 422 when validation fails' do
         expect(response).to have_http_status(422)
@@ -54,10 +54,10 @@ RSpec.describe 'Users API', type: :request do
     end
   end
 
-  describe 'POST /api/login' do
+  describe 'POST /api/v1/login' do
     context 'valid request' do
-      before(:each) {post '/api/signup', params: user_existing.to_json, headers: headers}
-      before { post '/api/login', params: {email: 'test123@gmail.com',password: 'apassword'}.to_json, headers: headers }
+      before(:each) {post '/api/v1/signup', params: user_existing.to_json, headers: headers}
+      before { post '/api/v1/login', params: {email: 'test123@gmail.com',password: 'apassword'}.to_json, headers: headers }
 
       it 'logs in successfully' do
         expect(response).to have_http_status(201)

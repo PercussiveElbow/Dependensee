@@ -1,42 +1,43 @@
 class ProjectsController < ApplicationController
   before_action :find_project_by_id, only: [:show, :update, :destroy]
 
-  # def_param_group :projects do
-  #   param :id, String, :required => true
-  # end
-
-  # GET /projects
+  api :GET, '/projects/', 'Projects Get'
   def index
     @projects = current_user.projects
     json_response(@projects)
   end
 
-  # api :POST, '/projects/:id', 'Projects Endpoint'
-  # param_group :projects
-  # POST /projects
+  api :POST, '/projects/:id', 'Projects Create'
+  param :language, String, :required => true
+  param :description, String
+  param :timeout, Integer
+  param :name, String, :required => true
+  #param :active, Boolean
   def create
     @project = current_user.projects.create!(whitelist)
     json_response(@project, :created)
   end
 
-  # api :GET, '/projects/:id', 'Projects Endpoint'
-  # param_group :projects
-  # GET /projects/:id
+  api :GET, '/projects/:id', 'Projects Get'
+  param :id, String, :required => true
   def show
     json_response(@project)
   end
-  #
-  # api :PUT, '/projects/:id', 'Projects Endpoint'
-  # param_group :projects
-  # PUT /projects/:id
+
+  api :PUT, '/projects/:id', 'Projects Update'
+  param :id, String, :required => true
+  param :language, String
+  param :description, String
+  param :timeout, Integer
+  param :name, String
+  #param :active, Boolean
   def update
     @project.update(whitelist)
     head :no_content
   end
 
-  # api :DELETE, '/projects/:id', 'Projects Endpoint'
-  # param_group :projects
-  # DELETE /projects/:id
+  api :DELETE, '/projects/:id', 'Projects Delete'
+  param :id, String, :required => true
   def destroy
     @project.destroy
     head :no_content
