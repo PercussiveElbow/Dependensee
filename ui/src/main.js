@@ -31,7 +31,7 @@ Vue.material.registerTheme({
   default: {
     primary: 'indigo',
     accent: 'red',
-    warn: 'blue'
+    warn: 'green'
   },
   green: {	
     primary: 'green',

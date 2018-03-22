@@ -96,15 +96,14 @@
           })
       },
       get_dependencies() {getDependencies(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.dependencies = response;});},
-      view_vulns() {getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  {this.open_vuln_dialog(response)})},
+      view_vulns() {this.open_vuln_dialog()},
       set_vulns(){
          getJsonReport(this.$route.params.project_id,this.$route.params.scan_id).then(response =>  
           { this.vulns=response;
             this.$refs.scanGraphs.fillData(this.dependencies,this.vulns)
           })
       },
-      open_vuln_dialog (response) {
-        this.report=response;
+      open_vuln_dialog()  {
           this.$modal.show('dialog', {
             title: 'Vulnerability Report Downloads',
             buttons: [
