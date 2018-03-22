@@ -27,17 +27,15 @@ class MsgConstants
   # Pip Scanning
   PIPFILE_UPLOADED = 'Python Pip Dependencies file'
 
-
   # Results
   SAFE_PATCHED = '               ✔ Safe, patched.'
   SAFE_UNAFFECTED = '               ✔ Safe, unaffected.'
   VULNERABILITY_FOUND = '               ✘ Vulnerability: '
   NO_VULN_FOUND = '          No vulnerabilities found'
 
-
   # Reports
   # General report constants
-  TITLE = 'CVE Scan: '
+  TITLE = ' Scan: '
   TEXT_SAVED = 'Text report saved to: '
   PDF_SAVED = 'PDF saved to: '
   TIMESTAMP = '%d_%m_%Y_%H%M'
@@ -49,11 +47,12 @@ class MsgConstants
   PATCHED_VER = 'Safe: '
   LATEST_VER = 'Latest: '
   VERSION_WARNING = '    *Requires major version update'
+  OUR_VERSION= 'Our version: '
   TIMEOUT = 14400
 
 
   # Score constants
-  NO_CVE_SCORE = 'No CVE Score found for this issue.'
+  NO_CVE_SCORE = 'No CVE Score found.'
   SCORE = 'Score: '
 
   # Hex constants

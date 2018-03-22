@@ -1,7 +1,7 @@
 require_relative '../lib/pom/pom_scanner'
 require_relative '../lib/gem/gem_scanner'
 require_relative '../lib/pip/pip_scanner'
-require_relative '../lib/gem/gem_report'
+require_relative '../lib/common/generate_report'
 require_relative '../lib/common/generic_version_logic'
 
 class ReportsController < ApplicationController
@@ -24,10 +24,10 @@ class ReportsController < ApplicationController
     case params[:id]
       when 'json'
         response = @vuln_list.to_json
-      when 'pdf' #TODO ADD JAVA/MAVEN VERSION PROPERLY!
-        return send_file(GemReport::gen_pdf(@vuln_list,@project.language), :filename => "report.pdf", :type => "application/pdf")
+      when 'pdf'
+        return send_file(GenerateReport::gen_pdf(@project.name, @vuln_list, @project.language), :filename => "report.pdf", :type => "application/pdf")
       when 'txt'
-        return send_file(GemReport::gen_txt(@vuln_list,@project.language), :filename => "report.txt", :type => "text/plain")
+        return send_file(GenerateReport::gen_txt(@project.name, @vuln_list, @project.language), :filename => "report.txt", :type => "application/plain")
       else
         response = ''
     end
