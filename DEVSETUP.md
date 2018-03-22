@@ -12,6 +12,7 @@
 - Ruby
 
 ### Server (with own PostgreSQL DB)
+Edit config/database.yml to point to your DB
 ```bash
 cd server/
 bundle install
@@ -36,4 +37,5 @@ npm run dev
 Then access on localhost:8080
 
 ### Client
-No setup, just run 'ruby client.rb' with a projectID as an optional first argument. (Requires JWT auth key being set up) 
+Setup your JWT auth key environment variable 'DEPENDENSEE_API_KEY'.
+Run 'ruby client.rb' with a projectID as an optional first argument.

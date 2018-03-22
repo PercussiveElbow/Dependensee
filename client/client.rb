@@ -5,15 +5,13 @@ require 'fileutils'
 require 'rexml/document'
 include REXML
 
-
 ####################START CONFIG#########################
 @config_check_timeout = 60     #60 seconds by defaul
 SERVER_URL = 'http://127.0.0.1:3000/api/v1'
 #change auth key to env variable
 # AUTH_KEY = ENV['DEPENDENSEE_API_KEY']
-AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZTQyZWU5Y2ItMzdhZi00NGNjLTljODMtMDU5NjBmMjhhMTA4IiwiZXhwIjoxNTIwNTM5MzUwfQ.ANlRKjGWXM3Md-FwyMYg4S8hm_YxE7vQKbPhG_lxcYQ'
+AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZmY3NGQxZjgtOWYyNS00YmQ1LWE3MWUtYTQzZTE2ZjM3YzAxIiwiZXhwIjoxNTIxNzU2NjU2fQ.2rc1nFZsPPeQINEBfSUeRQbVSlRAAWbKZF9bH8a45sM'
 ####################END CONFIG###########################
-
 
 ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
 @auto_scan = false;
@@ -21,13 +19,18 @@ ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
 @needs_update = 'no'
 @lang=''
 
+#For easier switching between test 
+POM_STRING = '/test/resources/pom.xml.test'
+GEM_STRING = '/test/resources/Gemfile.lock.test'
+PIP_STRING = '/test/resources/requirements.txt.test'
+
 def scan
-  if File.exists?(File.expand_path File.dirname(__FILE__) + '/pom.xml.test') and (@lang.empty? or @lang=='Java')
-    maven_project
-  elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/Gemfile.lock.test') and (@lang.empty? or @lang=='Ruby')
-    gem_project
-  elsif File.exists?(File.expand_path File.dirname(__FILE__) + '/requirements.txt.test') and (@lang.empty? or @lang=='Python')
+  if File.exists?(File.expand_path File.dirname(__FILE__) + PIP_STRING) and (@lang.empty? or @lang=='Python')
     pip_project
+  elsif File.exists?(File.expand_path File.dirname(__FILE__) + GEM_STRING) and (@lang.empty? or @lang=='Ruby')
+    gem_project
+  elsif File.exists?(File.expand_path File.dirname(__FILE__) + POM_STRING) and (@lang.empty? or @lang=='Java')
+    maven_project
   else
     raise StandardError.new 'No #{@lang} Dependency file found. Exiting.'
     exit 1
@@ -37,21 +40,21 @@ end
 def gem_project
   @lang='Ruby'
   print "Gemfile found \n"
-  body = [] << File.read(File.expand_path File.dirname(__FILE__) + '/Gemfile.lock.test')
+  body = [] << File.read(File.expand_path File.dirname(__FILE__) + GEM_STRING)
   post('Ruby',body)
 end
 
 def maven_project
   @lang='Java'
   print "Pomfile found \n"
-  body = [] << File.read(File.expand_path File.dirname(__FILE__) + '/pom.xml.test')
+  body = [] << File.read(File.expand_path File.dirname(__FILE__) + POM_STRING)
   post('Java',body)
 end
 
 def pip_project
   @lang='Python'
   print "Requirements.txt found \n"
-  body = [] << File.read(File.expand_path File.dirname(__FILE__) + '/requirements.txt.test')
+  body = [] << File.read(File.expand_path File.dirname(__FILE__) + PIP_STRING)
   post('Python',body)
 end
 
@@ -167,33 +170,42 @@ def update(dep_name,update_version)
 end
 
 def ruby_update(dep_name,update_version,dir)
-    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/Gemfile.lock.test'), dir)
+    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + GEM_STRING), dir)
     # code = system("bundle exec rails")
 end
 
 def java_update(dep_name,update_version,dir)
-    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/pom.xml.test'), dir)
+    original_filename = File.expand_path(File.dirname(__FILE__) + POM_STRING)
+    FileUtils.cp(original_filename, dir)
 
     if update_version.include? '='
       update_version = update_version.gsub(/[^.0-9]+/,'')
     else 
       #assume it needs to be bigger,  need to check it's a legit version though.
     end
-    xmldoc = Document.new(File.new('pom.xml.test'))
+    xmldoc = Document.new(File.new(original_filename))
     XPath.each(xmldoc, "//dependency") do|node|
         if node.elements['groupId'].text == dep_name.rpartition('.')[0] and node.elements['artifactId'].text == dep_name.rpartition('.')[2]
           puts "Found #{dep_name} in pomfile with unsafe version #{node.elements['version'].text} replacing with #{update_version}"
           node.elements['version'].text = update_version
         end
     end
-  xmldoc.write(File.open(dir + "/pom.xml.test", "w"))
-  #attempt maven install
+  xmldoc.write(File.open(dir + "/pom.xml", "w"))
+  print %x{cd #{dir} && mvn install}
+  exit_status = $?.exitstatus
+  if exit_status!=0
+    print "\n Java update failed.\n"
+    return false
+  else
+    print "\n Java update passed.\n"
+    return true
+  end
 end
 
 def python_update(dep_name,version,dir)
-    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/requirements.txt.test'), dir)
-    filename = "backup/#{Time.now.to_i}/requirements.txt.test"
-    File.open(filename, "r") do |file_handle|
+  FileUtils.cp(File.expand_path(File.dirname(__FILE__) + PIP_STRING), dir)
+  filename = "backup/#{Time.now.to_i}/requirements.txt.test"
+  File.open(filename, "r") do |file_handle|
         file_handle.each_line do |line|
             if line.include? dep_name
               # line = line.gsub("\n",'')
@@ -205,7 +217,15 @@ def python_update(dep_name,version,dir)
             end
         end
     end
-    #attempt pip install
+  print %x{cd #{dir} && pip install -r requirements.txt.test}
+  exit_status = $?.exitstatus
+  if exit_status!=0
+    print "\n Pip update failed.\n"
+    return false
+  else
+    print "\n Pip update passed.\n"
+    return true
+  end
 end
 
 

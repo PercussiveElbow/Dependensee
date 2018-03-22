@@ -20,7 +20,8 @@ https://dependensee.tech
 
 ## Run it yourself (Requires Docker+Docker Compose)
 ```bash
-./server/start.sh
+cd server/
+./start.sh
 ```
 
 ## API Documentation
