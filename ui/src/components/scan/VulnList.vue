@@ -2,20 +2,25 @@
 	<main class="main-content">
 	    <div>
 	      <md-list class="md-double-line">
-	          <div style="text-align: left" v-for="(vuln,title) in vulns" v-bind:key="title">
-	          <span style="font-size: large; font-weight: bold;">{{title}}</span></br>
-	          <span style="color: red">Current version:  {{vuln.cves[0].our_version}}</span></br>
-	          <span style="color: green">Safe version: {{vuln.overall_patch}}</span>
-	          <md-list-item v-for="(item,index) in vuln.cves" v-bind:key="item.cve">
-	            <md-avatar class="md-avatar-icon md-primary" md-theme="red" v-if="project.language === 'Ruby'" ><md-icon >warning</md-icon></md-avatar>
-	            <md-avatar class="md-avatar-icon md-primary" md-theme="orange" v-if="project.language === 'Java'"><md-icon >warning</md-icon></md-avatar>
-	            <md-avatar class="md-avatar-icon md-primary" md-theme="green" v-if="project.language === 'Python'"><md-icon >warning</md-icon></md-avatar>
-	            <div class="md-list-text-container">
-	              <a @click=openCVEModal(vuln,index,title)>CVE-{{item.cve}}</a>
-	              <ul>Patched versions: <li style="display:inline" v-for="patched_ver in item.patched_version">{{patched_ver}},  </li></ul>
-	            </div>
-	          </md-list-item>
-	        </div>
+	      	<div v-for="(vuln,title) in vulns" v-bind:key="title">
+	          <md-card md-with-hover style="text-align: left; background-color: white" >
+	          	<md-card-content>
+	          	 	<md-card-header>
+			          <div class="md-title" style="font-size: large; font-weight: bold;">{{title}}</div>
+			          <md-chip style="background-color:red; color: white">Current {{vuln.cves[0].our_version}}</md-chip>
+			          <md-chip style="background-color:#2ECC40; color: white">Safe {{vuln.overall_patch}}</md-chip>
+	      			</md-card-header>
+		          <md-list-item v-for="(item,index) in vuln.cves" v-bind:key="item.cve">
+		            <md-avatar class="md-avatar-icon md-primary" style="background-color:red" ><md-icon >warning</md-icon></md-avatar>
+		            <div class="md-list-text-container">
+		              <a style="color: red" @click=openCVEModal(vuln,index,title)>CVE-{{item.cve}}</a>
+		              <ul >Patched versions: <li style="display:inline;" v-for="patched_ver in item.patched_version">{{patched_ver}},  </li></ul>
+		            </div>
+		          </md-list-item>
+	      		</md-card-content>
+	           </md-card>
+	    	   </br>
+	    	</div>
 	      </md-list>
 	    </div>
     </main>  
