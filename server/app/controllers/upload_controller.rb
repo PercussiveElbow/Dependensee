@@ -59,7 +59,7 @@ class UploadController < ApplicationController
     @vuln_list = PomScanner::new(deps).scan
     @vuln_list = GenericVersionLogic::finish_version_logic(deps,@vuln_list)
     vuln_total
-    json_response(MsgConstants::POMFILE_UPLOADED)
+    JSON.pretty_generate({type: MsgConstants::POMFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
 
   # RUBY
@@ -74,7 +74,7 @@ class UploadController < ApplicationController
     @vuln_list = GemScanner::new(deps).scan
     @vuln_list = GenericVersionLogic::finish_version_logic(deps,@vuln_list)
     vuln_total
-    json_response(MsgConstants::GEMFILE_UPLOADED)
+    JSON.pretty_generate({type: MsgConstants::GEMFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
 
   # PYTHON
@@ -88,16 +88,12 @@ class UploadController < ApplicationController
     @vuln_list = PipScanner::new(deps).scan
     @vuln_list = GenericVersionLogic::finish_version_logic(deps,@vuln_list)
     vuln_total
-    json_response(MsgConstants::PIPFILE_UPLOADED)
+    JSON.pretty_generate({type: MsgConstants::PIPFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
 
   def vuln_total
     @vuln_total=0
     @vuln_list.each { |_, v| @vuln_total+=v['cves'].length }
-  end
-
-  def json_response(message)
-    JSON.pretty_generate({type: message, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
 
 end
