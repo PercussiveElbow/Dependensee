@@ -8,7 +8,7 @@ RSpec.describe 'reports API' do
   let!(:scan) { create(:scan, project_id: project.id) }
   let(:project_id) { project.id }
   let(:scan_id) { scan.id}
-  let!(:dependency) { create(:dependency, scan_id: scan.id, version: '1.2.3', name: 'org.asynchttpclient.async-http-client') }
+  let!(:dependency) { create(:dependency, scan_id: scan.id, version: '1.2.3', name: 'org.apache.struts.struts2-core') }
 
   let! (:ruby_project) {create(:project, language: 'Ruby')}
   let!(:ruby_scan) { create(:scan, project_id: ruby_project.id) }
@@ -88,7 +88,7 @@ RSpec.describe 'reports API' do
   describe 'GET /api/v1/projects/:python_project_id/scans/:python_scan_id/reports/json' do
     before { get "/api/v1/projects/#{python_project_id}/scans/#{python_scan_id}/reports/json", params: {}, headers: headers }
 
-    context 'when project exists' do
+    context 'when type is json' do
       it 'returns status code 200' do
         expect(response).to have_http_status(201)
       end
@@ -102,7 +102,7 @@ RSpec.describe 'reports API' do
   describe 'GET /api/v1/projects/:ruby_project_id/scans/:ruby_scan_id/reports/json' do
     before { get "/api/v1/projects/#{ruby_project_id}/scans/#{ruby_scan_id}/reports/json", params: {}, headers: headers }
 
-    context 'when project exists' do
+    context 'when type is json' do
       it 'returns status code 200' do
         expect(response).to have_http_status(201)
       end
@@ -116,7 +116,7 @@ RSpec.describe 'reports API' do
   describe 'GET /api/v1/projects/:project_id/scans/:scan_id/reports/pdf' do
     before { get "/api/v1/projects/#{project_id}/scans/#{scan_id}/reports/pdf", params: {}, headers: headers }
 
-    context 'when project exists' do
+    context 'when type is pdf' do
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
@@ -132,7 +132,7 @@ RSpec.describe 'reports API' do
   describe 'GET /api/v1/projects/:project_id/scans/:scan_id/reports/txt' do
     before { get "/api/v1/projects/#{project_id}/scans/#{scan_id}/reports/txt", params: {}, headers: headers }
 
-    context 'when project exists' do
+    context 'when type is txt' do
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
@@ -148,7 +148,7 @@ RSpec.describe 'reports API' do
   describe 'GET /api/v1/projects/:python_project_id/scans/:python_scan_id/reports/pdf' do
     before { get "/api/v1/projects/#{python_project_id}/scans/#{python_scan_id}/reports/pdf", params: {}, headers: headers }
 
-    context 'when project exists' do
+    context 'when type is pdf' do
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
@@ -164,7 +164,7 @@ RSpec.describe 'reports API' do
   describe 'GET /api/v1/projects/:python_project_id/scans/:python_scan_id/reports/txt' do
     before { get "/api/v1/projects/#{python_project_id}/scans/#{python_scan_id}/reports/txt", params: {}, headers: headers }
 
-    context 'when project exists' do
+    context 'when type is txt' do
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
@@ -190,7 +190,6 @@ RSpec.describe 'reports API' do
 
     end
 
-
   end
 
   describe 'GET /api/v1/projects/:ruby_project_id/scans/:ruby_scan_id/reports/txt' do
@@ -205,8 +204,21 @@ RSpec.describe 'reports API' do
         expect(response.headers['Content-Type']). to eql('application/plain')
       end
     end
+  end
 
 
+  describe 'GET /api/v1/projects/:ruby_project_id/scans/:ruby_scan_id/reports/invalidtype' do
+    before { get "/api/v1/projects/#{ruby_project_id}/scans/#{ruby_scan_id}/reports/invalidtype", params: {}, headers: headers }
+
+    context 'when type is invalid' do
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns error message' do
+        expect(json['message']). to eql('Update type not supported. Support versions: Safe, Latest, Manual')
+      end
+    end
   end
 
 

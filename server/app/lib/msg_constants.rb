@@ -62,6 +62,7 @@ class MsgConstants
   VERSION_WARNING = '    *Requires major version update'
   OUR_VERSION= 'Our version: '
   TIMEOUT = 14400
+  LATEST_VER_ERROR = 'Latest version unavailable'
 
   # Score
   NO_CVE_SCORE = 'No CVE Score found.'

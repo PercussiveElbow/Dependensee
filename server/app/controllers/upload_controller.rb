@@ -44,8 +44,6 @@ class UploadController < ApplicationController
         handle_java
       when 'Python'
         handle_python
-      else
-        raise EmptyDependencyException.new('No dependencies found in your POST body.')
     end
   end
 

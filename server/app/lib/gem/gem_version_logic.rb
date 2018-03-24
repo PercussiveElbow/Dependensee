@@ -72,7 +72,7 @@ class GemVersionLogic
       end
       return $p[gem_name][0]
     rescue
-      return 'Latest version unavailable'
+      return MsgConstants::LATEST_VER_ERROR
     end
   end
 

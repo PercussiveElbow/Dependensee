@@ -38,7 +38,7 @@ class ReportsController < ApplicationController
       when 'html'
         return send_file(GenerateReport::gen_html(@project.name, @vuln_list, @project.language), :filename => MsgConstants::FILENAME_HTML, :type => MsgConstants::MIME_HTML)
       else
-        response = ''
+        return json_response({message: MsgConstants::UPDATE_TYPE_NOT_SUPPORTED}, :unprocessable_entity)
     end
     json_response(response, :created)
   end

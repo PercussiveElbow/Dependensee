@@ -41,8 +41,7 @@ RSpec.describe 'updates API' do
       end
 
       it 'sets scan needs_update' do
-        expect(json['message']).to match("")
-
+        expect(Scan.find(scan_id).needs_update).to match("yes")
       end
     end
 
@@ -57,8 +56,7 @@ RSpec.describe 'updates API' do
       end
 
       it 'sets scan needs_update' do
-        expect(json['message']).to match("")
-
+        expect(Scan.find(scan_id).needs_update).to match("yes")
       end
     end
 
@@ -73,8 +71,7 @@ RSpec.describe 'updates API' do
       end
 
       it 'sets scan needs_update' do
-        expect(json['message']).to match("")
-
+        expect(Scan.find(scan_id).needs_update).to match("yes")
       end
     end
 
@@ -90,12 +87,49 @@ RSpec.describe 'updates API' do
       end
 
       it 'sets scan needs_update' do
-        expect(json['message']).to match("")
-
+        expect(Scan.find(scan_id).needs_update).to match("no")
       end
     end
 
+  end
 
+
+  describe 'POST /api/v1/projects/:ruby_project_id/scans/:ruby_scan_id/updates/:type/' do
+    before { post "/api/v1/projects/#{ruby_project_id}/scans/#{ruby_scan_id}/updates/#{type}", params: {}, headers: headers }
+
+    context 'when type is safe' do
+      let(:type) {'safe'}
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns a message' do
+        expect(json['message']).to match("Scan #{ruby_scan_id} vulnerable dependencies set to safe")
+      end
+
+      it 'sets scan needs_update' do
+        expect(Scan.find(ruby_scan_id).needs_update).to match("yes")
+      end
+    end
+  end
+
+  describe 'POST /api/v1/projects/:python_project_id/scans/:python_scan_id/updates/:type/' do
+    before { post "/api/v1/projects/#{python_project_id}/scans/#{python_scan_id}/updates/#{type}", params: {}, headers: headers }
+
+    context 'when type is safe' do
+      let(:type) {'safe'}
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns a message' do
+        expect(json['message']).to match("Scan #{python_scan_id} vulnerable dependencies set to safe")
+      end
+
+      it 'sets scan needs_update' do
+        expect(Scan.find(python_scan_id).needs_update).to match("yes")
+      end
+    end
   end
 
 
