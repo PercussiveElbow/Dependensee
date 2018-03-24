@@ -30,7 +30,7 @@ class UpdatesController < ApplicationController
   end
 
   def handle_manual
-    @scan['needs_update'] = 'manual'
+    @scan.update_attribute(:needs_update, 'yes')
     { message: "Scan #{params[:scan_id]} vulnerable dependencies set to manual" }
   end
 
@@ -39,6 +39,7 @@ class UpdatesController < ApplicationController
     for dep_name, vulns in @vuln_list
       set_update_version(dep_name,get_latest(dep_name))
     end
+    @scan.update_attribute(:needs_update, 'yes')
     { message: "Scan #{params[:scan_id]} vulnerable dependencies set to latest" }
   end
 
@@ -48,6 +49,7 @@ class UpdatesController < ApplicationController
     for dep_name, vulns in @vuln_list
       set_update_version(dep_name,vulns['overall_patch'])
     end
+    @scan.update_attribute(:needs_update, 'yes')
     { message: "Scan #{params[:scan_id]} vulnerable dependencies set to safe" }
   end
 
@@ -61,7 +63,6 @@ class UpdatesController < ApplicationController
         PipVersionLogic::get_latest_version(dep_name)
     end
   end
-
 
   def set_update_version(dep_name,update_ver)
     @scan.dependencies.where(name: dep_name)[0].update(update_to: update_ver)

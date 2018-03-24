@@ -118,9 +118,9 @@
         this.$modal.show('dialog', {
             title: 'Update dependencies',
             buttons: [
-              { title: 'Safe', handler: () => { update(this.$route.params.project_id,this.$route.params.scan_id, null, 'safe') } },
-              { title: 'Latest', handler: () => { update(this.$route.params.project_id,this.$route.params.scan_id, null, 'latest') } },
-              { title: 'Manual', handler: () => { update(this.$route.params.project_id,this.$route.params.scan_id, null, 'manual') } }          
+              { title: 'Safe', handler: () => { update(this.$route.params.project_id,this.$route.params.scan_id, null, 'safe').then(response => this.$modal.hide('dialog')) } },
+              { title: 'Latest', handler: () => { update(this.$route.params.project_id,this.$route.params.scan_id, null, 'latest').then(response => this.$modal.hide('dialog')) } },
+              { title: 'Manual', handler: () => { update(this.$route.params.project_id,this.$route.params.scan_id, null, 'manual').then(response => this.$modal.hide('dialog')) } }          
               ]
           })
       },
