@@ -1,5 +1,6 @@
 require_relative '../msg_constants'
 require_relative 'base_report'
+require_relative 'latest_version'
 
 class GenerateReport < BaseReport
 
@@ -9,7 +10,7 @@ class GenerateReport < BaseReport
       file.puts(GenerateReport::get_title(project_name) + "\n")
       vuln_list.each do |dep, vulns|
         file.puts(dep + "\n\n")
-        file.puts(MsgConstants::OUR_VERSION + vulns['cves'][0].instance_variable_get('@our_version') + MsgConstants::PATCHED_VERSION + vulns['overall_patch'].to_s + ' ' +  MsgConstants::LATEST_VER + ' ' + GenerateReport::handle_latest_ver(dep,project_language) + "\n")
+        file.puts(MsgConstants::OUR_VERSION + vulns['cves'][0].instance_variable_get('@our_version') + MsgConstants::PATCHED_VERSION + vulns['overall_patch'].to_s + ' ' +  MsgConstants::LATEST_VER + ' ' + LatestVersion::get_latest(project_language,dep) + "\n")
         file.puts("CVES\n")
         file.puts('=============================================')
         GenerateReport::gen_txt_insert_cves(file,vulns,project_language)
@@ -70,7 +71,7 @@ class GenerateReport < BaseReport
     pdf.text dep ,:size => 25
     pdf.text 'Current version: ' + vulns['cves'][0].instance_variable_get('@our_version') +"\n", :size => 16, :color => MsgConstants::RED
     pdf.text 'Overall safe version: ' + vulns['overall_patch'] +"\n", :size => 16, :color => MsgConstants::GREEN
-    pdf.text MsgConstants::LATEST_VER + ' ' + GenerateReport::handle_latest_ver(dep,project_language) + "\n\n", :size => 16
+    pdf.text MsgConstants::LATEST_VER + ' ' + LatestVersion::get_latest(project_language,dep) + "\n\n", :size => 16
   end
 
   def self.gen_pdf_insert_patched_vers(pdf,vuln)
@@ -116,20 +117,6 @@ class GenerateReport < BaseReport
 
   def self.get_title(project)
     return project + ' ' +  MsgConstants::TITLE + DateTime.now.strftime('%d/%m/%Y  %H:%M')
-  end
-
-
-  def self.handle_latest_ver(dep,language)
-    case language
-      when 'Java'
-        return PomVersionLogic::get_latest_version(dep)
-      when 'Ruby'
-        return GemVersionLogic::get_latest_version(dep)
-      when 'Python'
-        return PipVersionLogic::get_latest_version(dep)
-      else
-        # raise(Error.new)
-    end
   end
 
 end

@@ -48,7 +48,8 @@ ActiveRecord::Schema.define(version: 20171129201725) do
 
   create_table "projects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
-    t.boolean "active", default: false
+    t.boolean "auto_update", default: false
+    t.boolean "auto_scan", default: false
     t.string "language"
     t.string "description"
     t.string "owner"

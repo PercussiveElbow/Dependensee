@@ -5,6 +5,7 @@ require_relative '../lib/pom/pom_scanner'
 require_relative '../lib/gem/gem_scanner'
 require_relative '../lib/pip/pip_scanner'
 require_relative '../lib/common/generic_version_logic'
+require_relative '../lib/common/update_deps'
 
 class UploadController < ApplicationController
   before_action :find_project_by_id,:upload_headers
@@ -58,6 +59,7 @@ class UploadController < ApplicationController
 
     @vuln_list = PomScanner::new(deps).scan
     vuln_total
+    auto_update?
     json_return(MsgConstants::POMFILE_UPLOADED,deps)
   end
 
@@ -71,6 +73,8 @@ class UploadController < ApplicationController
     deps =  Dependency.where(['scan_id = ?', @scan.id])
 
     @vuln_list = GemScanner::new(deps).scan
+    vuln_total
+    auto_update?
     json_return(MsgConstants::GEMFILE_UPLOADED,deps)
   end
 
@@ -83,6 +87,8 @@ class UploadController < ApplicationController
     deps.each { |dep| @scan.dependencies.create(name: dep['name'], version: dep['version'], raw: dep) }
     deps =  Dependency.where(['scan_id = ?', @scan.id])
     @vuln_list = PipScanner::new(deps).scan
+    vuln_total
+    auto_update?
     json_return(MsgConstants::PIPFILE_UPLOADED,deps)
   end
 
@@ -94,6 +100,12 @@ class UploadController < ApplicationController
   def json_return(message,deps)
     vuln_total
     JSON.pretty_generate({type: message, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
+  end
+
+  def auto_update?
+    if @project.auto_update
+        UpdateDeps::handle_safe(@project,@scan,@vuln_list)
+    end
   end
 
 end

@@ -61,7 +61,8 @@
           formCreds.append('name', this.newproject.name);
           formCreds.append('description', this.newproject.description);
           formCreds.append('language',this.newproject.language);
-          formCreds.append('active',true);
+          formCreds.append('auto_update',true);
+          formCreds.append('auto_scan',true);
           formCreds.append('timeout',3600);
           postProject(formCreds);
           this.hide();

@@ -11,7 +11,7 @@ class Client
   SERVER_URL = 'https://dependensee.tech/api/v1'
   #SERVER_URL = 'http://127.0.0.1:3000/api/v1'
   AUTH_KEY = ENV['DEPENDENSEE_API_KEY']
-  #AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiZmY3NGQxZjgtOWYyNS00YmQ1LWE3MWUtYTQzZTE2ZjM3YzAxIiwiZXhwIjoxNTIxOTg5MzgyfQ.4DIAz9z9uf2-Nbf7jaEuMl5eAqV0SQUGUQDIeztGFrI'
+  #AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYjA3MWM1YWMtNTY4Yy00MDRiLWEzYTYtOWFkNDQxNjZkZGQ5IiwiZXhwIjoxNTIyMDA5MDgyfQ.y0bB4WBao7V-DRAeOtscZFo10iGU5TzSStrHZ_A1MZA'
   ####################END CONFIG###########################
 
   ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
@@ -120,7 +120,6 @@ class Client
     print "================================\n\n"
   end
 
-
   def self.check_config(scan_id)
     print "==========UPDATING CONFIG==========\n"
     uri = URI.parse(SERVER_URL + '/projects/' + @project_id + '/scans/' + scan_id)
@@ -136,7 +135,7 @@ class Client
     request = Net::HTTP::Get.new(uri.request_uri)
     request['Authorization'] = AUTH_KEY
     resp = http.request(request)
-    @auto_scan = JSON[resp.body]['active'] ? "true" : "false";
+    @auto_scan = JSON[resp.body]['auto_scan'] ? "true" : "false";
     print 'Checking if auto-scan is turned on...: ' + @auto_scan + "\n"
     @timeout = JSON[resp.body]['timeout'] 
     print 'Checking auto-scan timeout...: ' + @timeout.to_s + ' seconds' + "\n"

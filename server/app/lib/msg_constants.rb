@@ -13,9 +13,9 @@ class MsgConstants
   LOGGED_ON='Logged on. New Token generated'
   VALIDATION_ERROR='Validation error in one or more parameters'
   DEPENDENCY_FILE_ERROR='Validation failed when decoding dependency file.'
+  UPDATE_TYPE_NOT_SUPPORTED='Update type not supported. Support versions: Safe, Latest, Manual'
 
   # Gem Scanning
-  CHECKING_GEM = 'Checking gem: '
   GEM_VERSION = 'Gem version: '
   PATCHED_VERSION = ' Patched version: '
   ERROR_NOT_FOUND = 'Error. Gemfile not found in: '
@@ -26,12 +26,6 @@ class MsgConstants
 
   # Pip Scanning
   PIPFILE_UPLOADED = 'Python Pip Dependencies file'
-
-  # Results
-  SAFE_PATCHED = '               ✔ Safe, patched.'
-  SAFE_UNAFFECTED = '               ✔ Safe, unaffected.'
-  VULNERABILITY_FOUND = '               ✘ Vulnerability: '
-  NO_VULN_FOUND = '          No vulnerabilities found'
 
   # Reports
   # General report constants
@@ -49,7 +43,6 @@ class MsgConstants
   VERSION_WARNING = '    *Requires major version update'
   OUR_VERSION= 'Our version: '
   TIMEOUT = 14400
-
 
   # Score constants
   NO_CVE_SCORE = 'No CVE Score found.'

@@ -58,7 +58,8 @@
         </md-tab>
         <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
           <div>
-            <md-switch v-model="settings.scan" >Automatically Scan</md-switch>
+            <md-switch v-model="settings.auto_scan" >Automatically Scan</md-switch></br>
+            <md-switch v-model="settings.auto_update" >Automatically Update</md-switch>
           </div>
           <div>
             <h3> Scan every: </h3>
@@ -114,8 +115,9 @@
           data: []
         },
         settings: {
-          scan: false,
-          timeout: 3600
+          auto_scan: false,
+          timeout: 3600,
+          auto_update: false
         },
         intervalKill : ''
        }
@@ -132,9 +134,11 @@
       '$route': 'fetchData'
     },
     methods: {
-      get_project() {getProject(this.$route.params.id).then(response =>  {
+      get_project() {
+        getProject(this.$route.params.id).then(response =>  {
             this.project = response;
-            this.settings.scan = response.active;
+            this.settings.auto_scan = response.auto_scan;
+            this.settings.auto_update = response.auto_update
             this.settings.timeout = response.timeout;
             this.clientLinux = getClientLinux() + ' ' + this.project.id;
             this.clientDownload = getClientDownload();
@@ -164,7 +168,8 @@
       },
       saveSettings(){
           var formCreds = new FormData();
-          formCreds.append('active',this.settings.scan);
+          formCreds.append('auto_scan',this.settings.auto_scan);
+          formCreds.append('auto_update',this.settings.auto_update);
           formCreds.append('timeout',this.settings.timeout);
           editProject(this.$route.params.id,formCreds);
       },

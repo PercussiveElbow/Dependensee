@@ -79,6 +79,23 @@ RSpec.describe 'updates API' do
     end
 
 
+    context 'when type is not support' do
+      let(:type) {'griogioegoie'}
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns a message' do
+        expect(json['message']).to eql("Update type not supported. Support versions: Safe, Latest, Manual")
+      end
+
+      it 'sets scan needs_update' do
+        expect(json['message']).to match("")
+
+      end
+    end
+
+
   end
 
 
