@@ -12,6 +12,7 @@ class DependenciesController < ApplicationController
     param :name, String, :desc=> 'Name of Dependency', :required => true
     param :raw, String, :desc=> 'Raw body of Dependency from file'
     param :version, String, :desc=> 'Version of Dependency', :required => true
+    param :update_to, String, :desc=> 'Version this dependency should be updated to'
   end
 
   api :GET, '/projects/:project_id/scans/:scan_id/dependencies/', 'Get all Dependencies'

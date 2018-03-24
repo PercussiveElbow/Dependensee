@@ -8,6 +8,14 @@ require_relative '../lib/pip/pip_scanner'
 class UpdatesController < ApplicationController
   before_action :get_project_by_id,:get_scan_by_id
 
+  def_param_group :project_and_scan do
+    param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
+    param :scan_id, String,:desc=> 'Scan ID (UUID)', :required => true
+  end
+
+  api :POST, '/projects/:project_id/scans/:scan_id/updates/:type', 'Request an Update'
+  param_group :project_and_scan
+  param :type, ['safe','latest','manual'], :required => true
   def create
     case params[:id]
       when 'latest'
@@ -20,7 +28,6 @@ class UpdatesController < ApplicationController
         json_response(response, :unprocessable_entity)
     end
   end
-
 
   def handle_manual
     @scan['needs_update'] = 'manual'
@@ -67,11 +74,9 @@ class UpdatesController < ApplicationController
       when 'Java'
         PomScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
       when 'Python'
-       PipScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
+        PipScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
     end
   end
-
-
 
   def get_project_by_id
     begin
@@ -86,7 +91,6 @@ class UpdatesController < ApplicationController
       Raise CustomException::NotFound, MsgConstants::NOT_FOUND
     end
   end
-
 
   def get_scan_by_id
     begin

@@ -120,6 +120,10 @@ RSpec.describe 'reports API' do
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
+
+      it 'returns content type application pdf' do
+        expect(response.headers['Content-Type']). to eql('application/pdf')
+      end
     end
 
 
@@ -131,6 +135,74 @@ RSpec.describe 'reports API' do
     context 'when project exists' do
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
+      end
+
+      it 'returns content type application plain' do
+        expect(response.headers['Content-Type']). to eql('application/plain')
+      end
+    end
+
+
+  end
+
+  describe 'GET /api/v1/projects/:python_project_id/scans/:python_scan_id/reports/pdf' do
+    before { get "/api/v1/projects/#{python_project_id}/scans/#{python_scan_id}/reports/pdf", params: {}, headers: headers }
+
+    context 'when project exists' do
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns content type application pdf' do
+        expect(response.headers['Content-Type']). to eql('application/pdf')
+      end
+
+    end
+
+  end
+
+  describe 'GET /api/v1/projects/:python_project_id/scans/:python_scan_id/reports/txt' do
+    before { get "/api/v1/projects/#{python_project_id}/scans/#{python_scan_id}/reports/txt", params: {}, headers: headers }
+
+    context 'when project exists' do
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns content type application plain' do
+        expect(response.headers['Content-Type']). to eql('application/plain')
+      end
+    end
+
+  end
+
+  describe 'GET /api/v1/projects/:ruby_project_id/scans/:scan_id/reports/pdf' do
+    before { get "/api/v1/projects/#{ruby_project_id}/scans/#{ruby_scan_id}/reports/pdf", params: {}, headers: headers }
+
+    context 'when project exists' do
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns content type application pdf' do
+        expect(response.headers['Content-Type']). to eql('application/pdf')
+      end
+
+    end
+
+
+  end
+
+  describe 'GET /api/v1/projects/:ruby_project_id/scans/:ruby_scan_id/reports/txt' do
+    before { get "/api/v1/projects/#{ruby_project_id}/scans/#{ruby_scan_id}/reports/txt", params: {}, headers: headers }
+
+    context 'when project exists' do
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns content type application plain' do
+        expect(response.headers['Content-Type']). to eql('application/plain')
       end
     end
 
