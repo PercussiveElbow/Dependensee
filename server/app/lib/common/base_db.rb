@@ -9,7 +9,7 @@ class BaseDB
 
   def initialize(root_location,db_name,log_name,url)
     @log_name = log_name
-    root_location  = '/tmp/dependensee/' + root_location
+    root_location  = MsgConstants::BASE_LOC + root_location
     make_dir(root_location,db_name)
     unless File.directory?(@db_location)
       begin
@@ -22,7 +22,6 @@ class BaseDB
     end
   end
 
-
   def make_dir(root_location,db_name)
     FileUtils.mkdir_p(root_location) unless Dir.exist?(root_location)
     @db_location=root_location + '/' + db_name + '/'
@@ -31,7 +30,7 @@ class BaseDB
   def update?
     needs_save = false
     if $git_timestamp.nil? or ((Time.now.to_i - $git_timestamp) > GIT_TIMEOUT)
-      print("\n" + 'Updating ' + @log_name +'..' + "\n")
+      print("\n" + MsgConstants::UPDATING + @log_name +'..' + "\n")
       Git.open(@db_location).pull
       $git_timestamp = Time.now.to_i
       needs_save=true

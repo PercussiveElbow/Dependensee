@@ -15,6 +15,7 @@ class UploadController < ApplicationController
     json_response(process_dep_upload, :created)
   end
 
+  private
   def find_project_by_id
     begin
       param! :project_id, String, required: true, format:  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/

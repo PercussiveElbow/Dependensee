@@ -27,6 +27,7 @@ class LatestController < ApplicationController
     json_response(response, :created)
   end
 
+  private
   def get_project_by_id
     begin
       param! :project_id, String, required: true, format:  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/

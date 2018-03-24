@@ -44,7 +44,6 @@ class ProjectsController < ApplicationController
   end
 
   private
-
   def whitelist
     params.permit(:name, :language,:description, :auto_update, :timeout,:auto_scan)
   end

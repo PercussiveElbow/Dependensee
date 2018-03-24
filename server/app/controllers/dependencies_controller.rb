@@ -54,7 +54,6 @@ class DependenciesController < ApplicationController
   end
 
   private
-
   def dependency_params
     params.permit(:name, :raw, :version)
   end

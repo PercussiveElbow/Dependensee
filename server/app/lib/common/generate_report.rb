@@ -11,10 +11,7 @@ class GenerateReport < BaseReport
       vuln_list.each do |dep, vulns|
         file.puts(dep + "\n\n")
         file.puts(MsgConstants::OUR_VERSION + vulns['cves'][0].instance_variable_get('@our_version') + MsgConstants::PATCHED_VERSION + vulns['overall_patch'].to_s + ' ' +  MsgConstants::LATEST_VER + ' ' + LatestVersion::get_latest(project_language,dep) + "\n")
-        file.puts("CVES\n")
-        file.puts('=============================================')
         GenerateReport::gen_txt_insert_cves(file,vulns,project_language)
-        file.puts('=============================================')
       end
     }
     Logger.new(STDOUT).info  MsgConstants::TEXT_SAVED + filename
@@ -22,6 +19,8 @@ class GenerateReport < BaseReport
   end
 
   def self.gen_txt_insert_cves(file,vulns,project_language)
+    file.puts(MsgConstants::TEXT_REPORT_CVE)
+    file.puts(MsgConstants::TEXT_REPORT_LINE)
     for vuln in vulns['cves'] do
       cve_info =  GenerateReport::get_cve_info(project_language,vuln)
       file.puts('CVE: ' + vuln.cve + "\n")
@@ -29,6 +28,7 @@ class GenerateReport < BaseReport
       file.puts(MsgConstants::OUR_VERSION + vuln.our_version + MsgConstants::PATCHED_VERSION + vuln.patched_version.to_s + "\n" )
       file.puts(cve_info.desc + "\n") if !cve_info.desc.nil?
     end
+    file.puts(MsgConstants::TEXT_REPORT_LINE)
   end
 
   def self.gen_pdf(project_name,vuln_list,project_language)
@@ -69,8 +69,8 @@ class GenerateReport < BaseReport
 
   def self.gen_pdf_insert_versions(pdf,vulns,dep,project_language)
     pdf.text dep ,:size => 25
-    pdf.text 'Current version: ' + vulns['cves'][0].instance_variable_get('@our_version') +"\n", :size => 16, :color => MsgConstants::RED
-    pdf.text 'Overall safe version: ' + vulns['overall_patch'] +"\n", :size => 16, :color => MsgConstants::GREEN
+    pdf.text MsgConstants::CURRENT_VER + vulns['cves'][0].instance_variable_get('@our_version') +"\n", :size => 16, :color => MsgConstants::RED
+    pdf.text MsgConstants::OVERALL_SAFE_VER + vulns['overall_patch'] +"\n", :size => 16, :color => MsgConstants::GREEN
     pdf.text MsgConstants::LATEST_VER + ' ' + LatestVersion::get_latest(project_language,dep) + "\n\n", :size => 16
   end
 

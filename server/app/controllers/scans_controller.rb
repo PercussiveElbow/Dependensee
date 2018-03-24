@@ -46,7 +46,6 @@ class ScansController < ApplicationController
   end
 
   private
-
   def scans_params
     params.permit(:source, :needs_update)
   end

@@ -15,6 +15,7 @@ class CveController < ApplicationController
     raise CustomException::NotFound, MsgConstants::NOT_FOUND
   end
 
+  private
   def has_found_cve(resp)
     if !resp[0].empty?
       resp = resp[0]
@@ -22,10 +23,6 @@ class CveController < ApplicationController
     end
     resp
   end
-
-  # def name_or_cve
-  #   !params[:id][/\p{L}/].nil? ? find_cve_by_name : find_cve_by_id
-  # end
 
   def find_cve_by_id
       param_validate
@@ -55,9 +52,5 @@ class CveController < ApplicationController
       false
     end
   end
-
-  # def find_cve_by_name
-  #   @cve = RubyCve.where(['dependency_name = ?', params[:id]])
-  # end
 
 end

@@ -5,7 +5,7 @@ require_relative '../../models/java_cve'
 class MavenAndPipDB < BaseDB
 
   def initialize(root_location)
-    super(root_location,'maven_pip_db', 'Maven/Pip CVE DB','https://github.com/victims/victims-cve-db.git')
+    super(root_location,MsgConstants::MAVEN_PIP_DB_LOC,MsgConstants::MAVEN_PIP_DB_NAME, MsgConstants::MAVEN_PIP_DB_GIT_URL)
     save_into_db
   end
 

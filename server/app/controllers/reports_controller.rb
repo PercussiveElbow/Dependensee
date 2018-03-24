@@ -12,6 +12,11 @@ class ReportsController < ApplicationController
   param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
   param :format, ['json','pdf','txt','html'], :required => true
   def show
+    get_vuln_list
+    handle_report
+  end
+
+  def get_vuln_list
     case @project.language
       when 'Ruby'
         @vuln_list = GemScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
@@ -20,7 +25,6 @@ class ReportsController < ApplicationController
       when 'Python'
         @vuln_list = PipScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
     end
-    handle_report
   end
 
   def handle_report
@@ -28,11 +32,11 @@ class ReportsController < ApplicationController
       when 'json'
         response = @vuln_list.to_json
       when 'pdf'
-        return send_file(GenerateReport::gen_pdf(@project.name, @vuln_list, @project.language), :filename => "report.pdf", :type => "application/pdf")
+        return send_file(GenerateReport::gen_pdf(@project.name, @vuln_list, @project.language), :filename => MsgConstants::FILENAME_PDF, :type => MsgConstants::MIME_PDF)
       when 'txt'
-        return send_file(GenerateReport::gen_txt(@project.name, @vuln_list, @project.language), :filename => "report.txt", :type => "application/plain")
+        return send_file(GenerateReport::gen_txt(@project.name, @vuln_list, @project.language), :filename => MsgConstants::FILENAME_TXT, :type => MsgConstants::MIME_PLAIN)
       when 'html'
-        return send_file(GenerateReport::gen_html(@project.name, @vuln_list, @project.language), :filename => "report.html", :type => "text/html")
+        return send_file(GenerateReport::gen_html(@project.name, @vuln_list, @project.language), :filename => MsgConstants::FILENAME_HTML, :type => MsgConstants::MIME_HTML)
       else
         response = ''
     end

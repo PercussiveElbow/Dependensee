@@ -5,7 +5,7 @@ class GemDB < BaseDB
 
   #override
   def initialize(root_location)
-    super(root_location, 'ruby_cve', 'Ruby CVE DB','https://github.com/rubysec/ruby-advisory-db.git')
+    super(root_location, MsgConstants::GEM_DB_NAME, MsgConstants::GEM_DB_LOC,MsgConstants::GEM_DB_GIT_URL)
     save_into_db
   end
 
