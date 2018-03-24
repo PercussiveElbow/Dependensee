@@ -9,7 +9,7 @@ class GenerateReport < BaseReport
       file.puts(GenerateReport::get_title(project_name) + "\n")
       vuln_list.each do |dep, vulns|
         file.puts(dep + "\n\n")
-        file.puts(MsgConstants::OUR_VERSION + vulns['cves'][0].instance_variable_get('@our_version') + MsgConstants::PATCHED_VERSION + vulns['overall_patch'].to_s + ' ' +  MsgConstants::LATEST_VER + ' ' + GemVersionLogic::handle_latest_ver(dep,project_language) + "\n")
+        file.puts(MsgConstants::OUR_VERSION + vulns['cves'][0].instance_variable_get('@our_version') + MsgConstants::PATCHED_VERSION + vulns['overall_patch'].to_s + ' ' +  MsgConstants::LATEST_VER + ' ' + GenerateReport::handle_latest_ver(dep,project_language) + "\n")
         file.puts("CVES\n")
         file.puts('=============================================')
         for vuln in vulns['cves'] do

@@ -113,4 +113,29 @@ RSpec.describe 'reports API' do
     end
   end
 
+  describe 'GET /api/v1/projects/:project_id/scans/:scan_id/reports/pdf' do
+    before { get "/api/v1/projects/#{project_id}/scans/#{scan_id}/reports/pdf", params: {}, headers: headers }
+
+    context 'when project exists' do
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+
+  end
+
+  describe 'GET /api/v1/projects/:project_id/scans/:scan_id/reports/txt' do
+    before { get "/api/v1/projects/#{project_id}/scans/#{scan_id}/reports/txt", params: {}, headers: headers }
+
+    context 'when project exists' do
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+
+  end
+
+
 end

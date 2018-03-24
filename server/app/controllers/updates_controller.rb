@@ -30,7 +30,6 @@ class UpdatesController < ApplicationController
   def handle_latest
     @vuln_list = get_vulns
     for dep_name, vulns in @vuln_list
-      print dep_name
       set_update_version(dep_name,get_latest(dep_name))
     end
     { message: "Scan #{params[:scan_id]} vulnerable dependencies set to latest" }
@@ -40,7 +39,6 @@ class UpdatesController < ApplicationController
     @vuln_list = get_vulns
 
     for dep_name, vulns in @vuln_list
-      print dep_name
       set_update_version(dep_name,vulns['overall_patch'])
     end
     { message: "Scan #{params[:scan_id]} vulnerable dependencies set to safe" }
@@ -102,6 +100,7 @@ class UpdatesController < ApplicationController
     rescue
       Raise CustomException::NotFound, MsgConstants::NOT_FOUND
     end
+
   end
 
 end
