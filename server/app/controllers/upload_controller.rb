@@ -58,7 +58,7 @@ class UploadController < ApplicationController
 
     @vuln_list = PomScanner::new(deps).scan
     vuln_total
-    JSON.pretty_generate({type: MsgConstants::POMFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
+    json_return(MsgConstants::POMFILE_UPLOADED,deps)
   end
 
   # RUBY
@@ -71,8 +71,7 @@ class UploadController < ApplicationController
     deps =  Dependency.where(['scan_id = ?', @scan.id])
 
     @vuln_list = GemScanner::new(deps).scan
-    vuln_total
-    JSON.pretty_generate({type: MsgConstants::GEMFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
+    json_return(MsgConstants::GEMFILE_UPLOADED,deps)
   end
 
   # PYTHON
@@ -84,13 +83,17 @@ class UploadController < ApplicationController
     deps.each { |dep| @scan.dependencies.create(name: dep['name'], version: dep['version'], raw: dep) }
     deps =  Dependency.where(['scan_id = ?', @scan.id])
     @vuln_list = PipScanner::new(deps).scan
-    vuln_total
-    JSON.pretty_generate({type: MsgConstants::PIPFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
+    json_return(MsgConstants::PIPFILE_UPLOADED,deps)
   end
 
   def vuln_total
     @vuln_total=0
     @vuln_list.each { |_, v| @vuln_total+=v['cves'].length }
+  end
+
+  def json_return(message,deps)
+    vuln_total
+    JSON.pretty_generate({type: message, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
 
 end

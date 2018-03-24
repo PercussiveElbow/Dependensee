@@ -32,44 +32,58 @@ class GenerateReport < BaseReport
 
   def self.gen_pdf(project_name,vuln_list,project_language)
     filename = self.add_dir_return_filename + '.pdf'
-    Prawn::Document.generate(filename) do
-      font_size(26) { draw_text GenerateReport::get_title(project_name), :at => [10, 700] }
-      text MsgConstants::NEWLINES
+    Prawn::Document.generate(filename) do |pdf|
+      pdf.draw_text GenerateReport::get_title(project_name), :at => [10, 700], :size => 26
+      pdf.text MsgConstants::NEWLINES
       vuln_list.each do |dep,vulns|
-        text dep ,:size => 25
-        text 'Current version: ' + vulns['cves'][0].instance_variable_get('@our_version') +"\n", :size => 16, :color => MsgConstants::RED
-        text 'Overall safe version: ' + vulns['overall_patch'] +"\n", :size => 16, :color => MsgConstants::GREEN
-        text MsgConstants::LATEST_VER + ' ' + GenerateReport::handle_latest_ver(dep,project_language) + "\n\n", :size => 16
-
-        for vuln in vulns['cves'] do
-          text 'CVE ' + vuln.cve, :indent_paragraphs => 20, :size => 18
-          cve_info = GenerateReport::get_cve_info(project_language, vuln)
-          cve_score= cve_info.cvss2
-          cve_color = GenerateReport::get_color(cve_score)
-
-          if cve_score.nil?;
-            text MsgConstants::SCORE + MsgConstants::NO_CVE_SCORE, :color => MsgConstants::GREY, :indent_paragraphs => 40
-          else
-            text MsgConstants::SCORE + cve_score.to_s, :color => cve_color, :size => 16, :indent_paragraphs => 40
-          end
-          text MsgConstants::VERSIONS, :indent_paragraphs => 40, :size => 16
-
-          if !vuln.patched_version.nil?
-            vuln.patched_version.each do |patched_ver_index|
-              if GemVersionLogic::is_within_minor_ver(patched_ver_index, vuln.our_version)
-                text MsgConstants::PATCHED_VER + patched_ver_index.to_s, :indent_paragraphs => 60
-              else
-                text MsgConstants::PATCHED_VER + patched_ver_index.to_s + MsgConstants::VERSION_WARNING, :indent_paragraphs => 60
-              end
-            end
-          end
-          desc = cve_info.desc.nil? ? '' : cve_info.desc
-          text "\n" + desc + "\n\n", :style => :italic, :indent_paragraphs => 40
-        end
+        GenerateReport::gen_pdf_insert_versions(pdf,vulns,dep, project_language)
+        GenerateReport::gen_pdf_insert_cves(pdf,vulns,project_language)
       end
     end
     Logger.new(STDOUT).info MsgConstants::PDF_SAVED + filename
     filename
+  end
+
+  def self.gen_pdf_insert_score(pdf,cve_info)
+    cve_score= cve_info.cvss2
+    cve_color = GenerateReport::get_color(cve_score)
+
+    if cve_score.nil?;
+      pdf.text MsgConstants::SCORE + MsgConstants::NO_CVE_SCORE, :color => MsgConstants::GREY, :indent_paragraphs => 40
+    else
+      pdf.text MsgConstants::SCORE + cve_score.to_s, :color => cve_color, :size => 16, :indent_paragraphs => 40
+    end
+  end
+
+  def self.gen_pdf_insert_cves(pdf,vulns,project_language)
+    for vuln in vulns['cves'] do
+      pdf.text 'CVE ' + vuln.cve, :indent_paragraphs => 20, :size => 18
+      cve_info = GenerateReport::get_cve_info(project_language, vuln)
+      GenerateReport::gen_pdf_insert_score(pdf,cve_info)
+      GenerateReport::gen_pdf_insert_patched_vers(pdf,vuln)
+      desc = cve_info.desc.nil? ? '' : cve_info.desc
+      pdf.text "\n" + desc + "\n\n", :style => :italic, :indent_paragraphs => 40
+    end
+  end
+
+  def self.gen_pdf_insert_versions(pdf,vulns,dep,project_language)
+    pdf.text dep ,:size => 25
+    pdf.text 'Current version: ' + vulns['cves'][0].instance_variable_get('@our_version') +"\n", :size => 16, :color => MsgConstants::RED
+    pdf.text 'Overall safe version: ' + vulns['overall_patch'] +"\n", :size => 16, :color => MsgConstants::GREEN
+    pdf.text MsgConstants::LATEST_VER + ' ' + GenerateReport::handle_latest_ver(dep,project_language) + "\n\n", :size => 16
+  end
+
+  def self.gen_pdf_insert_patched_vers(pdf,vuln)
+    pdf.text MsgConstants::VERSIONS, :indent_paragraphs => 40, :size => 16
+    if !vuln.patched_version.nil?
+      vuln.patched_version.each do |patched_ver_index|
+        if GemVersionLogic::is_within_minor_ver(patched_ver_index, vuln.our_version)
+          pdf.text MsgConstants::PATCHED_VER + patched_ver_index.to_s, :indent_paragraphs => 60
+        else
+          pdf.text MsgConstants::PATCHED_VER + patched_ver_index.to_s + MsgConstants::VERSION_WARNING, :indent_paragraphs => 60
+        end
+      end
+    end
   end
 
   def self.gen_html(project_name,vuln_list,project_language)
