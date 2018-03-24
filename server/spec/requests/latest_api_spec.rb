@@ -11,7 +11,6 @@ RSpec.describe 'latest API' do
   let!(:dependency) { create(:dependency, scan_id: scan.id, version: '1.2.3', name: 'org.asynchttpclient.async-http-client') }
   let(:id) { dependency.id }
 
-
   let! (:ruby_project) {create(:project, language: 'Ruby')}
   let!(:ruby_scan) { create(:scan, project_id: ruby_project.id) }
   let(:ruby_project_id) { ruby_project.id }
@@ -25,7 +24,6 @@ RSpec.describe 'latest API' do
   let(:python_scan_id) { python_scan.id}
   let!(:python_dependency) { create(:dependency, scan_id: python_scan.id, version: '1.2.3', name: 'selenium') }
   let(:python_id) { python_dependency.id }
-
 
   let(:headers) { valid_headers }
 

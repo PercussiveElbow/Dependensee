@@ -11,20 +11,20 @@ class UpdatesController < ApplicationController
   def create
     case params[:id]
       when 'latest'
-        handle_latest
+        json_response(handle_latest, :ok)
       when 'safe'
-        handle_safe
+        json_response(handle_safe, :ok)
       when 'manual'
-        handle_manual
+        json_response(handle_manual, :ok)
       else
-        response = ''
+        json_response(response, :unprocessable_entity)
     end
-    json_response(response, :created)
   end
 
 
   def handle_manual
     @scan['needs_update'] = 'manual'
+    { message: "Scan #{params[:scan_id]} vulnerable dependencies set to manual" }
   end
 
   def handle_latest
@@ -33,6 +33,7 @@ class UpdatesController < ApplicationController
       print dep_name
       set_update_version(dep_name,get_latest(dep_name))
     end
+    { message: "Scan #{params[:scan_id]} vulnerable dependencies set to latest" }
   end
 
   def handle_safe
@@ -42,6 +43,7 @@ class UpdatesController < ApplicationController
       print dep_name
       set_update_version(dep_name,vulns['overall_patch'])
     end
+    { message: "Scan #{params[:scan_id]} vulnerable dependencies set to safe" }
   end
 
   def get_latest(dep_name)

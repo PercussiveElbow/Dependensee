@@ -85,7 +85,6 @@ RSpec.describe 'reports API' do
 
   end
 
-
   describe 'GET /api/v1/projects/:python_project_id/scans/:python_scan_id/reports/json' do
     before { get "/api/v1/projects/#{python_project_id}/scans/#{python_scan_id}/reports/json", params: {}, headers: headers }
 

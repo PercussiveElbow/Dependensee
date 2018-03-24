@@ -43,13 +43,3 @@ RSpec.describe GemDB do
   end
 
 end
-
-
-    # def test_secondary_db_doesnt_break
-    #   @db.load_cves_for_gem('rack')
-    #   GemDB.new( @random_no ).load_cves_for_gem('rack')
-    # end
-
-    # after(:all) do
-    #   FileUtils.rm_rf('/tmp/dependensee/' + @random_no)
-    # end
