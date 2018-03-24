@@ -1,6 +1,4 @@
-require_relative '../common/vulnerability'
 require_relative '../common/base_scanner'
-require_relative '../msg_constants'
 require_relative 'pom_version_logic'
 
 class PomScanner < BaseScanner
@@ -26,7 +24,7 @@ class PomScanner < BaseScanner
         }
       end
     end
-    vuln_hash
+    GenericVersionLogic::finish_version_logic(vuln_hash)
   end
 
 

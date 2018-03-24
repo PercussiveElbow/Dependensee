@@ -1,9 +1,7 @@
 require_relative 'gem_parser'
 require_relative 'gem_db'
 require_relative 'gem_version_logic'
-require_relative '../common/vulnerability'
 require_relative '../common/base_scanner'
-require_relative '../msg_constants'
 
 class GemScanner < BaseScanner
 
@@ -25,7 +23,7 @@ class GemScanner < BaseScanner
           end
       end
     end
-    vuln_hash
+    GenericVersionLogic::finish_version_logic(vuln_hash)
   end
 
   def get_needed_patches(gem_version, patched_versions)

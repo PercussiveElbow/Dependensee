@@ -15,6 +15,6 @@ RSpec.describe 'PipScanner' do
     }
 
     scanner = PipScanner::new(deps_final)
-    expect(scanner.scan.length).to eql(10)
+    expect(scanner.scan.length).to eql(2)
   end
 end

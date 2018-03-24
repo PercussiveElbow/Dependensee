@@ -68,11 +68,10 @@ RSpec.describe GemVersionLogic do
     expect(GemVersionLogic::unaffected?('1.0','<1.1')).to eql(true)
   end
 
-  it 'should query rubygems correctly ' do #todo find better test method since java can have lettering
+  it 'should query rubygems correctly ' do
     # expect(GemVersionLogic.get_latest_version('activerecord')).to match()
   end
 
-  #todo check if both these need fixed
   it 'should return true if contains a comma and is unaffected' do
     expect(GemVersionLogic::unaffected?('1.0','<1.1,>=5.0.0')).to eql(true)
   end

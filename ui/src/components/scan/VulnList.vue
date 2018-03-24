@@ -9,7 +9,8 @@
 			          <div class="md-title" style="font-size: large; font-weight: bold;">{{title}}</div>
 			          <md-chip style="background-color:red; color: white">Current {{vuln.cves[0].our_version}}</md-chip>
 			          <md-chip style="background-color:#2ECC40; color: white">Safe {{vuln.overall_patch}}</md-chip>
-	      			</md-card-header>
+<!-- 			          <md-chip class="md-primary" style="color: white">Latest {{vuln.overall_patch}}</md-chip>
+ -->	      			</md-card-header>
 		          <md-list-item v-for="(item,index) in vuln.cves" v-bind:key="item.cve">
 		            <md-avatar class="md-avatar-icon md-primary" style="background-color:red" ><md-icon >warning</md-icon></md-avatar>
 		            <div class="md-list-text-container">
@@ -68,5 +69,4 @@
      	 }
 		}
 	}
-
 </script>

@@ -14,6 +14,6 @@ RSpec.describe 'PomScanner' do
       deps_final.push(Dependency.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], raw: dep))
     }
     scanner = PomScanner::new(deps_final)
-    expect(scanner.scan.length).to eql(6)
+    expect(scanner.scan.length).to eql(1)
   end
 end

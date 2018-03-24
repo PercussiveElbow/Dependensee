@@ -7,11 +7,14 @@ Rails.application.routes.draw do
           resources :dependencies do
             get 'latest', to: 'latest#show'
           end
-        resources :reports
+          post '/updates/:id', to: 'updates#create'
+
+          resources :reports do
+
+          end
         end
         resources :upload
       end
-
       resources :cve do
       end
       resources :exploit do
@@ -24,5 +27,4 @@ Rails.application.routes.draw do
     end
   end
   apipie
-
 end

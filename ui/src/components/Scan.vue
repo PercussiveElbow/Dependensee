@@ -43,7 +43,7 @@
 </template>
 
 <script>
-  import {getProject,getScan,getDependencies,getJsonReport,getPdfReport,getTxtReport,updateScan} from '../utils/api.js';
+  import {getProject,getScan,getDependencies,getJsonReport,getPdfReport,getTxtReport,updateScan,update} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import CVESearch from './CveSearch'
   import DepList from './scan/DepList'
@@ -118,9 +118,10 @@
         this.$modal.show('dialog', {
             title: 'Update dependencies',
             buttons: [
-              { title: 'Normal', handler: () => { updateScan(this.$route.params.project_id,this.$route.params.scan_id, 'normal') } },
-              { title: 'Major', handler: () => { updateScan(this.$route.params.project_id,this.$route.params.scan_id, 'Major') } },
-              { title: 'Minor', handler: () => { updateScan(this.$route.params.project_id,this.$route.params.scan_id, 'Minor') } }          ]
+              { title: 'Safe', handler: () => { update(this.$route.params.project_id,this.$route.params.scan_id, null, 'safe') } },
+              { title: 'Latest', handler: () => { update(this.$route.params.project_id,this.$route.params.scan_id, null, 'latest') } },
+              { title: 'Manual', handler: () => { update(this.$route.params.project_id,this.$route.params.scan_id, null, 'manual') } }          
+              ]
           })
       },
       openJsonReport(){

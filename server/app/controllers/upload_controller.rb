@@ -57,7 +57,6 @@ class UploadController < ApplicationController
     deps =  Dependency.where(['scan_id = ?', @scan.id])
 
     @vuln_list = PomScanner::new(deps).scan
-    @vuln_list = GenericVersionLogic::finish_version_logic(deps,@vuln_list)
     vuln_total
     JSON.pretty_generate({type: MsgConstants::POMFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
@@ -72,7 +71,6 @@ class UploadController < ApplicationController
     deps =  Dependency.where(['scan_id = ?', @scan.id])
 
     @vuln_list = GemScanner::new(deps).scan
-    @vuln_list = GenericVersionLogic::finish_version_logic(deps,@vuln_list)
     vuln_total
     JSON.pretty_generate({type: MsgConstants::GEMFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end
@@ -86,7 +84,6 @@ class UploadController < ApplicationController
     deps.each { |dep| @scan.dependencies.create(name: dep['name'], version: dep['version'], raw: dep) }
     deps =  Dependency.where(['scan_id = ?', @scan.id])
     @vuln_list = PipScanner::new(deps).scan
-    @vuln_list = GenericVersionLogic::finish_version_logic(deps,@vuln_list)
     vuln_total
     JSON.pretty_generate({type: MsgConstants::PIPFILE_UPLOADED, scan_id: @scan.id,dependencies:  deps.length.to_s + ' ' +  MsgConstants::DEPENDENCIES_FOUND, vunerability_count: @vuln_total.to_s  + ' ' + MsgConstants::VULNERABILITIES_FOUND, vulnerabilities:  @vuln_list.to_json })
   end

@@ -1,6 +1,4 @@
-require_relative '../common/vulnerability'
 require_relative '../common/base_scanner'
-require_relative '../msg_constants'
 require_relative 'pip_version_logic'
 
 class PipScanner < BaseScanner
@@ -24,7 +22,7 @@ class PipScanner < BaseScanner
         }
       end
     end
-    vuln_hash
+    GenericVersionLogic::finish_version_logic(vuln_hash)
   end
 
 end

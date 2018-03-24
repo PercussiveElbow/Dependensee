@@ -23,7 +23,7 @@
     </md-list>
     <md-list>
       <md-divider class="md-inset"></md-divider>
-      <h3> Other Platforms </h3>
+      <md-subheader> Other Platforms </md-subheader>
       <md-list-item @click= "$router.push('/qr/')"><md-icon>smartphone</md-icon> <span>Smartphone UI</span></md-list-item>
       <md-list-item @click= "$router.push('/desktop/')"><md-icon>laptop</md-icon> <span>Desktop UI</span></md-list-item>
     </md-list>

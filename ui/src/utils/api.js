@@ -2,7 +2,7 @@ var axios = require('axios')
 
 const API_URL = 'https://dependensee.tech/api/v1/'
 const WEB_URL = 'https://ui.dependensee.tech/'
-// const ADDRESS  = 'http://127.0.0.1';
+// const ADDRESS  = 'http://localhost';
 // const API_URL = ADDRESS + ':3000/api/v1/'
 // const WEB_URL = ADDRESS + ':8080/'
 
@@ -14,6 +14,7 @@ const EXPLOIT_URL = API_URL + 'exploit/';
 const UPLOAD_URL =  '/upload/'
 const SCANS_URL = '/scans/'
 const PROFILE_URL = '/profile'
+const UPDATE_URL = '/updates/'
 const DEPENDENCIES_URL = '/dependencies/'
 const JSON_REPORT_URL = '/reports/json/'
 const PDF_REPORT_URL = '/reports/pdf/'
@@ -23,7 +24,7 @@ const ACCESS_TOKEN = 'jwk_access_token'
 //Split this file out for tidiness	
 export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
 	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,
-	dependencyLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux,updateScan,canExploit};
+	dependencyLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux,updateScan,canExploit,update};
 
 //AUTH
 function apiLogin(params) {
@@ -87,6 +88,11 @@ function upload(id,body,source){
 
 function deleteScan(id,scan_id){
 	return common_delete(PROJECTS_URL+id+SCANS_URL+scan_id)
+}
+
+//UPDATE
+function update(id,scan_id,params,type){
+	return axios.post(PROJECTS_URL+id+SCANS_URL+scan_id + UPDATE_URL + type, params, {headers: {'Authorization': getToken() }} ).then(response => response.data);
 }
 
 //DEPENDENCIES

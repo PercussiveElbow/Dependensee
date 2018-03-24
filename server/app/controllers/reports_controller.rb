@@ -10,7 +10,7 @@ class ReportsController < ApplicationController
 
   api :GET, '/projects/:project_id/scans/:format', 'Generate a Report for this Scan'
   param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
-  param :format, ['json','pdf','txt'], :required => true
+  param :format, ['json','pdf','txt','html'], :required => true
   def show
     case @project.language
       when 'Ruby'
@@ -20,7 +20,10 @@ class ReportsController < ApplicationController
       when 'Python'
         @vuln_list = PipScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan
     end
-    @vuln_list = GenericVersionLogic::finish_version_logic(Dependency.where(['scan_id = ?', @scan.id]),@vuln_list)
+    handle_report
+  end
+
+  def handle_report
     case params[:id]
       when 'json'
         response = @vuln_list.to_json
@@ -28,6 +31,8 @@ class ReportsController < ApplicationController
         return send_file(GenerateReport::gen_pdf(@project.name, @vuln_list, @project.language), :filename => "report.pdf", :type => "application/pdf")
       when 'txt'
         return send_file(GenerateReport::gen_txt(@project.name, @vuln_list, @project.language), :filename => "report.txt", :type => "application/plain")
+      when 'html'
+        return send_file(GenerateReport::gen_html(@project.name, @vuln_list, @project.language), :filename => "report.html", :type => "text/html")
       else
         response = ''
     end

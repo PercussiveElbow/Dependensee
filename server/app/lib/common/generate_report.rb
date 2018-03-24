@@ -3,17 +3,17 @@ require_relative 'base_report'
 
 class GenerateReport < BaseReport
 
-  def self.gen_txt(project, vuln_list,language)
+  def self.gen_txt(project_name, vuln_list,project_language)
     filename =  self.add_dir_return_filename + '.txt'
     open(filename, 'a') { |file|
-      file.puts(GenerateReport::get_title(project) + "\n")
+      file.puts(GenerateReport::get_title(project_name) + "\n")
       vuln_list.each do |dep, vulns|
         file.puts(dep + "\n\n")
-        file.puts(MsgConstants::OUR_VERSION + vulns['cves'][0].instance_variable_get('@our_version') + MsgConstants::PATCHED_VERSION + vulns['overall_patch'].to_s + ' ' +  MsgConstants::LATEST_VER + ' ' + GemVersionLogic::handle_latest_ver(dep,language) + "\n")
+        file.puts(MsgConstants::OUR_VERSION + vulns['cves'][0].instance_variable_get('@our_version') + MsgConstants::PATCHED_VERSION + vulns['overall_patch'].to_s + ' ' +  MsgConstants::LATEST_VER + ' ' + GemVersionLogic::handle_latest_ver(dep,project_language) + "\n")
         file.puts("CVES\n")
         file.puts('=============================================')
         for vuln in vulns['cves'] do
-          cve_info =  GenerateReport::get_cve_info(language,vuln)
+          cve_info =  GenerateReport::get_cve_info(project_language,vuln)
           file.puts('CVE: ' + vuln.cve + "\n")
           file.puts(MsgConstants::SCORE + cve_info.cvss2.to_s + "\n")
           file.puts(MsgConstants::OUR_VERSION + vuln.our_version + MsgConstants::PATCHED_VERSION + vuln.patched_version.to_s + "\n" )
@@ -26,20 +26,20 @@ class GenerateReport < BaseReport
     filename
   end
 
-  def self.gen_pdf(project,vuln_list,language)
+  def self.gen_pdf(project_name,vuln_list,project_language)
     filename = self.add_dir_return_filename + '.pdf'
     Prawn::Document.generate(filename) do
-      font_size(26) { draw_text GenerateReport::get_title(project), :at => [10, 700] }
+      font_size(26) { draw_text GenerateReport::get_title(project_name), :at => [10, 700] }
       text MsgConstants::NEWLINES
       vuln_list.each do |dep,vulns|
         text dep ,:size => 25
         text 'Current version: ' + vulns['cves'][0].instance_variable_get('@our_version') +"\n", :size => 16, :color => MsgConstants::RED
         text 'Overall safe version: ' + vulns['overall_patch'] +"\n", :size => 16, :color => MsgConstants::GREEN
-        text MsgConstants::LATEST_VER + ' ' + GenerateReport::handle_latest_ver(dep,language) + "\n\n", :size => 16
+        text MsgConstants::LATEST_VER + ' ' + GenerateReport::handle_latest_ver(dep,project_language) + "\n\n", :size => 16
 
         for vuln in vulns['cves'] do
           text 'CVE ' + vuln.cve, :indent_paragraphs => 20, :size => 18
-          cve_info = GenerateReport::get_cve_info(language, vuln)
+          cve_info = GenerateReport::get_cve_info(project_language, vuln)
           cve_score= cve_info.cvss2
           cve_color = GenerateReport::get_color(cve_score)
 
@@ -66,6 +66,10 @@ class GenerateReport < BaseReport
     end
     print "\n" + MsgConstants::PDF_SAVED + filename + "\n"
     filename
+  end
+
+  def self.gen_html(project_name,vuln_list,project_language)
+
   end
 
 
