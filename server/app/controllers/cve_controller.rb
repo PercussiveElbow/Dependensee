@@ -9,13 +9,18 @@ class CveController < ApplicationController
   def show
     resp = @cve.as_json
     if !resp.empty?
-      if !resp[0].empty?
-            resp = resp[0]
-            resp['language'] = @language if !@language.nil?
-      end
+      resp = has_found_cve(resp)
       return json_response(resp)
     end
     raise CustomException::NotFound, MsgConstants::NOT_FOUND
+  end
+
+  def has_found_cve(resp)
+    if !resp[0].empty?
+      resp = resp[0]
+      resp['language'] = @language if !@language.nil?
+    end
+    resp
   end
 
   # def name_or_cve

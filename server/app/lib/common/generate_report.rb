@@ -12,18 +12,22 @@ class GenerateReport < BaseReport
         file.puts(MsgConstants::OUR_VERSION + vulns['cves'][0].instance_variable_get('@our_version') + MsgConstants::PATCHED_VERSION + vulns['overall_patch'].to_s + ' ' +  MsgConstants::LATEST_VER + ' ' + GenerateReport::handle_latest_ver(dep,project_language) + "\n")
         file.puts("CVES\n")
         file.puts('=============================================')
-        for vuln in vulns['cves'] do
-          cve_info =  GenerateReport::get_cve_info(project_language,vuln)
-          file.puts('CVE: ' + vuln.cve + "\n")
-          file.puts(MsgConstants::SCORE + cve_info.cvss2.to_s + "\n")
-          file.puts(MsgConstants::OUR_VERSION + vuln.our_version + MsgConstants::PATCHED_VERSION + vuln.patched_version.to_s + "\n" )
-          file.puts(cve_info.desc + "\n") if !cve_info.desc.nil?
-        end
+        GenerateReport::gen_txt_insert_cves(file,vulns,project_language)
         file.puts('=============================================')
       end
     }
-    print MsgConstants::NEWLINES + MsgConstants::TEXT_SAVED + filename + "\n"
+    Logger.new(STDOUT).info  MsgConstants::TEXT_SAVED + filename
     filename
+  end
+
+  def self.gen_txt_insert_cves(file,vulns,project_language)
+    for vuln in vulns['cves'] do
+      cve_info =  GenerateReport::get_cve_info(project_language,vuln)
+      file.puts('CVE: ' + vuln.cve + "\n")
+      file.puts(MsgConstants::SCORE + cve_info.cvss2.to_s + "\n")
+      file.puts(MsgConstants::OUR_VERSION + vuln.our_version + MsgConstants::PATCHED_VERSION + vuln.patched_version.to_s + "\n" )
+      file.puts(cve_info.desc + "\n") if !cve_info.desc.nil?
+    end
   end
 
   def self.gen_pdf(project_name,vuln_list,project_language)
@@ -64,7 +68,7 @@ class GenerateReport < BaseReport
         end
       end
     end
-    print "\n" + MsgConstants::PDF_SAVED + filename + "\n"
+    Logger.new(STDOUT).info MsgConstants::PDF_SAVED + filename
     filename
   end
 

@@ -10,8 +10,7 @@ class BaseDB
   def initialize(root_location,db_name,log_name,url)
     @log_name = log_name
     root_location  = '/tmp/dependensee/' + root_location
-    FileUtils.mkdir_p(root_location) unless Dir.exist?(root_location)
-    @db_location=root_location + '/' + db_name + '/'
+    make_dir(root_location,db_name)
     unless File.directory?(@db_location)
       begin
         Git.clone(url, db_name, :path => root_location)
@@ -21,6 +20,12 @@ class BaseDB
         abort 'Error cloning '+ @log_name +', exiting.';
       end
     end
+  end
+
+
+  def make_dir(root_location,db_name)
+    FileUtils.mkdir_p(root_location) unless Dir.exist?(root_location)
+    @db_location=root_location + '/' + db_name + '/'
   end
 
   def update?
