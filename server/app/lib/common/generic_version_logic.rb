@@ -27,15 +27,20 @@ class GenericVersionLogic
 
   def self.overall_ver_replace(patch_ver,overall_patch)
     if !patch_ver.include? ','
-      ver = Gem::Version.new(patch_ver.gsub('>', '').gsub(' ','').gsub('=','').gsub('~',''))
-      if ver >= Gem::Version.new(overall_patch.gsub('>', '').gsub(' ', '').gsub('=', '').gsub('~', ''))
-        overall_patch = patch_ver
-      end
+        overall_patch = check_replace(patch_ver,overall_patch)
     else
       patch_ver_split = patch_ver.split(',')
       for a_ver in patch_ver_split
         overall_patch = self.overall_ver_replace(a_ver, overall_patch)
       end
+    end
+    overall_patch
+  end
+
+  def self.check_replace(patch_ver,overall_patch)
+    ver = Gem::Version.new(patch_ver.gsub('>', '').gsub(' ','').gsub('=','').gsub('~',''))
+    if ver >= Gem::Version.new(overall_patch.gsub('>', '').gsub(' ', '').gsub('=', '').gsub('~', ''))
+      overall_patch = patch_ver
     end
     overall_patch
   end
