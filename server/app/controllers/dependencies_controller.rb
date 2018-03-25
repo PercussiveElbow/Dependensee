@@ -55,7 +55,7 @@ class DependenciesController < ApplicationController
 
   private
   def dependency_params
-    params.permit(:name, :raw, :version)
+    params.permit(:name, :raw, :version,:update_to)
   end
 
   def get_project_by_id
