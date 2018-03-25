@@ -1,7 +1,4 @@
 before_install: cd server
-language: ruby
-rvm:
- - 2.4
 script: 
   - docker-compose build
   - docker-compose up -d postgres

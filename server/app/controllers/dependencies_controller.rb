@@ -1,6 +1,5 @@
 # app/controllers/dependencies_controller.rb
-class DependenciesController < ApplicationController
-  before_action :get_project_by_id,:get_scan_by_id
+class DependenciesController < ProjectAndScanValidatorController
   before_action :set_dependency, only: [:show, :update, :destroy]
 
   def_param_group :project_and_scan do
@@ -58,20 +57,6 @@ class DependenciesController < ApplicationController
     params.permit(:name, :raw, :version,:update_to)
   end
 
-  def get_project_by_id
-    begin
-      param! :project_id, String, required: true, format:  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
-    rescue
-      raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
-    end
-
-    begin
-      @project = Project.find(params[:project_id])
-    rescue
-      Raise CustomException::NotFound, MsgConstants::NOT_FOUND
-    end
-  end
-
   def set_dependency
     begin
       param! :id, String, required: true, format:  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
@@ -86,18 +71,5 @@ class DependenciesController < ApplicationController
     end
   end
 
-  def get_scan_by_id
-    begin
-      param! :scan_id, String, required: true, format:  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
-    rescue
-      raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
-    end
-
-    begin
-      @scan = @project.scans.find(params[:scan_id]) if @project
-    rescue
-      Raise CustomException::NotFound, MsgConstants::NOT_FOUND
-    end
-  end
 
 end

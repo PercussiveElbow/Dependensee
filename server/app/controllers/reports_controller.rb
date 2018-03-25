@@ -4,10 +4,7 @@ require_relative '../lib/pip/pip_scanner'
 require_relative '../lib/common/generate_report'
 require_relative '../lib/common/generic_version_logic'
 
-class ReportsController < ApplicationController
-  before_action :get_project_by_id
-  before_action :set_project_scan, only: [:show]
-
+class ReportsController < ProjectAndScanValidatorController
   api :GET, '/projects/:project_id/scans/:format', 'Generate a Report for this Scan'
   param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
   param :format, ['json','pdf','txt','html'], :required => true
@@ -41,34 +38,6 @@ class ReportsController < ApplicationController
         return json_response({message: MsgConstants::UPDATE_TYPE_NOT_SUPPORTED}, :unprocessable_entity)
     end
     json_response(response, :created)
-  end
-
-  def get_project_by_id
-    begin
-      param! :project_id, String, required: true, format:  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
-    rescue
-      raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
-    end
-
-    begin
-      @project = Project.find(params[:project_id])
-    rescue
-      Raise CustomException::NotFound, MsgConstants::NOT_FOUND
-    end
-  end
-
-  def set_project_scan
-    begin
-      param! :scan_id, String, required: true, format:  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
-    rescue
-      raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
-    end
-
-    begin
-      @scan = @project.scans.find(params[:scan_id]) if @project
-    rescue
-      Raise CustomException::NotFound, MsgConstants::NOT_FOUND
-    end
   end
 
 end
