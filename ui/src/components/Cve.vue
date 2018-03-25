@@ -89,7 +89,7 @@
     },
     created() {
       this.get_cve();
-       canExploit(this.cve_id).then( response => {
+       canExploit(this.$route.params.cve_id).then( response => {
             if(response===200){
               this.exploitFound=true;
             }else{
@@ -106,7 +106,7 @@
           this.error= 'CVE not found!'
         });
       },
-      getExploitInfo(cve_id){getExploit(cve_id);},
+      getExploitInfo(cve_id){getExploit(this.$route.params.cve_id);},
       nvdb(cve_id){window.location.href = 'https://nvd.nist.gov/vuln/detail/'+ cve_id},
       cvedetails(cve_id){window.location.href = 'https://www.cvedetails.com/cve/CVE-'+ cve_id},
       rapid7(cve_id){window.location.href = 'https://www.rapid7.com/db/search?utf8=%E2%9C%93&q=' + cve_id + '&t=a'}

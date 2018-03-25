@@ -37,8 +37,6 @@ RSpec.describe AuthReq do
         let(:header) { { 'Authorization' => expired_token_generator(user.id) } }
         subject(:request_obj) { described_class.new(header) }
 
-
-        # TODO: implement proper expired signature catch!!
         it 'raises ExceptionHandler::InvalidToken' do
           expect { request_obj.call }.to raise_error(CustomException::InvalidToken, /Invalid Authorization Token/)
         end

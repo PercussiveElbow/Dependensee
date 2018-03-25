@@ -100,7 +100,7 @@ RSpec.describe 'dependencies API' do
   end
 
   describe 'POST /api/v1/projects/:project_id/scans/:scan_id/dependencies' do
-    let(:valid_attributes) { { name: 'Test', version: '1.2.3', language: 'ruby', raw: 'fewf', done: false }.to_json }
+    let(:valid_attributes) { { name: 'Test', version: '1.2.3', raw: 'fewf'}.to_json }
 
     context 'when request attributes are valid' do
       before do post "/api/v1/projects/#{project_id}/scans/#{scan_id}/dependencies", params: valid_attributes, headers: headers end
@@ -124,7 +124,7 @@ RSpec.describe 'dependencies API' do
   end
 
   describe 'PUT /api/v1/projects/:project_id/dependencies/:id' do
-    let(:valid_attributes) { { name: 'Test', version: '1.2.3', language: 'ruby', raw: 'fewf', done: false }.to_json }
+    let(:valid_attributes) { { name: 'Test123', version: '4.5.6', raw: 'newraw',update_to: '7.8.9'}.to_json }
 
     before do
       put "/api/v1/projects/#{project_id}/scans/#{scan_id}/dependencies/#{id}", params: valid_attributes, headers: headers
@@ -136,8 +136,10 @@ RSpec.describe 'dependencies API' do
       end
 
       it 'updates the dependency' do
-        #TODO fix
-        # expect(Dependency.find(id)).to match('')
+        expect(Dependency.find(id).name).to match('Test123')
+        expect(Dependency.find(id).version).to match('4.5.6')
+        expect(Dependency.find(id).raw).to match('newraw')
+        expect(Dependency.find(id).update_to).to match('7.8.9')
       end
     end
 

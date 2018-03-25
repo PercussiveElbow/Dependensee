@@ -1,6 +1,5 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
-
-  #Todo implement this spec
+  pending "add some examples to (or delete) #{__FILE__}"
 end
