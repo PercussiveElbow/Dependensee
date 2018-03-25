@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe 'scans API', type: :request do
   let(:user) { create(:user) }
   let!(:project) { create(:project, owner: user.id) }
-  let!(:scans) { create_list(:scan, 20, project_id: project.id) }
+  let!(:scans) { create_list(:scan, 20, project_id: project.id, needs_update: false) }
   let(:project_id) { project.id }
   let(:id) { scans.first.id }
   let(:headers) { valid_headers }
@@ -94,20 +94,6 @@ RSpec.describe 'scans API', type: :request do
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
       end
-    end
-
-    context 'when an invalid request' do
-      let(:invalid_headers) { { name: 'rejrhgrhghughugur'}.to_json }
-
-      before { post "/projects/#{project_id}/scans", params: {}, headers: headers }
-      #
-      # it 'returns status code 422' do
-      #   expect(response).to have_http_status(422)
-      # end
-      #
-      # it 'returns a failure message' do
-      #   expect(response.body).to match(/Validation failed: Source can't be blank/)
-      # end
     end
   end
 

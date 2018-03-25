@@ -19,9 +19,8 @@ class ScansController < ApplicationController
   api :POST, '/projects/:project_id/scans/', 'Create a Scan'
   param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
   param :source, String, :desc=> 'Source of the scan'
-  #param :needs_update, Boolean
+  param :needs_update, [true, false]
   def create
-    param! :needs_update,String, default: "no"
     @scan = @project.scans.create!(scans_params)
     json_response(@scan, :created)
   end
@@ -30,9 +29,8 @@ class ScansController < ApplicationController
   param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
   param :id, String,:desc=> 'Scan ID (UUID)', :required => true
   param :source, String, :desc=> 'Source of the scan'
-  #param :needs_update, Boolean
+  param :needs_update, [true, false]
   def update
-    param! :needs_update,String, default: "no"
     @scan.update(scans_params)
     head :no_content
   end

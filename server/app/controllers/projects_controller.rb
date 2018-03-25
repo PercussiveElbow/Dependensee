@@ -12,7 +12,8 @@ class ProjectsController < ApplicationController
   param :description, String, :desc => 'Description for the project'
   param :timeout, Integer, :desc => 'Timeout between scans (seconds) '
   param :name, String, :desc => 'Name of the project', :required => true
-  #param :active, Boolean
+  param :auto_update,  [true, false]
+  param :auto_scan,  [true, false]
   def create
     @project = current_user.projects.create!(whitelist)
     json_response(@project, :created)
@@ -30,7 +31,8 @@ class ProjectsController < ApplicationController
   param :description, String, :desc => 'Description for the project'
   param :timeout, Integer, :desc => 'Timeout between scans (seconds) '
   param :name, String, :desc => 'Name of the project', :required => true
-  #param :active, Boolean
+  param :auto_update,  [true, false]
+  param :auto_scan,  [true, false]
   def update
     @project.update(whitelist)
     head :no_content

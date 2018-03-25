@@ -51,7 +51,7 @@ class UploadController < ApplicationController
   def handle_java
     deps = PomParser::load_from_post(request.raw_post).load_deps
     raise EmptyDependencyException.new('No jars found in your POST body.') if deps.empty?
-    @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
+    @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => false)
 
     deps.each { |dep| @scan.dependencies.create(name: dep['groupId']+'.'+dep['artifactId'], version: dep['version'], raw: dep) }
     deps =  Dependency.where(['scan_id = ?', @scan.id])
@@ -66,7 +66,7 @@ class UploadController < ApplicationController
   def handle_ruby
     deps = GemParser::load_from_post(request.raw_post).load_deps
     raise EmptyDependencyException.new('No gems found in your POST body.') if deps.empty?
-    @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
+    @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => false)
 
     deps.each { |dep| @scan.dependencies.create(name: dep.name, version: dep.version, raw: dep) }
     deps =  Dependency.where(['scan_id = ?', @scan.id])
@@ -81,7 +81,7 @@ class UploadController < ApplicationController
   def handle_python
     deps = PipParser::load_from_post(request.raw_post).load_deps
     raise EmptyDependencyException.new('No pip dependencies found in your POST body.') if deps.empty?
-    @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => 'no')
+    @scan = @project.scans.create!(:source => request.headers['source'], :needs_update => false)
 
     deps.each { |dep| @scan.dependencies.create(name: dep['name'], version: dep['version'], raw: dep) }
     deps =  Dependency.where(['scan_id = ?', @scan.id])

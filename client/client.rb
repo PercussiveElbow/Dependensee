@@ -17,7 +17,7 @@ class Client
   ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
   @auto_scan = false;
   @timeout = 3600;
-  @needs_update = 'no'
+  @needs_update = false;
   @lang=''
 
   #For easier switching between test 
@@ -144,7 +144,7 @@ class Client
   end
 
   def self.needs_update?
-    if @needs_update=='yes'
+    if @needs_update
       print "Update needed\n"
       Client::get_dependencies
     else

@@ -85,7 +85,7 @@ ActiveRecord::Schema.define(version: 20171129201725) do
   create_table "scans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "date"
     t.string "source"
-    t.string "needs_update"
+    t.boolean "needs_update", default: false
     t.uuid "project_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

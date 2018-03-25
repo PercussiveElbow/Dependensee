@@ -22,7 +22,7 @@ class UpdateDeps
     for dep_name, vulns in vuln_list
       UpdateDeps::set_update_version(scan,dep_name,vulns['overall_patch'])
     end
-    scan.update_attribute(:needs_update, 'yes')
+    scan.update_attribute(:needs_update, true)
     { message: "Scan #{scan.id} vulnerable dependencies set to safe" }
   end
 
@@ -31,12 +31,12 @@ class UpdateDeps
     for dep_name, vulns in vuln_list
       UpdateDeps::set_update_version(scan,dep_name,LatestVersion::get_latest(project.language,dep_name))
     end
-    scan.update_attribute(:needs_update, 'yes')
+    scan.update_attribute(:needs_update, true)
     { message: "Scan #{scan.id} vulnerable dependencies set to latest" }
   end
 
   def self.handle_manual(scan)
-    scan.update_attribute(:needs_update, 'yes')
+    scan.update_attribute(:needs_update, true)
     { message: "Scan #{scan.id} vulnerable dependencies set to manual" }
   end
 

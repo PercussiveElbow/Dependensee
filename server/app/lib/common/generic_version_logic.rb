@@ -9,23 +9,35 @@ class GenericVersionLogic
     vuln_list.each do |_,vh|
       overall_patch = '0.0.0'
       vh['cves'].each do |cve|
-
-        if !cve.patched_version.nil?
-          cve.patched_version.each do |patch_ver|
-            if !patch_ver.include? ',' #todo fix
-              ver = Gem::Version.new(patch_ver.gsub('>', '').gsub(' ','').gsub('=','').gsub('~',''))
-              if ver >= Gem::Version.new(overall_patch.gsub('>', '').gsub(' ', '').gsub('=', '').gsub('~', ''))
-                overall_patch = patch_ver
-              end
-            else
-              print "Generic version logic bug" #todo fix
-            end
-          end
-        end
+          overall_patch = GenericVersionLogic::handle_patched_ver_loop(cve,overall_patch)
       end
       vh['overall_patch'] = overall_patch
     end
     vuln_list
+  end
+
+  def self.handle_patched_ver_loop(cve,overall_patch)
+    unless cve.patched_version.nil?
+      cve.patched_version.each do |patch_ver|
+        overall_patch = GenericVersionLogic::overall_ver_replace(patch_ver, overall_patch)
+      end
+    end
+    overall_patch
+  end
+
+  def self.overall_ver_replace(patch_ver,overall_patch)
+    if !patch_ver.include? ','
+      ver = Gem::Version.new(patch_ver.gsub('>', '').gsub(' ','').gsub('=','').gsub('~',''))
+      if ver >= Gem::Version.new(overall_patch.gsub('>', '').gsub(' ', '').gsub('=', '').gsub('~', ''))
+        overall_patch = patch_ver
+      end
+    else
+      patch_ver_split = patch_ver.split(',')
+      for a_ver in patch_ver_split
+        overall_patch = self.overall_ver_replace(a_ver, overall_patch)
+      end
+    end
+    overall_patch
   end
 
   def self.finish_version_logic(vuln_list)

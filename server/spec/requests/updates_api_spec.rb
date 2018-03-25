@@ -41,7 +41,7 @@ RSpec.describe 'updates API' do
       end
 
       it 'sets scan needs_update' do
-        expect(Scan.find(scan_id).needs_update).to match("yes")
+        expect(Scan.find(scan_id).needs_update).to eql(true)
       end
     end
 
@@ -56,7 +56,7 @@ RSpec.describe 'updates API' do
       end
 
       it 'sets scan needs_update' do
-        expect(Scan.find(scan_id).needs_update).to match("yes")
+        expect(Scan.find(scan_id).needs_update).to eql(true)
       end
     end
 
@@ -71,7 +71,7 @@ RSpec.describe 'updates API' do
       end
 
       it 'sets scan needs_update' do
-        expect(Scan.find(scan_id).needs_update).to match("yes")
+        expect(Scan.find(scan_id).needs_update).to eql(true)
       end
     end
 
@@ -87,7 +87,7 @@ RSpec.describe 'updates API' do
       end
 
       it 'sets scan needs_update' do
-        expect(Scan.find(scan_id).needs_update).to match("no")
+        expect(Scan.find(scan_id).needs_update).to eql(false)
       end
     end
 
@@ -108,7 +108,7 @@ RSpec.describe 'updates API' do
       end
 
       it 'sets scan needs_update' do
-        expect(Scan.find(ruby_scan_id).needs_update).to match("yes")
+        expect(Scan.find(ruby_scan_id).needs_update).to match(true)
       end
     end
   end
@@ -127,7 +127,7 @@ RSpec.describe 'updates API' do
       end
 
       it 'sets scan needs_update' do
-        expect(Scan.find(python_scan_id).needs_update).to match("yes")
+        expect(Scan.find(python_scan_id).needs_update).to eql(true)
       end
     end
   end
