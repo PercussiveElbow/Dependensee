@@ -2,7 +2,7 @@ var axios = require('axios')
 
 const API_URL = 'https://dependensee.tech/api/v1/'
 const WEB_URL = 'https://ui.dependensee.tech/'
-// const ADDRESS  = 'http://localhost';
+// const ADDRESS  = 'http://127.0.0.1';
 // const API_URL = ADDRESS + ':3000/api/v1/'
 // const WEB_URL = ADDRESS + ':8080/'
 
@@ -22,9 +22,16 @@ const TXT_REPORT_URL = '/reports/txt/'
 const ACCESS_TOKEN = 'jwk_access_token'
 
 //Split this file out for tidiness	
-export{saveTokenQR,apiLogin,apiSignUp,getProjects,saveToken,clearToken,getToken,editProject,deleteProject,getProject,getScans,
-	isValidToken,getProfile,postProject,upload,getScan,getDependencies,getCve,getJsonReport,getPdfReport,deleteScan,
-	dependencyLatest,getTxtReport,getExploit,getExploitPlain,getQr,getClientDownload,getClientLinux,updateScan,canExploit,update};
+export{apiLogin,apiSignUp,saveToken,clearToken,getToken,isValidToken,getProfile,
+	getProject,getProjects,postProject,editProject,deleteProject,
+	getScans,getScan,deleteScan,editScan,
+	upload,
+	getDependencies,dependencyLatest,requestUpdate,
+	getJsonReport,getPdfReport,getTxtReport,
+	getExploit,getExploitPlain,canExploit,
+	getCve,
+	getQr,saveTokenQR,
+	getClientDownload,getClientLinux};
 
 //AUTH
 function apiLogin(params) {
@@ -78,7 +85,7 @@ function getScans(id){
 	return common_get(PROJECTS_URL+id+SCANS_URL);
 }
 
-function updateScan(id,scan_id,type){
+function editScan(id,scan_id,type){
 	return axios.put(PROJECTS_URL+id+SCANS_URL+scan_id,{'needs_update': type}, {headers: {'Authorization': getToken()}} ).then(response => response.data);
 }
 
@@ -91,7 +98,7 @@ function deleteScan(id,scan_id){
 }
 
 //UPDATE
-function update(id,scan_id,params,type){
+function requestUpdate(id,scan_id,params,type){
 	return axios.post(PROJECTS_URL+id+SCANS_URL+scan_id + UPDATE_URL + type, params, {headers: {'Authorization': getToken() }} ).then(response => response.data);
 }
 

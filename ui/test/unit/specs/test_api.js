@@ -1,5 +1,14 @@
 import Vue from 'vue'
-import {apiSignUp,saveToken,postProject,getToken,getProject,getProfile,getCve,deleteProject,upload,getScans,getScan,getDependencies,getJsonReport,editProject,deleteScan,getProjects} from '../../../src/utils/api.js'
+import {apiLogin,apiSignUp,saveToken,clearToken,getToken,isValidToken,getProfile,
+  getProject,getProjects,postProject,editProject,deleteProject,
+  getScans,getScan,deleteScan,editScan,
+  upload,
+  getDependencies,dependencyLatest,requestUpdate,
+  getJsonReport,getPdfReport,getTxtReport,
+  getExploit,getExploitPlain,canExploit,
+  getCve,
+  getQr,saveTokenQR,
+  getClientDownload,getClientLinux} from '../../../src/utils/api.js'
 import 'url-search-params-polyfill';
 var FormData = require('form-data');
 var chai = require('chai');
@@ -10,6 +19,9 @@ var fs = require('fs');
 describe('API Tests', function() {
   	var projectId = ''
     var scanId = ''
+    var dependencyId = ''
+    var email = ''
+    var password = ''
 
     it('should sign up correctly and save token successfully', function(done) {
       	var creds = { name: '', email: '', password: ''};
@@ -26,10 +38,19 @@ describe('API Tests', function() {
           formCreds.append('password_confirmation',creds.password);
           var respThing = '';
           console.log("Name: " + creds.name, + " Email: " +creds.email + " Password: " + creds.password);
+          email = creds.email;
+          password = creds.password;
           apiSignUp(formCreds).then(resp => (expect(resp).to.have.property("auth_token") ,saveToken(resp), console.log(getToken()), done() ));
    		  this.timeout(10000);
 
     }, 10000);
+
+    it('should login successfully',function() {
+      var formCreds = new URLSearchParams();
+          formCreds.append('email',email);
+          formCreds.append('password',password);
+        apiLogin(formCreds).then(resp=>(expect(resp).to.have.property("auth_token")));
+    });
 
     it('should get profile successfully', function(){
     	getProfile().then(resp => (expect(resp).to.have.property("name"),expect(resp).to.have.property("email") ) );
@@ -88,7 +109,14 @@ describe('API Tests', function() {
     });
 
     it('should get dependencies successfully', function() {
-    	getDependencies(projectId,scanId).then(resp => { expect(resp.length).to.equal(6) });
+    	getDependencies(projectId,scanId).then(resp => { 
+        expect(resp.length).to.equal(6);
+        dependencyId = resp[0]['id'];
+      });
+    });
+
+    it('should get latest version of dependency sucessfully',function() {
+      dependencyLatest(projectId,scanId,dependencyId).then(resp=> {expect(resp).to.have.property('version')})
     });
 
     it('should get vulnerabilities successfully', function() {
@@ -98,5 +126,29 @@ describe('API Tests', function() {
     it('should delete scan successfully', function() {
     	deleteScan(projectId,scanId).then(resp => { getScans(projectId).then(response => { expect(response.length).to.equal(0) } )});
     });
+
+    it('should clear token', function(){
+      clearToken()
+    });
+
+    it('should get token', function(){
+      expect(getToken()).to.equal(null);
+    });
+
+    it('should set and get token', function(){
+      var token = "newtoken";
+      var tokenHash = {};
+      tokenHash['auth_token'] = token;
+      saveToken(tokenHash);
+      expect(getToken()).to.eql(token);
+    });
+
+    it('should check if can exploit', function(){
+      canExploit('2017-14063').then(resp=> {resp.to.equal(404);});
+    });
+
+    // it('should check if can exploit true', function(){
+    //   canExploit('').to.equal(200);
+    // });
 
   });
