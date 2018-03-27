@@ -16,6 +16,6 @@ else
     cd ../ui/
     npm run build
     cd dist 
-    docker rmi httpd
+    docker rmi -f httpd
     docker run -d -p 8080:80 -e VIRTUAL_HOST=ui.dependensee.tech -e LETSENCRYPT_HOST=ui.dependensee.tech -e LETSENCRYPT_EMAIL=contact@ui.dependensee.tech --network=webproxy -v "$PWD":/usr/local/apache2/htdocs/ httpd
 fi

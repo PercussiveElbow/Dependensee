@@ -4,7 +4,8 @@ class CreateProjects < ActiveRecord::Migration[5.1]
 
     create_table :projects, id: :uuid do |t|
       t.string :name
-      t.boolean :active, default: false
+      t.boolean :auto_update, default: false
+      t.boolean :auto_scan, default: false
       t.string :language
       t.string :owner
       t.string :description
