@@ -15,7 +15,13 @@ else
     docker-compose -f docker-compose_site.yml up -d
     cd ../ui/
     npm run build
-    cd dist 
-    docker rmi -f httpd
-    docker run -d -p 8080:80 -e VIRTUAL_HOST=ui.dependensee.tech -e LETSENCRYPT_HOST=ui.dependensee.tech -e LETSENCRYPT_EMAIL=contact@ui.dependensee.tech --network=webproxy -v "$PWD":/usr/local/apache2/htdocs/ httpd
+    cp Dockerfile dist
+    cp .htaccess dist
+    cd dist
+    docker rmi -f dependensee-ui
+    docker rmi -f apache
+    docker build . --tag=dependensee-ui
+    docker stop apache
+    docker run -d -p 8080:80 -e VIRTUAL_HOST=ui.dependensee.tech -e LETSENCRYPT_HOST=ui.dependensee.tech -e LETSENCRYPT_EMAIL=contact@ui.dependensee.tech --network=webproxy --name apache dependensee-ui
 fi
+
