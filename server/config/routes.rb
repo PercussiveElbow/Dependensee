@@ -8,17 +8,12 @@ Rails.application.routes.draw do
             get 'latest', to: 'latest#show'
           end
           post '/updates/:id', to: 'updates#create'
-
-          resources :reports do
-
-          end
+          resources :reports
         end
         resources :upload
       end
-      resources :cve do
-      end
-      resources :exploit do
-      end
+      resources :cve
+      resources :exploit
       post 'auth/login', to: 'authentication#authenticate'
       post 'signup', to: 'users#create'
       post 'login', to: 'users#login'
@@ -27,4 +22,5 @@ Rails.application.routes.draw do
     end
   end
   apipie
+  root to: 'welcome#show'
 end
