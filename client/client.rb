@@ -11,74 +11,115 @@ class Client
   SERVER_URL = 'https://dependensee.tech/api/v1'
   #SERVER_URL = 'http://127.0.0.1:3000/api/v1'
   AUTH_KEY = ENV['DEPENDENSEE_API_KEY']
-  #AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYjA3MWM1YWMtNTY4Yy00MDRiLWEzYTYtOWFkNDQxNjZkZGQ5IiwiZXhwIjoxNTIyMDA5MDgyfQ.y0bB4WBao7V-DRAeOtscZFo10iGU5TzSStrHZ_A1MZA'
+  #AUTH_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiOWRmNjk1ODEtYmY5ZS00MzAzLWJhYTMtNDVjYWY3MDRjMThhIiwiZXhwIjoxNTIyMzcxMjU1fQ.H-jMS663rkEE36ckz0hhulDVAy2RGfJNssHovx58SgQ'
   ####################END CONFIG###########################
-
-  ARGV[0].nil? ? @project_id = '' : @project_id = ARGV[0]
-  @auto_scan = false;
-  @timeout = 3600;
-  @needs_update = false;
-  @lang=''
-
+  
   #For easier switching between test 
   POM_STRING = '/test/resources/pom.xml.test'
   GEM_STRING = '/test/resources/Gemfile.lock.test'
   PIP_STRING = '/test/resources/requirements.txt.test'
 
-  def self.scan
-    if pip_project?
-      pip_project
-    elsif gem_project?
-      gem_project
-    elsif pom_project?
-      maven_project
+  attr_accessor :project_id
+  attr_accessor :auto_scan
+  attr_accessor :timeout
+  attr_accessor :needs_update
+  attr_accessor :lang
+  attr_accessor :scan_id
+  attr_accessor :config_check_timeout
+
+  def initialize
+    @lang = ''
+  end
+
+  def self.setup(project_id,timeout=3600,config_check_timeout=60)
+    client = self.new
+    client.project_id=project_id
+    client.timeout = timeout
+    client.config_check_timeout=config_check_timeout
+
+    if !client.project_id.nil? and !client.project_id.empty?
+      client.get_existing_project
     else
-      raise StandardError.new 'No #{@lang} Dependency file found. Exiting.'
+      client.lang_check
+      client.create_new_project
+    end
+    client
+  end
+
+  def get_existing_project
+      resp = get_request(SERVER_URL + '/projects/' + @project_id)
+      @lang = JSON[resp.body]['language']
+      @timeout = JSON[resp.body]['timeout']
+  end
+
+  def lang_check
+    if pip_project?
+      @lang='Python'
+    elsif gem_project?
+      @lang='Ruby'
+    elsif pom_project?
+      @lang='Java'
+    else
+      raise StandardError.new 'No #{@lang} dependency file found. Exiting.'
       exit 1
     end
   end
 
-  def self.pom_project?
-    File.exists?(File.expand_path File.dirname(__FILE__) + POM_STRING) and (@lang.empty? or @lang=='Java')
+  def scan
+    case @lang
+      when 'Python'
+        pip_upload
+      when 'Java'
+        pom_upload
+      when 'Ruby'
+        gem_upload
+      else
+        raise StandardError.new 'Language: " #{@lang} " not supported. Exiting.'
+        exit 1
+    end
   end
 
-  def self.gem_project?
-    File.exists?(File.expand_path File.dirname(__FILE__) + GEM_STRING) and (@lang.empty? or @lang=='Ruby')
+  def pom_project?(loc=POM_STRING)
+    file_exists?(loc) and (@lang.empty? or @lang=='Java')
   end
 
-  def self.pip_project?
-    File.exists?(File.expand_path File.dirname(__FILE__) + PIP_STRING) and (@lang.empty? or @lang=='Python')
+  def gem_project?(loc=GEM_STRING)
+    file_exists?(loc) and (@lang.empty? or @lang=='Ruby')
   end
 
-  def self.gem_project
-    @lang='Ruby'
+  def pip_project?(loc=PIP_STRING)
+    file_exists?(loc) and (@lang.empty? or @lang=='Python')
+  end
+
+  def file_exists?(loc)
+    File.exists?(File.expand_path File.dirname(__FILE__) + loc)
+  end
+
+  def gem_upload
     print "Gemfile found \n"
     body = [] << File.read(File.expand_path File.dirname(__FILE__) + GEM_STRING)
-    Client::post('Ruby',body)
+    post_upload('Ruby',body)
   end
 
-  def self.maven_project
-    @lang='Java'
+  def pom_upload
     print "Pomfile found \n"
     body = [] << File.read(File.expand_path File.dirname(__FILE__) + POM_STRING)
-    Client::post('Java',body)
+    post_upload('Java',body)
   end
 
-  def self.pip_project
-    @lang='Python'
+  def pip_upload
     print "Requirements.txt found \n"
     body = [] << File.read(File.expand_path File.dirname(__FILE__) + PIP_STRING)
-    Client::post('Python',body)
+    post_upload('Python',body)
   end
 
-  def self.create_new_project
+  def create_new_project
     print "=======CREATING NEW PROJECT======\n"
     uri = URI.parse(SERVER_URL + '/projects/')
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Post.new(uri.request_uri)
     request['Authorization'] = AUTH_KEY
-    request.body=URI.encode_www_form({name: File.basename(Dir.getwd), language: @lang, active: true, timeout: 3600 })
-
+    request.body=URI.encode_www_form({name: File.basename(Dir.getwd), language: @lang, auto_scan: true,auto_update: true, timeout: @timeout })
     resp = http.request(request)
     if resp.code.to_s == 201.to_s
       @project_id =  JSON[resp.body]['id']
@@ -91,9 +132,8 @@ class Client
     print "=======DONE PROJECT CREATION======\n\n"
   end
 
-  def self.post(language,body)
-    Client::create_new_project if(@project_id.nil? or @project_id.empty?)
-    print "Attempting to upload dependencies..\n"
+  def post_upload(language,body)
+    print "Uploading dependency file.\n"
     uri = URI.parse(SERVER_URL + '/projects/' + @project_id + '/upload')
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Post.new(uri.request_uri)
@@ -102,10 +142,10 @@ class Client
     os = RbConfig::CONFIG['host_os'] + " #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
     request['Source'] = "Client [#{os}]"
     resp = http.request(request)
-    Client::print_scan(resp)
+    print_scan(resp)
   end
 
-  def self.print_scan(resp)
+  def print_scan(resp)
     print "=========SCAN INFORMATION========\n"
     print "Scan id: #{JSON[resp.body]['scan_id']}\n"
     @scan_id = JSON[resp.body]['scan_id']
@@ -120,84 +160,66 @@ class Client
     print "================================\n\n"
   end
 
-  def self.check_config(scan_id)
-    print "==========UPDATING CONFIG==========\n"
-    uri = URI.parse(SERVER_URL + '/projects/' + @project_id + '/scans/' + scan_id)
+  def get_request(location)
+    uri = URI.parse(location)
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Get.new(uri.request_uri)
     request['Authorization'] = AUTH_KEY
-    resp = http.request(request)
+    http.request(request)
+  end
+
+  def check_config(scan_id)
+    check_config_project
+    get_dependencies if check_needs_update?(scan_id)
+  end
+
+  def check_needs_update?(scan_id)
+    resp = get_request(SERVER_URL + '/projects/' + @project_id + '/scans/' + scan_id)
     @needs_update = JSON[resp.body]['needs_update']
     print 'Checking if scan needs update...: ' + "#{@needs_update}\n"
+    return needs_update
+  end
 
-    uri = URI.parse(SERVER_URL + '/projects/' + @project_id)
-    http = Net::HTTP.new(uri.host, uri.port)
-    request = Net::HTTP::Get.new(uri.request_uri)
-    request['Authorization'] = AUTH_KEY
-    resp = http.request(request)
+  def check_config_project
+    print "==========UPDATING CONFIG==========\n"
+    resp = get_request(SERVER_URL + '/projects/' + @project_id)
     @auto_scan = JSON[resp.body]['auto_scan'] ? "true" : "false";
-    print 'Checking if auto-scan is turned on...: ' + @auto_scan + "\n"
     @timeout = JSON[resp.body]['timeout'] 
+    print 'Checking if auto-scan is turned on...: ' + @auto_scan + "\n"
     print 'Checking auto-scan timeout...: ' + @timeout.to_s + ' seconds' + "\n"
     print "========DONE UPDATING CONFIG========\n\n"
-    Client::needs_update?
   end
 
-  def self.needs_update?
-    if @needs_update
-      print "Update needed\n"
-      Client::get_dependencies
-    else
-      print "No update needed currently\n\n"
-    end
-  end
-
-  def self.get_dependencies
-    uri = URI.parse(SERVER_URL + '/projects/' + @project_id + '/scans/' + @scan_id + '/dependencies')
-    http = Net::HTTP.new(uri.host, uri.port)
-    request = Net::HTTP::Get.new(uri.request_uri)
-    request['Authorization'] = AUTH_KEY
-    resp = http.request(request)
+  def get_dependencies
     print "=========UPDATE INFORMATION========\n"
+    resp = get_request(SERVER_URL + '/projects/' + @project_id + '/scans/' + @scan_id + '/dependencies')
     for dep in JSON.parse(resp.body) do
       if !dep['update_to'].nil? and dep['update_to'] != 'null'
         update_dep(dep['name'],dep['update_to'])
       end
     end
-    update_succesful?
     print "===================================\n"
   end
 
-  def self.update_dep(dep_name,update_version)
+  def update_dep(dep_name,update_version)
     dir = "backup/#{Time.now.to_i}"
     FileUtils.mkdir_p dir
     case @lang
     when 'Java'
-      Client::java_update(dep_name,update_version,dir)
+      java_update(dep_name,update_version,dir)
     when 'Ruby'
-      Client::ruby_update(dep_name,update_version,dir)
+      ruby_update(dep_name,update_version,dir)
     when 'Python'
-      Client::python_update(dep_name,update_version,dir)
+      python_update(dep_name,update_version,dir)
     end
   end
 
-  def self.update_succesful?
-    case @lang
-    when 'Java'
-      pom_update_successful?
-    when 'Ruby'
-      #
-    when 'Python'
-      pip_update_successful?
-    end
-  end
-
-  def self.ruby_update(dep_name,update_version,dir)
+  def ruby_update(dep_name,update_version,dir)
       FileUtils.cp(File.expand_path(File.dirname(__FILE__) + GEM_STRING), dir)
       # code = system("bundle exec rails")
   end
 
-  def self.java_update(dep_name,update_version,dir)
+  def java_update(dep_name,update_version,dir)
       original_filename = File.expand_path(File.dirname(__FILE__) + POM_STRING)
       FileUtils.cp(original_filename, dir)
       update_version = update_version.gsub(/[^.0-9]+/,'') if update_version.include? '='
@@ -210,9 +232,10 @@ class Client
           end
       end
     xmldoc.write(File.open(dir + "/pom.xml", "w"))
+    pom_update_successful?
   end
 
-  def self.pom_update_successful?
+  def pom_update_successful?
     # print %x{cd #{dir} && mvn install}
     exit_status = 0
     #exit_status = $?.exitstatus
@@ -225,7 +248,7 @@ class Client
     end
   end
 
-  def self.python_update(dep_name,version,dir)
+  def python_update(dep_name,version,dir)
     FileUtils.cp(File.expand_path(File.dirname(__FILE__) + PIP_STRING), dir)
     filename = "backup/#{Time.now.to_i}/requirements.txt.test"
     File.open(filename, "r") do |file_handle|
@@ -237,9 +260,10 @@ class Client
               end
           end
       end
+      pip_update_successful?
   end
 
-  def self.pip_update_successful?
+  def pip_update_successful?
     # print %x{cd #{dir} && pip install -r requirements.txt.test}
     #exit_status = $?.exitstatus
     exit_status = 0
@@ -252,18 +276,7 @@ class Client
     end
   end
 
-  #On run
-  if __FILE__ == $0 
-    if !:project_id.nil? and !@project_id.empty?
-        uri = URI.parse(SERVER_URL + '/projects/' + @project_id)
-        http = Net::HTTP.new(uri.host, uri.port)
-        request = Net::HTTP::Get.new(uri.request_uri)
-        request['Authorization'] = AUTH_KEY
-        resp = http.request(request)
-        @lang = JSON[resp.body]['language']
-    end
-
-
+  def scan_loop
     while true
       print "=====SCAN STARTED: Beginning at #{Time.new.inspect}========\n"
       scan
@@ -278,3 +291,11 @@ class Client
   end
 
 end
+
+#On run
+if __FILE__ == $0 
+  project_id = ARGV[0].nil? ?  '' : ARGV[0]
+  client = Client.setup(project_id)
+  client.scan_loop()
+end
+
