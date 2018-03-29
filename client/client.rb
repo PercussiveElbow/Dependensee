@@ -6,13 +6,9 @@ require 'rexml/document'
 include REXML
 
 class Client
-  #SERVER_URL = 'https://dependensee.tech/api/v1'
-  SERVER_URL = 'http://127.0.0.1:3000/api/v1'  
-  POM_STRING = '/test/resources/pom.xml.test'
-  GEM_STRING = '/test/resources/Gemfile.lock.test'
-  PIP_STRING = '/test/resources/requirements.txt.test'
-
-  attr_accessor :project_id, :auto_scan, :timeout, :needs_update, :lang, :scan_id, :config_check_timeout, :auth_key
+  SERVER_URL = 'https://dependensee.tech/api/v1'
+  #SERVER_URL = 'http://127.0.0.1:3000/api/v1'  
+  attr_accessor :project_id, :auto_scan, :auto_update, :timeout, :needs_update, :lang, :scan_id, :config_check_timeout, :auth_key, :search_loc
 
   def self.setup(auth_key,project_id)
     client = self.new
@@ -24,20 +20,21 @@ class Client
     client.auto_scan=true
     client.timeout = 3600
     client.config_check_timeout=60
-    auto_update=false
+    client.auto_update=false
     #########################################
 
     if !client.project_id.nil? and !client.project_id.empty?
       client.get_existing_project
     else
       client.lang_check
-      client.create_new_project(auto_update)
+      client.create_new_project
     end
     client
   end
 
   def initialize
     @lang = ''
+    @search_loc = '/test/resources/'
   end
 
   def get_existing_project
@@ -62,29 +59,29 @@ class Client
     case @lang
       when 'Python'
         print "Requirements.txt found \n"
-        loc = PIP_STRING
+        loc = 'requirements.txt'
       when 'Java'
         print "Pomfile found \n"
-        loc = POM_STRING
+        loc = 'pom.xml'
       when 'Ruby'
         print "Gemfile found \n"
-        loc = GEM_STRING
+        loc = 'Gemfile.lock'
       else
         raise StandardError.new "Language: #{@lang} not supported. Exiting."; exit 1
     end
-    body = [] << File.read(File.expand_path File.dirname(__FILE__) + loc)
+    body = [] << File.read(File.expand_path File.dirname(__FILE__) + @search_loc +  loc)
     post_upload(body)
   end
 
-  def pom_project?(loc=POM_STRING)
+  def pom_project?(loc=@search_loc+'pom.xml')
     file_exists?(loc) and (@lang.empty? or @lang=='Java')
   end
 
-  def gem_project?(loc=GEM_STRING)
+  def gem_project?(loc=@search_loc+'Gemfile.lock')
     file_exists?(loc) and (@lang.empty? or @lang=='Ruby')
   end
 
-  def pip_project?(loc=PIP_STRING)
+  def pip_project?(loc=@search_loc+'requirements.txt')
     file_exists?(loc) and (@lang.empty? or @lang=='Python')
   end
 
@@ -92,13 +89,13 @@ class Client
     File.exists?(File.expand_path File.dirname(__FILE__) + loc)
   end
 
-  def create_new_project(auto_update)
+  def create_new_project
     print "=======CREATING NEW PROJECT======\n"
     uri = URI.parse(SERVER_URL + '/projects/')
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Post.new(uri.request_uri)
     request['Authorization'] = @auth_key
-    request.body=URI.encode_www_form({name: File.basename(Dir.getwd), language: @lang, auto_scan: auto_scan,auto_update: auto_update, timeout: @timeout })
+    request.body=URI.encode_www_form({name: File.basename(Dir.getwd), language: @lang, auto_scan: @auto_scan ,auto_update: @auto_update, timeout: @timeout })
     resp = http.request(request)
     if resp.code == 201.to_s
       @project_id =  JSON[resp.body]['id']
@@ -157,18 +154,17 @@ class Client
   end
 
   def needs_update?(scan_id)
-    resp = get_request(SERVER_URL + '/projects/' + @project_id + '/scans/' + scan_id)
-    @needs_update = JSON[resp.body]['needs_update']
+    @needs_update = JSON[get_request(SERVER_URL + '/projects/' + @project_id + '/scans/' + scan_id).body]['needs_update']
     print 'Checking if scan needs update...: ' + "#{@needs_update}\n"
-    return needs_update
+    return @needs_update
   end
 
   def check_config_project
     print "==========UPDATING CONFIG==========\n"
     resp = get_request(SERVER_URL + '/projects/' + @project_id)
-    @auto_scan = JSON[resp.body]['auto_scan'] ? "true" : "false";
+    @auto_scan = JSON[resp.body]['auto_scan'];
     @timeout = JSON[resp.body]['timeout'] 
-    print 'Checking if auto-scan is turned on...: ' + @auto_scan + "\n"
+    print 'Checking if auto-scan is turned on...: ' + @auto_scan.to_s + "\n"
     print 'Checking auto-scan timeout...: ' + @timeout.to_s + ' seconds' + "\n"
     print "========DONE UPDATING CONFIG========\n\n"
   end
@@ -198,12 +194,12 @@ class Client
   end
 
   def ruby_update(dep_name,update_version,dir)
-      FileUtils.cp(File.expand_path(File.dirname(__FILE__) + GEM_STRING), dir)
+      FileUtils.cp(File.expand_path(File.dirname(__FILE__) + @search_loc + '/Gemfile.lock'), dir)
       # code = system("bundle exec rails")
   end
 
   def java_update(dep_name,update_version,dir)
-      original_filename = File.expand_path(File.dirname(__FILE__) + POM_STRING)
+      original_filename = File.expand_path(File.dirname(__FILE__) + @search_loc + '/pom.xml')
       FileUtils.cp(original_filename, dir)
       update_version = update_version.gsub(/[^.0-9]+/,'') if update_version.include? '='
 
@@ -223,16 +219,14 @@ class Client
     exit_status = 0
     #exit_status = $?.exitstatus
     if exit_status!=0
-      print "\n Java update failed.\n"
-      return false
+      print "\n Java update failed.\n"; return false
     else
-      print "\n Java update passed.\n"
-      return true
+      print "\n Java update passed.\n"; return true
     end
   end
 
   def python_update(dep_name,version,dir)
-    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + PIP_STRING), dir)
+    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + @search_loc + '/requirements.txt'), dir)
     filename = "backup/#{Time.now.to_i}/requirements.txt.test"
     File.open(filename, "r") do |file_handle|
           file_handle.each_line do |line|
@@ -251,11 +245,9 @@ class Client
     #exit_status = $?.exitstatus
     exit_status = 0
     if exit_status!=0
-      print "\n Pip update failed.\n"
-      return false
+      print "\n Pip update failed.\n"; return false
     else
-      print "\n Pip update passed.\n"
-      return true
+      print "\n Pip update passed.\n"; return true
     end
   end
 
@@ -266,7 +258,7 @@ class Client
       counter = 0
       while counter <= @timeout
         check_config(@scan_id)
-        print "\nChecking latest config in 60 seconds. Time til next scan is is #{@timeout-counter}s\n\n"
+        print "\nChecking latest config in #{@config_check_timeout} seconds. Time til next scan is is #{@timeout-counter}s\n\n"
         sleep @config_check_timeout
         counter += @config_check_timeout
       end
