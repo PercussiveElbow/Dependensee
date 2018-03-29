@@ -1,7 +1,7 @@
 <template>
 	<div id='graphthing' responsive: true >
        <h1>Vulnerable vs Safe Dependencies</h1> <pie-chart :chart-data="pieData"></pie-chart></br>
-       <h1>Vulnerability Severity</h1> <bar-chart :chart-data="graphData"></bar-chart>
+       <h1>Vulnerability Severity</h1> <bar-chart :chart-data="graphData" :options="graphOptions"></bar-chart>
     </div>
 </template>
 
@@ -28,7 +28,8 @@
 	          labels: [],data: []
 	        },
 	        dependencies: [],
-	        vulns: []
+	        vulns: [],
+          graphOptions: {}
 		}
 	},
     methods: {
@@ -46,6 +47,11 @@
               data: [this.dependencies.length-Object.getOwnPropertyNames(this.vulns).length+1,Object.getOwnPropertyNames(this.vulns).length-1]
             }]
         }
+
+        this.graphOptions = {scales: {
+            yAxes: [{ticks: {beginAtZero:true}}],
+            xAxes: [{ticks: {beginAtZero:true}}]
+          }}
         var scores = []; var labels = [];
         var keys = Object.keys(this.vulns);
         for(var i=0;i<keys.length;i++){

@@ -6,27 +6,28 @@ require 'rexml/document'
 include REXML
 
 class Client
+  ####################START CONFIG#########################
   #SERVER_URL = 'https://dependensee.tech/api/v1'
-  SERVER_URL = 'http://127.0.0.1:3000/api/v1'  
+  SERVER_URL = 'http://127.0.0.1:3000/api/v1'
+  AUTH_KEY = ENV['DEPENDENSEE_API_KEY']
+  ####################END CONFIG###########################
+  
   POM_STRING = '/test/resources/pom.xml.test'
   GEM_STRING = '/test/resources/Gemfile.lock.test'
   PIP_STRING = '/test/resources/requirements.txt.test'
 
-  attr_accessor :project_id, :auto_scan, :timeout, :needs_update, :lang, :scan_id, :config_check_timeout, :auth_key
+  attr_accessor :project_id, :auto_scan, :timeout, :needs_update, :lang, :scan_id, :config_check_timeout
 
-  def self.setup(auth_key,project_id)
+  def initialize
+    @lang = ''
+  end
+
+  def self.setup(project_id,auto_update=false,auto_scan=true,timeout=3600,config_check_timeout=60)
     client = self.new
-    client.auth_key = auth_key
     client.project_id=project_id
-
-    #default config if no project id specified
-    ##########################################
-    client.auto_scan=true
-    client.timeout = 3600
-    client.config_check_timeout=60
-    auto_update=false
-    #########################################
-
+    client.timeout = timeout
+    client.config_check_timeout=config_check_timeout
+    client.auto_scan=auto_scan
     if !client.project_id.nil? and !client.project_id.empty?
       client.get_existing_project
     else
@@ -34,10 +35,6 @@ class Client
       client.create_new_project(auto_update)
     end
     client
-  end
-
-  def initialize
-    @lang = ''
   end
 
   def get_existing_project
@@ -97,12 +94,12 @@ class Client
     uri = URI.parse(SERVER_URL + '/projects/')
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Post.new(uri.request_uri)
-    request['Authorization'] = @auth_key
+    request['Authorization'] = AUTH_KEY
     request.body=URI.encode_www_form({name: File.basename(Dir.getwd), language: @lang, auto_scan: auto_scan,auto_update: auto_update, timeout: @timeout })
     resp = http.request(request)
-    if resp.code == 201.to_s
+    if resp.code.to_s == 201.to_s
       @project_id =  JSON[resp.body]['id']
-    elsif resp.code ==401.to_s
+    elsif resp.code.to_s ==401.to_s
       raise StandardError.new 'Error when creating project, auth key invalid'
     else
       raise StandardError.new 'Error when creating project'
@@ -117,7 +114,7 @@ class Client
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Post.new(uri.request_uri)
     request.body = body.join
-    request['Authorization'] = @auth_key
+    request['Authorization'] = AUTH_KEY
     os = RbConfig::CONFIG['host_os'] + " #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
     request['Source'] = "Client [#{os}]"
     resp = http.request(request)
@@ -143,9 +140,9 @@ class Client
     uri = URI.parse(location)
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Get.new(uri.request_uri)
-    request['Authorization'] = @auth_key
+    request['Authorization'] = AUTH_KEY
     resp = http.request(request)
-    if resp.code ==401.to_s
+    if resp.code.to_s ==401.to_s
       raise StandardError.new 'Error when creating project, auth key invalid'; exit 1;
     end
     resp
@@ -277,5 +274,5 @@ end
 
 if __FILE__ == $0 
   project_id = ARGV[0].nil? ?  '' : ARGV[0]
-  Client.setup(ENV['DEPENDENSEE_API_KEY'],project_id).scan_loop
+  Client.setup(project_id).scan_loop
 end

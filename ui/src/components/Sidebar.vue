@@ -19,7 +19,7 @@
       <md-list-item @click="$router.push('/Projects')"><md-icon>folder</md-icon> <span>Projects</span></md-list-item>
       <md-list-item @click="$refs.bsidebar.toggle()"><md-icon>file_upload</md-icon> <span>Quick Scan</span></md-list-item>
       <md-list-item @click= "show()"><md-icon>search</md-icon> <span>CVE Search</span></md-list-item>
-      <md-list-item @click= "$router.push('/exploit/2016-6662')"><md-icon>warning</md-icon> <span>Exploit Search</span></md-list-item>
+      <md-list-item @click= "show()"><md-icon>warning</md-icon> <span>Exploit Search</span></md-list-item>
     </md-list>
     <md-list>
       <md-divider class="md-inset"></md-divider>

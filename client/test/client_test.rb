@@ -1,5 +1,5 @@
 require 'test/unit'
-require_relative '../../client'
+require_relative '../client'
 
 
 class TestClient < Test::Unit::TestCase

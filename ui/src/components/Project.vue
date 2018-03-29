@@ -43,7 +43,7 @@
           <vue-event-calendar :events="scansCalendar"></vue-event-calendar>
         </md-tab>
         <md-tab id="tab-graph" md-label="Graphs" to="/components/tabs/graph">
-          <div id='graphthing' responsive:true>
+          <div id='graphthing' >
             <h1>Number of dependencies</h1> <line-chart :chart-data="depGraphData"></line-chart>
           </div>
         </md-tab>
@@ -218,6 +218,8 @@
           var aScan = locScans[a];
           this.process_graph(self,data,values,labels,locScans[a])
           }
+
+    
       },
       process_graph(self,data,values,labels,aScan){
           getDependencies(this.$route.params.id,aScan.id).then(response =>  {
