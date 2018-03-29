@@ -1,15 +1,15 @@
 <body>
-  <% if @production %>
     <%= stylesheet_link_tag "welcome_picnic.min.css" %>
     <div class="container" >
       <div class="block">
         <h1>Dependensee</h1>
-        <a href="https://ui.dependensee.tech"  class="button icon-picture">UI</a>
-        <a href="https://dependensee.tech/docs" class="button icon-file-code">Docs</a>
-        <a href="https://github.com/PercussiveElbow/Dependensee" class="button icon-g">Github</a>
+        <% if @production %>
+          <a href="https://ui.dependensee.tech"  class="button icon-picture">UI</a>
+          <a href="https://dependensee.tech/docs" class="button icon-file-code">Docs</a>
+          <a href="https://github.com/PercussiveElbow/Dependensee" class="button icon-g">Github</a>
+        <% end %>
       </div>
     </div>
-  <% end %>
 </body>
 
 <style>
