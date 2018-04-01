@@ -97,6 +97,18 @@ RSpec.describe 'dependencies API' do
         expect(response.body).to match(/Couldn't find Dependency/)
       end
     end
+
+    context 'when dependency id is not uuid' do
+      let(:id) {'blah'}
+
+      it 'returns status code 422' do
+        expect(response).to have_http_status(422)
+      end
+
+      it 'returns an error message' do
+        expect(response.body).to match("Validation error in one or more parameters")
+      end
+    end
   end
 
   describe 'POST /api/v1/projects/:project_id/scans/:scan_id/dependencies' do

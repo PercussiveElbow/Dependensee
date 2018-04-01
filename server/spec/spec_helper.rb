@@ -20,7 +20,11 @@ require 'support/req_spec_helper'
 require 'simplecov'
 require 'simplecov-console'
 SimpleCov.formatter = SimpleCov.formatter = SimpleCov::Formatter::Console
-SimpleCov.start
+
+SimpleCov.start do
+  add_filter 'spec/rails_helper.rb'
+  add_filter 'config/application.rb'
+end
 
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
