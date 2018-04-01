@@ -2,6 +2,8 @@
 require 'rails_helper'
 require_relative '../../../app/lib/common/base_db'
 require 'fileutils'
+require 'git'
+
 
 RSpec.describe BaseDB do
 
@@ -14,4 +16,18 @@ RSpec.describe BaseDB do
     db.update?
     FileUtils.rm_r  '/tmp/dependensee/'+root_loc
   end
+
+
+
+  describe 'error handling ' do
+    before do
+      allow(Git).to receive(:clone).and_raise(StandardError.new('Some git thing happened'))
+    end
+
+    it 'should return an error if git gives an error' do
+      root_loc = 'test/git'
+      expect {BaseDB.new(root_loc,'testdb','testdb','https://github.com/githubtraining/hellogitworld.git')}.to raise_error(Exception, 'Error cloning testdb, exiting.')
+    end
+  end
+
 end

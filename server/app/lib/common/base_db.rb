@@ -14,7 +14,7 @@ class BaseDB
     unless File.directory?(@db_location)
       begin
         Git.clone(url, db_name, :path => root_location)
-        print('Cloning ' + @log_name + ' to: ' + @db_location + "\n")
+        Logger.new(STDOUT).info('Cloning ' + @log_name + ' to: ' + @db_location + "\n")
         $git_timestamp = Time.now.to_i
       rescue Exception => _
         abort 'Error cloning '+ @log_name +', exiting.';
@@ -30,12 +30,10 @@ class BaseDB
   def update?
     needs_save = false
     if $git_timestamp.nil? or ((Time.now.to_i - $git_timestamp) > GIT_TIMEOUT)
-      print("\n" + MsgConstants::UPDATING + @log_name +'..' + "\n")
+      Logger.new(STDOUT).info(MsgConstants::UPDATING + @log_name +'..')
       Git.open(@db_location).pull
       $git_timestamp = Time.now.to_i
       needs_save=true
-    else
-      # print("\nNo need to update #{@log_name}\n")
     end
     needs_save
   end

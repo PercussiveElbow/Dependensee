@@ -16,7 +16,6 @@ require_relative '../app/lib/pom/pom_db'
 require_relative '../app/lib/exploit/exploit_db'
 require_relative '../app/lib/exploit/exploit_db_mappings'
 
-
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -52,9 +51,8 @@ module Untitled1
 
     if defined?(Rails::Server)
       config.after_initialize do
-        # ran_int = Random.rand(100).to_s
         ran_int = 'development'
-        print "\n======DOWNLOADING SOURCES======\n"
+        Logger.new(STDOUT).info '======DOWNLOADING SOURCES======'
         # Clone the RubyCVE Git Repo
         $ruby_db = GemDB::new(ran_int)
         # Clone Maven/Pip CVE Git Repo
@@ -63,8 +61,7 @@ module Untitled1
         $exploit_db = ExploitDB::new(ran_int)
         # Clone exploit DB mappings
         ExploitDbMappings::new(ran_int)
-        print "======DONE DOWNLOADING     ======\n\n"
-
+        Logger.new(STDOUT).info '======DONE DOWNLOADING     ======'
       end
     end
 

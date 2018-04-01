@@ -98,7 +98,7 @@ RSpec.describe 'scans API', type: :request do
   end
 
   describe 'PUT /api/v1/projects/:project_id/scans/:id' do
-    let(:valid_attributes) { { name: 'Test', version: '1.2.3', language: 'ruby', raw: 'fewf', done: false }.to_json }
+    let(:valid_attributes) { { source: 'newsource', needs_update: 'true' }.to_json }
 
     before do
       put "/api/v1/projects/#{project_id}/scans/#{id}", params: valid_attributes, headers: headers
@@ -110,8 +110,8 @@ RSpec.describe 'scans API', type: :request do
       end
 
       it 'updates the scan' do
-        #TODO fix
-        # expect(scan.find(id)).to match('')
+        expect(Scan.find(id).source).to match('newsource')
+        expect(Scan.find(id).needs_update).to match(true)
       end
     end
 

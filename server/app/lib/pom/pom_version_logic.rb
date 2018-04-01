@@ -36,7 +36,7 @@ class PomVersionLogic
     elsif first_ver.include? '<'
       second_ver = first_ver.include?('<=') ? '<='.concat(second_ver)  : '<'.concat(second_ver);
     else
-      puts 'Invalid vuln ver'
+      Logger.new(STDOUT).debug 'Invalid vuln ver'
     end
     self.version_logic(first_ver,dep_ver) || self.version_logic(second_ver,dep_ver)
   end
@@ -58,7 +58,7 @@ class PomVersionLogic
     elsif vuln_ver.include? '=='
       return Gem::Version.new(dep_ver) == Gem::Version.new(vuln_ver.gsub(/[^0-9.]/, ''))
     else
-        puts 'Invalid vuln ver'
+      Logger.new(STDOUT).debug 'Invalid vuln ver'
     end
   end
 
