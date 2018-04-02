@@ -1,0 +1,16 @@
+<head>
+<title><%= project_name %></title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/picnic/6.5.0/picnic.min.css" media="screen"/>
+</head>
+<div>
+  <h1><%= project_name %></h1>
+
+  <% vuln_list.each do |dep, vulns| %>
+
+      <h2><%= dep %></h2>
+      <h3>Safe patched version: <%= vulns['overall_patch'] %></h3>
+      <% vulns['cves'].each do |vuln|%>
+          <h3> <%= vuln.cve %></h3>
+        <%end %>
+  <% end %>
+</div>

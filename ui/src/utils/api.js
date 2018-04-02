@@ -2,9 +2,9 @@ var axios = require('axios')
 
 const API_URL = 'https://dependensee.tech/api/v1/'
 const WEB_URL = 'https://ui.dependensee.tech/'
-// const ADDRESS  = 'http://127.0.0.1';
-// const API_URL = ADDRESS + ':3000/api/v1/'
-// const WEB_URL = ADDRESS + ':8080/'
+//const ADDRESS  = 'http://127.0.0.1';
+//const API_URL = ADDRESS + ':3000/api/v1/'
+//const WEB_URL = ADDRESS + ':8080/'
 
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
@@ -19,6 +19,7 @@ const DEPENDENCIES_URL = '/dependencies/'
 const JSON_REPORT_URL = '/reports/json/'
 const PDF_REPORT_URL = '/reports/pdf/'
 const TXT_REPORT_URL = '/reports/txt/'
+const HTML_REPORT_URL = '/reports/html/'
 const ACCESS_TOKEN = 'jwk_access_token'
 
 //Split this file out for tidiness	
@@ -27,7 +28,7 @@ export{apiLogin,apiSignUp,saveToken,clearToken,getToken,isValidToken,getProfile,
 	getScans,getScan,deleteScan,editScan,
 	upload,
 	getDependencies,dependencyLatest,requestUpdate,
-	getJsonReport,getPdfReport,getTxtReport,
+	getJsonReport,getPdfReport,getTxtReport,getHtmlReport,
 	getExploit,getExploitPlain,canExploit,
 	getCve,
 	getQr,saveTokenQR,
@@ -124,6 +125,15 @@ function getTxtReport(project_id,scan_id){
 	return axios.get(PROJECTS_URL+project_id+SCANS_URL + scan_id + TXT_REPORT_URL,{headers: {'Authorization': getToken()}} ).then (
 			response => { response.data
 			let blob = new Blob([response.data], { type: 'application/text' } ),
+			url = window.URL.createObjectURL(blob)
+			 window.open(url);
+	});
+}
+
+function getHtmlReport(project_id,scan_id){
+	return axios.get(PROJECTS_URL+project_id+SCANS_URL + scan_id + HTML_REPORT_URL,{headers: {'Authorization': getToken()}} ).then (
+			response => { response.data
+			let blob = new Blob([response.data], { type: 'application/html' } ),
 			url = window.URL.createObjectURL(blob)
 			 window.open(url);
 	});

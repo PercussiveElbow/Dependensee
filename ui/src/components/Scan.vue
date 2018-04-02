@@ -43,7 +43,7 @@
 </template>
 
 <script>
-  import {getProject,getScan,getDependencies,getJsonReport,getPdfReport,getTxtReport,requestUpdate} from '../utils/api.js';
+  import {getProject,getScan,getDependencies,getJsonReport,getPdfReport,getTxtReport,getHtmlReport,requestUpdate} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import CVESearch from './CveSearch'
   import DepList from './scan/DepList'
@@ -110,7 +110,7 @@
               { title: 'JSON', handler: () => { this.openJsonReport() } },
               { title: 'PDF', handler: () => { getPdfReport(this.$route.params.project_id,this.$route.params.scan_id) } },
               { title: 'TXT', handler: () => { getTxtReport(this.$route.params.project_id,this.$route.params.scan_id) } },
-              { title: 'HTML', handler: () => {alert('Html reports not implemented yet')}}
+              { title: 'HTML', handler: () => {getHtmlReport(this.$route.params.project_id,this.$route.params.scan_id)}}
            ]
           })
       },

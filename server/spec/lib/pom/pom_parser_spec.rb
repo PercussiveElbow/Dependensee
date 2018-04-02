@@ -7,7 +7,7 @@ RSpec.describe 'PomParser' do
 
   it 'should be created correctly from post' do
     parser = PomParser::load_from_post(File.read File.expand_path(File.dirname(__FILE__) + '../../../resources/pom.xml.test'))
-    expect(parser.load_deps.length).to eql(6)
+    expect(parser.load_deps.length).to eql(7)
   end
 end
 

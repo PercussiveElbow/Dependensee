@@ -14,7 +14,7 @@ class BaseDB
     unless File.directory?(@db_location)
       begin
         Git.clone(url, db_name, :path => root_location)
-        Logger.new(STDOUT).info("Cloning#{log_name} to: #{@db_location}")
+        Logger.new(STDOUT).info("Cloning #{log_name} to: #{@db_location}")
         $git_timestamp = Time.now.to_i
       rescue Exception => _
         abort 'Error cloning '+ @log_name +', exiting.';

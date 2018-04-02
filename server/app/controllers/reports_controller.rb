@@ -33,7 +33,7 @@ class ReportsController < ProjectAndScanValidatorController
       when 'txt'
         return send_file(GenerateReport::gen_txt(@project.name, @vuln_list, @project.language), :filename => MsgConstants::FILENAME_TXT, :type => MsgConstants::MIME_PLAIN)
       when 'html'
-        return send_file(GenerateReport::gen_html(@project.name, @vuln_list, @project.language), :filename => MsgConstants::FILENAME_HTML, :type => MsgConstants::MIME_HTML)
+        return render html: GenerateReport::gen_html(@project.name, @vuln_list, @project.language).html_safe
       else
         return json_response({message: MsgConstants::UPDATE_TYPE_NOT_SUPPORTED}, :unprocessable_entity)
     end

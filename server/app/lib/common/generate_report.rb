@@ -88,7 +88,12 @@ class GenerateReport < BaseReport
   end
 
   def self.gen_html(project_name,vuln_list,project_language)
-
+    template = ERB.new(File.open(Rails.root.join('app','views','reports','reports.html.erb')).read)
+    a = binding
+    a.local_variable_set(:lang,project_language)
+    a.local_variable_set(:vuln_list,vuln_list)
+    a.local_variable_set(:project_name,GenerateReport::get_title(project_name))
+    template.result(a)
   end
 
 
@@ -108,7 +113,7 @@ class GenerateReport < BaseReport
   def self.get_color(cve_score)
     if cve_score.to_f >= 5.0 and cve_score.to_f <7.5
       return MsgConstants::YELLOW
-    elsif cve_score.to_f >= 7.5
+    elsif cve_score.to_f >= 7.0
       return MsgConstants::RED
     else
       return MsgConstants::DEFAULT

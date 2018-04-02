@@ -9,6 +9,7 @@ RSpec.describe 'reports API' do
   let(:project_id) { project.id }
   let(:scan_id) { scan.id}
   let!(:dependency) { create(:dependency, scan_id: scan.id, version: '1.2.3', name: 'org.apache.struts.struts2-core') }
+  let!(:dependency_mid_cvss2) { create(:dependency, scan_id: scan.id, version: '7.0.0', name: 'org.apache.solr.solr-core') }
 
   let! (:ruby_project) {create(:project, language: 'Ruby')}
   let!(:ruby_scan) { create(:scan, project_id: ruby_project.id) }
@@ -33,7 +34,7 @@ RSpec.describe 'reports API' do
       end
 
       it 'returns all dependencies' do
-        expect(json.size).to eq(1)
+        expect(json.size).to eq(2)
       end
     end
 
@@ -196,6 +197,20 @@ RSpec.describe 'reports API' do
 
       it 'returns content type application plain' do
         expect(response.headers['Content-Type']). to eql('application/plain')
+      end
+    end
+  end
+
+  describe 'GET /api/v1/projects/:ruby_project_id/scans/:ruby_scan_id/reports/html' do
+    before { get "/api/v1/projects/#{ruby_project_id}/scans/#{ruby_scan_id}/reports/html", params: {}, headers: headers }
+
+    context 'when project exists' do
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'returns content type application plain' do
+        expect(response.headers['Content-Type']). to eql('text/html; charset=utf-8')
       end
     end
   end
