@@ -26,9 +26,6 @@ class PomVersionLogic
   end
 
   def self.comma_split(vuln_ver,dep_ver)
-    if vuln_ver.count(',') > 1
-      vuln_ver
-    end
     first_ver = vuln_ver.rpartition(',')[0]
     second_ver = vuln_ver.rpartition(',')[2]
     if first_ver.include? '>'

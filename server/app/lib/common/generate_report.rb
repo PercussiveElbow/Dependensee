@@ -87,15 +87,30 @@ class GenerateReport < BaseReport
     end
   end
 
-  def self.gen_html(project_name,vuln_list,project_language)
+  def self.gen_html(project_name,vuln_list,lang)
     template = ERB.new(File.open(Rails.root.join('app','views','reports','reports.html.erb')).read)
     a = binding
-    a.local_variable_set(:lang,project_language)
+    a.local_variable_set(:lang,lang)
+    vuln_list = GenerateReport::gen_html_cve_info(lang,vuln_list)
     a.local_variable_set(:vuln_list,vuln_list)
     a.local_variable_set(:project_name,GenerateReport::get_title(project_name))
     template.result(a)
-  end
+    end
 
+    def self.gen_html_cve_info(lang,vuln_list)
+      vuln_list.each do |dep,vulns|
+        vulns['latest_ver'] = LatestVersion::get_latest(lang,dep)
+        i =0
+        while(i < vulns['cves'].length)
+          cve_info = GenerateReport::get_cve_info(lang,vulns['cves'][i])
+          vulns['cves'][i] = vulns['cves'][i].as_json
+          vulns['cves'][i]['score'] if !cve_info.cvss2.nil?
+          vulns['cves'][i]['desc'] = cve_info.desc if !cve_info.desc.nil?
+          i = i+1
+        end
+      end
+      vuln_list
+    end
 
   def self.get_cve_info(language, vuln)
     case language
@@ -105,8 +120,6 @@ class GenerateReport < BaseReport
         return RubyCve.where(['cve_id = ?', vuln.cve.to_s]).first
       when 'Python'
          return PythonCve.where(['cve_id = ?', vuln.cve.to_s]).first
-      else
-        # raise(Error.new)
     end
   end
 

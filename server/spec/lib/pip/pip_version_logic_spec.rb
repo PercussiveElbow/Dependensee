@@ -18,6 +18,10 @@ RSpec.describe PipVersionLogic do
     expect(PipVersionLogic::is_vuln?('1.1.1', ['<=1.0.0'],[])).to eql(false)
   end
 
+  it 'should return is vuln not 4' do
+    expect(PipVersionLogic::is_vuln?('2.0.0', ['<=1.0.0'],['1.9.9, 1.9.99'])).to eql(false)
+  end
+
   it 'should return is vuln 1' do
     expect(PipVersionLogic::is_vuln?('0.9.9', ['<=1.0.0'],[])).to eql(true)
   end

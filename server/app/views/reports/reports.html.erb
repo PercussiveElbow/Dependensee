@@ -6,11 +6,32 @@
   <h1><%= project_name %></h1>
 
   <% vuln_list.each do |dep, vulns| %>
-
-      <h2><%= dep %></h2>
-      <h3>Safe patched version: <%= vulns['overall_patch'] %></h3>
-      <% vulns['cves'].each do |vuln|%>
-          <h3> <%= vuln.cve %></h3>
-        <%end %>
+          <article class="card">
+            <header>
+              <h2><%= dep %></h2>
+              <h3 class="safe">Safe patched version: <%= vulns['overall_patch'] %></h3>
+              <h3>Latest version: <%= vulns['latest_ver'] %></h3>
+              <h3 class="danger">Our version: <%= vulns['cves'][0]['our_version'] %></h3>
+            </header>
+            <% vulns['cves'].each do |vuln|%>
+                <h4 class="cve">CVE-<%= vuln['cve'] %></h4>
+                <% if !vuln['score'].nil? %><h5> Score: <%= vuln['score'] %> </h5><% end %>
+                <h5>Patched version: <%= vuln['patched_version'] %></h5>
+                <% if !vuln['desc'].nil? %><p><%= vuln['desc'] %></p><% end %>
+            <%end %>
+          </article>
   <% end %>
 </div>
+
+<style>
+  .safe {
+    color: green;
+  }
+
+  .cve {
+    text-decoration: underline;
+  }
+  .danger {
+    color: red;
+  }
+</style>
