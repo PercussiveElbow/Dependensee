@@ -1,6 +1,8 @@
 # spec/lib/pip/pip_version_logic_spec.rb
 require 'rails_helper'
 require_relative '../../../app/lib/pip/pip_version_logic'
+require 'json'
+require 'net/http'
 
 RSpec.describe PipVersionLogic do
 
@@ -32,7 +34,6 @@ RSpec.describe PipVersionLogic do
     expect(PipVersionLogic::is_vuln?('0.9.9', ['==1.0.0'],[])).to eql(false)
   end
 
-
   it 'should return is vuln below' do
     expect(PipVersionLogic::is_vuln?('0.9.9', ['<1.0.0'],[])).to eql(true)
   end
@@ -42,6 +43,16 @@ RSpec.describe PipVersionLogic do
   end
 
   it 'should query pypi correctly ' do
-    expect(PipVersionLogic.get_latest_version('selenium')).to match(/^[0-9][0-9.]*$/)
+    expect(PipVersionLogic.get_latest_version('simplejson')).to match(/^[0-9][0-9.]*$/)
   end
+
+  describe 'it should handle pypi error' do
+    before do
+      allow(Net::HTTP).to receive(:get).and_raise(StandardError.new('Some network error'))
+    end
+    it 'should rescue if pypi query fails' do
+      expect(PipVersionLogic.get_latest_version('selenium')).to eql(MsgConstants::LATEST_VER_ERROR)
+    end
+  end
+
 end

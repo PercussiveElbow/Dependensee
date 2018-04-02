@@ -125,8 +125,6 @@ RSpec.describe 'reports API' do
         expect(response.headers['Content-Type']). to eql('application/pdf')
       end
     end
-
-
   end
 
   describe 'GET /api/v1/projects/:project_id/scans/:scan_id/reports/txt' do
@@ -141,8 +139,6 @@ RSpec.describe 'reports API' do
         expect(response.headers['Content-Type']). to eql('application/plain')
       end
     end
-
-
   end
 
   describe 'GET /api/v1/projects/:python_project_id/scans/:python_scan_id/reports/pdf' do
@@ -156,7 +152,6 @@ RSpec.describe 'reports API' do
       it 'returns content type application pdf' do
         expect(response.headers['Content-Type']). to eql('application/pdf')
       end
-
     end
 
   end
@@ -187,7 +182,6 @@ RSpec.describe 'reports API' do
       it 'returns content type application pdf' do
         expect(response.headers['Content-Type']). to eql('application/pdf')
       end
-
     end
 
   end
@@ -220,6 +214,5 @@ RSpec.describe 'reports API' do
       end
     end
   end
-
 
 end

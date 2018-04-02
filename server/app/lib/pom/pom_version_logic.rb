@@ -76,8 +76,8 @@ class PomVersionLogic
         $p[dep_name] = [query_maven(dep_name), Time.now.to_i]
       end
       return $p[dep_name][0]
-    rescue
-      return MsgConstants::LATEST_VER_ERROR
+      rescue StandardError => e
+        return MsgConstants::LATEST_VER_ERROR
     end
   end
 

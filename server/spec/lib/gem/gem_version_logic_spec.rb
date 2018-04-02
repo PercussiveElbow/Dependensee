@@ -1,6 +1,7 @@
 # spec/lib/gem/gem_version_logic_spec.rb
 require 'rails_helper'
 require_relative '../../../app/lib/gem/gem_version_logic'
+require 'rss'
 
 RSpec.describe GemVersionLogic do
 
@@ -69,7 +70,18 @@ RSpec.describe GemVersionLogic do
   end
 
   it 'should query rubygems correctly ' do
-    # expect(GemVersionLogic.get_latest_version('activerecord')).to match()
+    expect(GemVersionLogic::get_latest_version('nokogiri')).not_to eql(nil)
+    expect(GemVersionLogic::get_latest_version('nokogiri')).not_to eql('Latest version unavailable')
+  end
+
+  describe 'it should handle rubygems error' do
+    before do
+      allow(RSS::Parser).to receive(:parse).and_raise(StandardError.new('Some rss error'))
+    end
+
+    it 'should rescue if rubygems query fails' do
+      expect(GemVersionLogic.get_latest_version('activerecord')).to eql(MsgConstants::LATEST_VER_ERROR)
+    end
   end
 
   it 'should return true if contains a comma and is unaffected' do

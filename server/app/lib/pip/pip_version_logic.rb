@@ -1,5 +1,6 @@
 require 'rss'
 require 'open-uri'
+require_relative '../pom/pom_version_logic'
 
 class PipVersionLogic
 
@@ -31,7 +32,7 @@ class PipVersionLogic
         $py[dep_name] = [query_pypi(dep_name), Time.now.to_i]
       end
       return $py[dep_name][0]
-    rescue
+    rescue StandardError => e
       return MsgConstants::LATEST_VER_ERROR
     end
   end

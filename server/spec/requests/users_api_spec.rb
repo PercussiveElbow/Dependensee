@@ -39,7 +39,6 @@ RSpec.describe 'Users API', type: :request do
     end
   end
 
-
   describe 'POST /api/v1/login' do
     context 'valid request' do
       before { post '/api/v1/login', params: {name:  'abc', email: 'eioefiwfiowefiwo'}.to_json, headers: headers }

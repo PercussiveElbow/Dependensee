@@ -110,7 +110,6 @@ RSpec.describe 'upload API' do
       it 'returns status code 200' do
         expect(response).to have_http_status(201)
       end
-
     end
   end
 

@@ -132,5 +132,4 @@ RSpec.describe 'updates API' do
     end
   end
 
-
 end

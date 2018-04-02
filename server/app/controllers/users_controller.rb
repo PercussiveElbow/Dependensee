@@ -12,7 +12,7 @@ class UsersController < ApplicationController
       # param! :name, String, required: true, format: /A-Za-z+/
       param! :email, String, required: true, format: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
       param! :password, String, required: true
-    rescue
+    rescue StandardError => e
       raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
     end
     user = User.create!(whitelist)

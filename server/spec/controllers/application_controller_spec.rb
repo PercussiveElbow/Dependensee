@@ -8,11 +8,6 @@ RSpec.describe ApplicationController, type: :controller do
   describe '#authorize_request' do
     context 'auth token supplied' do
       before { allow(request).to receive(:headers).and_return(headers) }
-
-      # private method authorize_request returns current user
-      # it 'sets current user' do
-      #   expect(subject.instance_eval { auth_req }).to eq(user)
-      # end
     end
 
     context 'no auth token supplied' do

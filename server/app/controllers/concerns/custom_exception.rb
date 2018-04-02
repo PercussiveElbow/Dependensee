@@ -5,7 +5,6 @@ module CustomException
   class AuthenticationError < StandardError; end
   class MissingToken <StandardError; end
   class InvalidToken <StandardError; end
-  # class ExpiredSignature <StandardError; end
   class EmptyDependencyException < StandardError; end
   class NotFound < StandardError; end
   class ValidationError < StandardError; end
@@ -33,10 +32,6 @@ module CustomException
 
   def no_auth(e)
     json_response({ message: e.message }, :unauthorized)
-  end
-
-  def expired_sig(e)
-    json_response({ message: e.message }, :expired_sig)
   end
 
   def not_found(e)

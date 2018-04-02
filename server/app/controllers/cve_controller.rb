@@ -39,7 +39,7 @@ class CveController < ApplicationController
   def param_validate
     begin
       param! :id, String, required: true, format:  /^\d{4}-(0\d{3}|[1-9]\d{3,})$/
-    rescue
+    rescue StandardError => e
       raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
     end
   end

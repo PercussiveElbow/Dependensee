@@ -1,6 +1,7 @@
 # spec/lib/pom/pom_version_logic_spec.rb
 require 'rails_helper'
 require_relative '../../../app/lib/pom/pom_version_logic'
+require 'net/http'
 
 RSpec.describe PomVersionLogic do
 
@@ -38,6 +39,15 @@ RSpec.describe PomVersionLogic do
 
   it 'should query maven correctly ' do
     expect(PomVersionLogic.get_latest_version('org.asynchttpclient.async-http-client')).to match(/^[0-9][0-9.]*$/)
+  end
+
+  describe 'it should handle maven error' do
+    before do
+      allow(Net::HTTP).to receive(:get).and_raise(StandardError.new('Some network error'))
+    end
+    it 'should rescue if maven query fails' do
+      expect(PomVersionLogic.get_latest_version('com.googlecode.json-simple.json-simple')).to eql(MsgConstants::LATEST_VER_ERROR)
+    end
   end
 
 end

@@ -2,8 +2,6 @@ require 'rss'
 require 'open-uri'
 
 class GemVersionLogic
-  # Constant that I should really change
-  TIMEOUT = 14400
 
   def self.is_vuln?(dep_ver,vuln_ver,unaffected)
     vuln = false
@@ -59,9 +57,7 @@ class GemVersionLogic
   end
 
   def self.query_rubygems(gem_name)
-      open("https://rubygems.org/gems/#{gem_name}/versions.atom") do |rss|
-        return RSS::Parser.parse(rss,false).items[0].title.content.gsub(gem_name,'').tr('()', '')
-      end
+    RSS::Parser.parse("https://rubygems.org/gems/#{gem_name}/versions.atom",false).items[0].title.content.gsub(gem_name,'').tr('()', '')
   end
 
   def self.get_latest_version(gem_name)
@@ -70,8 +66,8 @@ class GemVersionLogic
       if  $h[gem_name].nil? or ((Time.now.to_i - $h[gem_name][1].to_i)> MsgConstants::TIMEOUT)
         $h[gem_name] = [query_rubygems(gem_name), Time.now.to_i]
       end
-      return $p[gem_name][0]
-    rescue
+      return $h[gem_name][0]
+    rescue StandardError => e
       return MsgConstants::LATEST_VER_ERROR
     end
   end
