@@ -1,5 +1,4 @@
 # app/lib/custom_jwt.rb
-
 class CustomJWT
   HMAC = Rails.application.secrets.secret_key_base
 

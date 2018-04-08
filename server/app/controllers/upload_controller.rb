@@ -9,6 +9,7 @@ require_relative '../lib/common/update_deps'
 
 class UploadController < ApplicationController
   before_action :find_project_by_id,:upload_headers
+  # Upload controller /projects/project_id/upload/
 
   api :POST, '/projects/:project_id/upload/', 'Upload a file to load dependencies from'
   def create

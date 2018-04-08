@@ -1,5 +1,5 @@
 class AuthReq
-
+  # Class used to authenticate each request
   def initialize(headers = {})
     @headers = headers
   end

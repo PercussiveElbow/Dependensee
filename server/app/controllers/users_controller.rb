@@ -1,6 +1,7 @@
 # app/controllers/users_controller.rb
 class UsersController < ApplicationController
   skip_before_action :auth_req
+  # Users controller, deals with both /login/ and /signup/
 
   api :POST, '/signup/', 'Signup'
   param :email, String, :desc=> 'Email for account', :required=>true

@@ -2,6 +2,7 @@
 class ScansController < ApplicationController
   before_action :get_project_by_id
   before_action :set_project_scan, only: [:show, :update, :destroy]
+  # Scan controller /projects/project_id/scans/
 
   api :GET, '/projects/:project_id/scans', 'Get all Scans for this Project'
   param :project_id, String, :desc => 'Project ID (UUID) ', :required => true

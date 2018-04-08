@@ -1,5 +1,6 @@
 # app/controllers/profile_controller.rb
 class ProfileController < ApplicationController
+  # Profile controller /profile
 
   api :GET, '/profile/', 'Get your Profile'
   def profile_get

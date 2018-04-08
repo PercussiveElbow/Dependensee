@@ -18,4 +18,5 @@ class AuthUser
     return user if user && user.authenticate(password)
     raise(CustomException::AuthenticationError, MsgConstants::INVALID_CREDS)
   end
+
 end

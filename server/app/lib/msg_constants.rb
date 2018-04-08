@@ -1,5 +1,6 @@
 # app/lib/MsgConstants.rb
 class MsgConstants
+  # Class to deal with constants across the application
 
   # Login/Signup
   INVALID_CREDS='Invalid credentials'

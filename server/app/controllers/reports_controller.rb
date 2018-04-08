@@ -1,3 +1,4 @@
+# app/controllers/reports_controller.rb
 require_relative '../lib/pom/pom_scanner'
 require_relative '../lib/gem/gem_scanner'
 require_relative '../lib/pip/pip_scanner'
@@ -5,6 +6,8 @@ require_relative '../lib/common/generate_report'
 require_relative '../lib/common/generic_version_logic'
 
 class ReportsController < ProjectAndScanValidatorController
+  # Reports controller /projects/project_id/scans/scan_id/reports/
+
   api :GET, '/projects/:project_id/scans/:format', 'Generate a Report for this Scan'
   param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
   param :format, ['json','pdf','txt','html'], :required => true

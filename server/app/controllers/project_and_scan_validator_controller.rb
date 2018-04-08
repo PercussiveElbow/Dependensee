@@ -1,6 +1,7 @@
 # app/controllers/project_and_scan_validator_controller.rb
 class ProjectAndScanValidatorController < ApplicationController
   before_action :get_project_by_id,:get_scan_by_id
+  # Generic class to DRY repetitive logic for project+scans dependent controlelrs
 
   def get_project_by_id
     begin

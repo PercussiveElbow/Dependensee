@@ -1,6 +1,7 @@
 # app/controllers/dependencies_controller.rb
 class DependenciesController < ProjectAndScanValidatorController
   before_action :set_dependency, only: [:show, :update, :destroy]
+  # Dependencies controller /projects/project_id/scans/scan_id/dependencies
 
   def_param_group :project_and_scan do
     param :project_id, String, :desc => 'Project ID (UUID) ', :required => true

@@ -1,11 +1,12 @@
 # app/controllers/updates_controller.rb
-
 require_relative '../lib/common/generic_version_logic'
 require_relative '../lib/common/update_deps'
 require_relative '../lib/msg_constants'
 
 class UpdatesController < ProjectAndScanValidatorController
-  def_param_group :project_and_scan do
+  # Updates /projects/project_id/scans/scan_id
+
+def_param_group :project_and_scan do
     param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
     param :scan_id, String,:desc=> 'Scan ID (UUID)', :required => true
   end

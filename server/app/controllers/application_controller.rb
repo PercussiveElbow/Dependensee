@@ -1,5 +1,6 @@
 # app/controllers/application_controller.rb
 class ApplicationController < ActionController::API
+   # Base application controller, calls auth by default
    before_action :auth_req
    attr_reader :current_user
 

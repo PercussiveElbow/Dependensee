@@ -4,6 +4,7 @@ require_relative '../lib/pip/pip_version_logic'
 
 class LatestController < ProjectAndScanValidatorController
   before_action :set_project_dependency,  only: [:show]
+  # Latest controller /projects/project_id/scans/scan_id/dependencies/dependency_id/latest
 
   def_param_group :project_and_scan do
     param :project_id, String, :desc => 'Project ID (UUID) ', :required => true

@@ -3,6 +3,7 @@ require_relative '../lib/msg_constants'
 class CveController < ApplicationController
   before_action :find_cve_by_id, only: [:show]
   skip_before_action :auth_req
+  # CVE Controller, no auth required
 
   api :GET, '/cve/:cve_id/', 'Get a CVE'
   param :id, String, :desc => 'ID of CVE format 20XX-XXXX', :required=>true

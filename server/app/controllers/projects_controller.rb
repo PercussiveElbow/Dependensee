@@ -1,5 +1,7 @@
+# app/controllers/projects_controller.rb
 class ProjectsController < ApplicationController
   before_action :find_project_by_id, only: [:show, :update, :destroy]
+  # Projects controller /projects/
 
   api :GET, '/projects/', 'Get all Projects'
   def index
