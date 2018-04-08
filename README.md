@@ -19,8 +19,8 @@ It consists of three parts:
 https://dependensee.tech
 
 ## Run it yourself (Requires Docker+Docker Compose)
-```bash
 Download latest release and export a RAILS_SECRET to your shell
+```bash
 docker-compose -f dependensee_release.yml up
 ```
 
