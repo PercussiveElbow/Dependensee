@@ -20,8 +20,8 @@ https://dependensee.tech
 
 ## Run it yourself (Requires Docker+Docker Compose)
 ```bash
-cd server/
-./start.sh
+Download latest release and export a RAILS_SECRET to your shell
+docker-compose -f dependensee_release.yml up
 ```
 
 ## API Documentation
