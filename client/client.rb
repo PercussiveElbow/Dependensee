@@ -6,9 +6,9 @@ require 'rexml/document'
 include REXML
 
 class Client
-  SERVER_URL = 'https://dependensee.tech/api/v1'
-  #SERVER_URL = 'http://127.0.0.1:3000/api/v1'  
-  attr_accessor :project_id, :auto_scan, :auto_update, :timeout, :needs_update, :lang, :scan_id, :config_check_timeout, :auth_key, :search_loc
+  #SERVER_URL = 'https://dependensee.tech/api/v1'
+  SERVER_URL = 'http://127.0.0.1:3000/api/v1'  
+  attr_accessor :project_id, :auto_scan, :auto_update, :timeout, :needs_update, :lang, :scan_id, :config_check_timeout, :auth_key, :search_loc, :test
 
   def self.setup(auth_key,project_id)
     client = self.new
@@ -35,6 +35,7 @@ class Client
   def initialize
     @lang = ''
     @search_loc = '/test/resources/'
+    @test = true
   end
 
   def get_existing_project
@@ -195,7 +196,12 @@ class Client
 
   def ruby_update(dep_name,update_version,dir)
       FileUtils.cp(File.expand_path(File.dirname(__FILE__) + @search_loc + '/Gemfile.lock'), dir)
-      # code = system("bundle exec rails")
+      FileUtils.cp(File.expand_path(File.dirname(__FILE__) + @search_loc + '/Gemfile'), dir)
+      if @test 
+        print %x{cd #{dir} && bundle update #{dep_name}}
+      else
+        print %x{bundle update #{dep_name}}
+      end
   end
 
   def java_update(dep_name,update_version,dir)
@@ -210,7 +216,11 @@ class Client
             node.elements['version'].text = update_version
           end
       end
-    xmldoc.write(File.open(dir + "/pom.xml", "w"))
+    if @test
+      xmldoc.write(File.open(dir + "/pom.xml", "w"))
+    else
+      xmldoc.write(File.open(original_filename, "w"))
+    end
     pom_update_successful?
   end
 
