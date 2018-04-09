@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.com/PercussiveElbow/Dependensee.svg?token=pvU3wgppiDA8vnEdogBq&branch=master)](https://travis-ci.com/PercussiveElbow/Dependensee)<a href="https://codeclimate.com/repos/5aa7e0eca785aa028600a9a2/test_coverage"><img src="https://api.codeclimate.com/v1/badges/6bbd1f9404a076d9834f/test_coverage" /></a><a href="https://codeclimate.com/repos/5aa7e0eca785aa028600a9a2/maintainability"><img src="https://api.codeclimate.com/v1/badges/6bbd1f9404a076d9834f/maintainability" /></a>[![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
-
+[![Build Status](https://api.travis-ci.org/PercussiveElbow/Dependensee.svg?branch=master)](https://travis-ci.org/PercussiveElbow/Dependensee/)<a href="https://codeclimate.com/github/PercussiveElbow/Dependensee/test_coverage"><img src="https://api.codeclimate.com/v1/badges/9a064cca8a09e6e40b1f/test_coverage" /></a><a href="https://codeclimate.com/github/PercussiveElbow/Dependensee/maintainability"><img src="https://api.codeclimate.com/v1/badges/9a064cca8a09e6e40b1f/maintainability" /></a>[![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
+ 
 
 Dependensee is an open source patch/vulnerability manager for third party libraries
 
