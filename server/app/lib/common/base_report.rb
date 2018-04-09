@@ -21,7 +21,7 @@ class BaseReport
     end
   end
 
-  def self.get_title(project) # Get title (projectname+timestamp)
+  def self.get_title(project) # Get title (projectnmae)
     return project + ' ' +  MsgConstants::TITLE + DateTime.now.strftime('%d/%m/%Y  %H:%M')
   end
 

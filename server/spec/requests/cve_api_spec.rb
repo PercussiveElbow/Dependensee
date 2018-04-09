@@ -29,7 +29,7 @@ RSpec.describe 'CVE API', type: :request do
       end
 
       it 'returns a not found message' do
-        expect(response.body).to include("Not found")
+        expect(response.body).to include('Not found')
       end
     end
 
@@ -55,7 +55,7 @@ RSpec.describe 'CVE API', type: :request do
       end
 
       it 'returns a not found message' do
-        expect(response.body).to include("Not found")
+        expect(response.body).to include('Not found')
       end
     end
 
@@ -80,7 +80,7 @@ RSpec.describe 'CVE API', type: :request do
       end
 
       it 'returns a not found message' do
-        expect(response.body).to include("Not found")
+        expect(response.body).to include('Not found')
       end
     end
 

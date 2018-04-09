@@ -34,7 +34,7 @@ class PomVersionLogic
       when /</
         second_ver = first_ver.include?('<=') ? '<='.concat(second_ver)  : '<'.concat(second_ver);
       else
-          Logger.new(STDOUT).debug 'Invalid vuln ver'
+        Logger.new(STDOUT).debug 'Invalid vuln ver'
     end
     self.version_logic_vuln?(first_ver, dep_ver) || self.version_logic_vuln?(second_ver, dep_ver)
   end

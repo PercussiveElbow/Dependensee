@@ -11,7 +11,7 @@ class AuthUser
 
   private
   attr_reader :email, :password
-  def user
+  def user # return user if auth passes
     user = User.find_by(email: email)
     return user if user && user.authenticate(password)
     raise(CustomException::AuthenticationError, MsgConstants::INVALID_CREDS)

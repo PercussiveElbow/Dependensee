@@ -14,7 +14,7 @@ class GenericVersionLogic
     vuln_list
   end
 
-  def self.handle_patched_ver_loop(cve,overall_patch)
+  def self.handle_patched_ver_loop(cve,overall_patch) # Calculates the min version needed given a few patches
     unless cve.patched_version.nil?
       cve.patched_version.each do |patch_ver|
         overall_patch = GenericVersionLogic::overall_ver_replace(patch_ver, overall_patch)
@@ -23,23 +23,21 @@ class GenericVersionLogic
     overall_patch
   end
 
-  def self.overall_ver_replace(patch_ver,overall_patch) # Calculates the min version needed given a few patches
+  def self.overall_ver_replace(patch_ver,overall_patch) # Replaces overall safe version with higher if needed
     if !patch_ver.include? ','
         overall_patch = check_replace(patch_ver,overall_patch)
     else
       patch_ver_split = patch_ver.split(',')
-      for a_ver in patch_ver_split
+      patch_ver_split.each { |a_ver|
         overall_patch = self.overall_ver_replace(a_ver, overall_patch)
-      end
+      }
     end
     overall_patch
   end
 
   def self.check_replace(patch_ver,overall_patch)
     ver = Gem::Version.new(patch_ver.gsub('>', '').gsub(' ','').gsub('=','').gsub('~',''))
-    if ver >= Gem::Version.new(overall_patch.gsub('>', '').gsub(' ', '').gsub('=', '').gsub('~', ''))
-      overall_patch = patch_ver
-    end
+    overall_patch = patch_ver if ver >= Gem::Version.new(overall_patch.gsub('>', '').gsub(' ', '').gsub('=', '').gsub('~', ''))
     overall_patch
   end
 

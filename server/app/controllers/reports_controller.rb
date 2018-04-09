@@ -10,7 +10,7 @@ class ReportsController < ProjectAndScanValidatorController
 
   api :GET, '/projects/:project_id/scans/:format', 'Generate a Report for this Scan'
   param :project_id, String, :desc => 'Project ID (UUID) ', :required => true
-  param :format, ['json','pdf','txt','html'], :required => true
+  param :format, %w(json pdf txt html), :required => true
   def show
     get_vuln_list
     handle_report

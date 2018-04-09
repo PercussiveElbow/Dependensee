@@ -10,7 +10,7 @@ class ProjectsController < ApplicationController
   end
 
   api :POST, '/projects/:id', 'Create a Project'
-  param :language, ['Java','Ruby','Python'], :desc => 'Language' ,:required => true
+  param :language, %w(Java Ruby Python), :desc => 'Language' , :required => true
   param :description, String, :desc => 'Description for the project'
   param :timeout, Integer, :desc => 'Timeout between scans (seconds) '
   param :name, String, :desc => 'Name of the project', :required => true
@@ -29,7 +29,7 @@ class ProjectsController < ApplicationController
 
   api :PUT, '/projects/:id', 'Update an existing Project'
   param :id, String, :desc => 'Project ID (UUID) ', :required => true
-  param :language, ['Java','Ruby','Python'], :desc => 'Language' ,:required => true
+  param :language, %w(Java Ruby Python), :desc => 'Language' , :required => true
   param :description, String, :desc => 'Description for the project'
   param :timeout, Integer, :desc => 'Timeout between scans (seconds) '
   param :name, String, :desc => 'Name of the project', :required => true

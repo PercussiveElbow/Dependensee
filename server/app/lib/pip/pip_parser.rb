@@ -4,9 +4,9 @@ require 'open-uri'
 
 class PipParser < BaseParser
 
-  def initialize(pipfile)
+  def initialize(pip_file)
     super()
-    @pipfile = pipfile
+    @pip_file = pip_file
     @dependencies=parse_deps
   end
 
@@ -20,7 +20,7 @@ class PipParser < BaseParser
 
   def parse_deps # Parse the dependencies found in the requirements.txt file body
     deps = Array.new
-    @pipfile.each_line do |line|
+    @pip_file.each_line do |line|
       line = line.gsub("\n",'')
       name = line.gsub(/[^a-z\-]/i,'')
       version = line.gsub(/[^0-9=>.]/i,'')

@@ -8,7 +8,7 @@ class ApplicationController < ActionController::API
    include CustomException
 
    private
-   def auth_req
+   def auth_req # return authed user
       @current_user = (AuthReq.new(request.headers).call)[:user]
    end
 

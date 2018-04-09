@@ -83,7 +83,7 @@ RSpec.describe 'updates API' do
       end
 
       it 'returns a message' do
-        expect(json['message']).to eql("Update type not supported. Support versions: Safe, Latest, Manual")
+        expect(json['message']).to eql('Update type not supported. Support versions: Safe, Latest, Manual')
       end
 
       it 'sets scan needs_update' do

@@ -1,11 +1,10 @@
 require 'git'
 require 'yaml'
 require 'fileutils'
+require_relative '../msg_constants'
 
 class BaseDB
   # Base DB class for extending. Used for cloning git DBs
-  GIT_TIMEOUT = 150000
-
   @log_name = ''
 
   def initialize(root_location,db_name,log_name,url)
@@ -23,14 +22,14 @@ class BaseDB
     end
   end
 
-  def make_dir(root_location,db_name)
+  def make_dir(root_location,db_name) # make directory to clone to if not exists
     FileUtils.mkdir_p(root_location) unless Dir.exist?(root_location)
     @db_location=root_location + '/' + db_name + '/'
   end
 
   def update? # check if update is needed
     needs_save = false
-    if $git_timestamp.nil? or ((Time.now.to_i - $git_timestamp) > GIT_TIMEOUT)
+    if $git_timestamp.nil? or ((Time.now.to_i - $git_timestamp) > MsgConstants::GIT_TIMEOUT)
       Logger.new(STDOUT).info(MsgConstants::UPDATING + @log_name)
       Git.open(@db_location).pull
       $git_timestamp = Time.now.to_i

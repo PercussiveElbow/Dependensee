@@ -56,7 +56,7 @@ RSpec.describe 'projects API', type: :request do
       end
 
       it 'returns a not found message' do
-        expect(response.body).to include("Validation error in one or more parameters")
+        expect(response.body).to include('Validation error in one or more parameters')
       end
     end
 

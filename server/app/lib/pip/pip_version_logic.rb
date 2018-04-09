@@ -11,9 +11,9 @@ class PipVersionLogic
         vuln=true; break;
       end
     }
-    if !fixed_in.nil?
+    unless fixed_in.nil?
       fixed_in.each { |fixed_ver|
-        if PomVersionLogic::affected?(fixed_ver,dep_ver.gsub(/[^0-9.]/, ''))
+        if PomVersionLogic::affected?(fixed_ver, dep_ver.gsub(/[^0-9.]/, ''))
           vuln=false; break;
         end
       }

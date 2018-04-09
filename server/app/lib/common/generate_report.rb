@@ -21,13 +21,13 @@ class GenerateReport < BaseReport
   def self.gen_txt_insert_cves(file,vulns,project_language) # Txt helper method to insert CVEs
     file.puts(MsgConstants::TEXT_REPORT_CVE)
     file.puts(MsgConstants::TEXT_REPORT_LINE)
-    for vuln in vulns['cves'] do
-      cve_info =  GenerateReport::get_cve_info(project_language,vuln)
+    vulns['cves'].each { |vuln|
+      cve_info = GenerateReport::get_cve_info(project_language, vuln)
       file.puts('CVE: ' + vuln.cve + "\n")
       file.puts(MsgConstants::SCORE + cve_info.cvss2.to_s + "\n")
-      file.puts(MsgConstants::OUR_VERSION + vuln.our_version + MsgConstants::PATCHED_VERSION + vuln.patched_version.to_s + "\n" )
-      file.puts(cve_info.desc + "\n") if !cve_info.desc.nil?
-    end
+      file.puts(MsgConstants::OUR_VERSION + vuln.our_version + MsgConstants::PATCHED_VERSION + vuln.patched_version.to_s + "\n")
+      file.puts(cve_info.desc + "\n") unless cve_info.desc.nil?
+    }
     file.puts(MsgConstants::TEXT_REPORT_LINE)
   end
 
@@ -60,14 +60,14 @@ class GenerateReport < BaseReport
   end
 
   def self.gen_pdf_insert_cves(pdf,vulns,project_language) # Method to write CVEs to pdf
-    for vuln in vulns['cves'] do
+    vulns['cves'].each { |vuln|
       pdf.text 'CVE ' + vuln.cve, :indent_paragraphs => 20, :size => 18
       cve_info = GenerateReport::get_cve_info(project_language, vuln)
-      GenerateReport::gen_pdf_insert_score(pdf,cve_info)
-      GenerateReport::gen_pdf_insert_patched_vers(pdf,vuln)
+      GenerateReport::gen_pdf_insert_score(pdf, cve_info)
+      GenerateReport::gen_pdf_insert_patched_vers(pdf, vuln)
       desc = cve_info.desc.nil? ? '' : cve_info.desc
       pdf.text "\n" + desc + "\n\n", :style => :italic, :indent_paragraphs => 40
-    end
+    }
   end
 
   def self.gen_pdf_insert_versions(pdf,vulns,dep,project_language) # Method to write relevant version info to pdf
@@ -79,7 +79,7 @@ class GenerateReport < BaseReport
 
   def self.gen_pdf_insert_patched_vers(pdf,vuln) # Method to write patched version info to pdf
     pdf.text MsgConstants::VERSIONS, :indent_paragraphs => 40, :size => 16
-    if !vuln.patched_version.nil?
+    unless vuln.patched_version.nil?
       vuln.patched_version.each do |patched_ver_index|
         if GemVersionLogic::is_within_minor_ver(patched_ver_index, vuln.our_version)
           pdf.text MsgConstants::PATCHED_VER + patched_ver_index.to_s, :indent_paragraphs => 60
@@ -116,11 +116,11 @@ class GenerateReport < BaseReport
       vuln_list.each do |dep,vulns|
         vulns['latest_ver'] = LatestVersion::get_latest(lang,dep)
         i =0
-        while(i < vulns['cves'].length)
+        while i < vulns['cves'].length
           cve_info = GenerateReport::get_cve_info(lang,vulns['cves'][i])
           vulns['cves'][i] = vulns['cves'][i].as_json
-          vulns['cves'][i]['score'] if !cve_info.cvss2.nil?
-          vulns['cves'][i]['desc'] = cve_info.desc if !cve_info.desc.nil?
+          vulns['cves'][i]['score'] unless cve_info.cvss2.nil?
+          vulns['cves'][i]['desc'] = cve_info.desc unless cve_info.desc.nil?
           i = i+1
         end
       end

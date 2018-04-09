@@ -9,7 +9,7 @@ class CveController < ApplicationController
   param :id, String, :desc => 'ID of CVE format 20XX-XXXX', :required=>true
   def show
     resp = @cve.as_json
-    if !resp.empty?
+    unless resp.empty?
       resp = has_found_cve(resp)
       return json_response(resp)
     end
@@ -18,9 +18,9 @@ class CveController < ApplicationController
 
   private
   def has_found_cve(resp)
-    if !resp[0].empty?
+    unless resp[0].empty?
       resp = resp[0]
-      resp['language'] = @language if !@language.nil?
+      resp['language'] = @language unless @language.nil?
     end
     resp
   end
@@ -28,11 +28,11 @@ class CveController < ApplicationController
   def find_cve_by_id
       param_validate
       @cve = RubyCve.where(['cve_id = ?', params[:id]])
-      if !set_lang?('Ruby')
+      unless set_lang?('Ruby')
         @cve = JavaCve.where(['cve_id = ?', params[:id]])
-        if !set_lang?('Java')
+        unless set_lang?('Java')
           @cve = PythonCve.where(['cve_id = ?', params[:id]])
-            set_lang?('Python')
+          set_lang?('Python')
         end
       end
   end

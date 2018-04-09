@@ -63,7 +63,7 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'returns auth key' do
-        expect(json['message']).to match("Logged on. New Token generated")
+        expect(json['message']).to match('Logged on. New Token generated')
       end
 
       it 'returns auth token' do

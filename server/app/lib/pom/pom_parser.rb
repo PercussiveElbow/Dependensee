@@ -27,7 +27,7 @@ class PomParser < BaseParser
     deps.each { |dep|
       dep['groupId'] = dep['groupId'].downcase
       dep['artifactId'] = dep['artifactId'].downcase
-      raise(CustomException::DependencyFileError, MsgConstants::DEPENDENCY_FILE_ERROR) if !dep['groupId'].force_encoding("UTF-8").ascii_only? or dep['groupId'].length > 50 or dep['artifactId'].length > 50
+      raise(CustomException::DependencyFileError, MsgConstants::DEPENDENCY_FILE_ERROR) if !dep['groupId'].force_encoding('UTF-8').ascii_only? or dep['groupId'].length > 50 or dep['artifactId'].length > 50
     }
     deps
   end

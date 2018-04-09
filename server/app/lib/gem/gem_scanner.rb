@@ -9,7 +9,7 @@ class GemScanner < BaseScanner
     super(deps)
   end
 
-  def scan
+  def scan # Scan ruby dependencies for CVEs
     $ruby_db.update?
     vuln_hash = {}
     @deps.each do |spec|
@@ -36,14 +36,12 @@ class GemScanner < BaseScanner
     vuln_hash
   end
 
-  def get_needed_patches(gem_version, patched_versions)
+  def get_needed_patches(gem_version, patched_versions) # get any pathes needed
     needed_patches = Array.new
     unless gem_version.nil? or patched_versions.nil?
       patched_versions.each do |patched_version|
 
-        if patched_version.to_s.include?(',') # for weird case where there is a comma present in versioning
-          return nil
-        end
+        return nil if patched_version.to_s.include?(',') # for weird case where there is a comma present in versioning
 
         if GemVersionLogic::is_above_patched_ver(gem_version, patched_version)
           return nil

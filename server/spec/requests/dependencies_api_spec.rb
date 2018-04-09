@@ -106,7 +106,7 @@ RSpec.describe 'dependencies API' do
       end
 
       it 'returns an error message' do
-        expect(response.body).to match("Validation error in one or more parameters")
+        expect(response.body).to match('Validation error in one or more parameters')
       end
     end
   end

@@ -11,7 +11,7 @@ class GemParser < BaseParser
     @sources=@lockfile.sources
   end
 
-  def self.load_from_post(body)
+  def self.load_from_post(body) # parse lockfile body into lockfile object
     begin
       lockfile = Bundler::LockfileParser.new(body.to_s)
     rescue
@@ -20,7 +20,7 @@ class GemParser < BaseParser
       self.new(lockfile)
   end
 
-  def load_deps
+  def load_deps # return the dependencies from the lockfile
     specs = @lockfile.specs
     specs.each { |spec|
       spec

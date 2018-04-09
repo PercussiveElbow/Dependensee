@@ -13,93 +13,93 @@
 ActiveRecord::Schema.define(version: 20171129201725) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-  enable_extension "pgcrypto"
+  enable_extension 'plpgsql'
+  enable_extension 'pgcrypto'
 
-  create_table "dependencies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
-    t.string "version"
-    t.string "raw"
-    t.string "update_to"
-    t.uuid "scan_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["scan_id"], name: "index_dependencies_on_scan_id"
+  create_table 'dependencies', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
+    t.string 'name'
+    t.string 'version'
+    t.string 'raw'
+    t.string 'update_to'
+    t.uuid 'scan_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['scan_id'], name: 'index_dependencies_on_scan_id'
   end
 
-  create_table "exploits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.text "cves", default: [], array: true
-    t.string "edb_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table 'exploits', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
+    t.text 'cves', default: [], array: true
+    t.string 'edb_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
-  create_table "java_cves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "title"
-    t.string "date"
-    t.string "desc"
-    t.string "cvss2"
-    t.string "cve_id"
-    t.text "references"
-    t.text "affected"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table 'java_cves', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
+    t.string 'title'
+    t.string 'date'
+    t.string 'desc'
+    t.string 'cvss2'
+    t.string 'cve_id'
+    t.text 'references'
+    t.text 'affected'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
-  create_table "projects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
-    t.boolean "auto_update", default: false
-    t.boolean "auto_scan", default: false
-    t.string "language"
-    t.string "description"
-    t.string "owner"
-    t.integer "timeout", default: 3600
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table 'projects', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
+    t.string 'name'
+    t.boolean 'auto_update', default: false
+    t.boolean 'auto_scan', default: false
+    t.string 'language'
+    t.string 'description'
+    t.string 'owner'
+    t.integer 'timeout', default: 3600
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
-  create_table "python_cves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "title"
-    t.string "date"
-    t.string "desc"
-    t.string "cvss2"
-    t.string "cve_id"
-    t.text "references"
-    t.text "affected"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table 'python_cves', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
+    t.string 'title'
+    t.string 'date'
+    t.string 'desc'
+    t.string 'cvss2'
+    t.string 'cve_id'
+    t.text 'references'
+    t.text 'affected'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
-  create_table "ruby_cves", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "dependency_name"
-    t.string "date"
-    t.string "desc"
-    t.string "cvss2"
-    t.string "cve_id"
-    t.text "patched_versions", default: [], array: true
-    t.text "unaffected_versions", default: [], array: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table 'ruby_cves', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
+    t.string 'dependency_name'
+    t.string 'date'
+    t.string 'desc'
+    t.string 'cvss2'
+    t.string 'cve_id'
+    t.text 'patched_versions', default: [], array: true
+    t.text 'unaffected_versions', default: [], array: true
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
-  create_table "scans", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "date"
-    t.string "source"
-    t.boolean "needs_update", default: false
-    t.uuid "project_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["project_id"], name: "index_scans_on_project_id"
+  create_table 'scans', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
+    t.string 'date'
+    t.string 'source'
+    t.boolean 'needs_update', default: false
+    t.uuid 'project_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index ['project_id'], name: 'index_scans_on_project_id'
   end
 
-  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
-    t.string "email"
-    t.string "password_digest"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table 'users', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
+    t.string 'name'
+    t.string 'email'
+    t.string 'password_digest'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
-  add_foreign_key "dependencies", "scans"
-  add_foreign_key "scans", "projects"
+  add_foreign_key 'dependencies', 'scans'
+  add_foreign_key 'scans', 'projects'
 end

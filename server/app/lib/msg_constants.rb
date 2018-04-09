@@ -79,6 +79,7 @@ class MsgConstants
   # DB
   BASE_LOC = '/tmp/dependensee/'
   UPDATING = 'Updating '
+  GIT_TIMEOUT = 150000
 
   # Exploit DB
   EXPLOIT_DB_NAME = 'Exploit DB'

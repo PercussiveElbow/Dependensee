@@ -1,5 +1,4 @@
 require 'rss'
-require 'open-uri'
 
 class GemVersionLogic
 
@@ -16,10 +15,9 @@ class GemVersionLogic
 
   def self.unaffected?(gem_ver, safe_ver)
     if safe_ver.include? ','
-      safe_ver_split = safe_ver.split(',')
-      for ver in safe_ver_split
-        return true if GemVersionLogic::unaffected?(gem_ver,ver)
-      end
+      safe_ver.split(',').each { |ver|
+        return true if GemVersionLogic::unaffected?(gem_ver, ver)
+      }
       return false
     end
     GemVersionLogic::unaffected_logic(gem_ver,safe_ver)
@@ -38,15 +36,15 @@ class GemVersionLogic
     end
   end
 
-  def self.is_within_minor_ver(gem_ver,patch_ver)
+  def self.is_within_minor_ver(gem_ver,patch_ver) # Method to calculate whether a major update will be needed
     return patch_ver.to_s.tr('>=<~ ', '')[0,3] == gem_ver.to_s.tr('>=<~ ', '')[0,3]
   end
 
-  def self.query_rubygems(gem_name)
+  def self.query_rubygems(gem_name) # call rubygems to get latest version of gem
     RSS::Parser.parse("https://rubygems.org/gems/#{gem_name}/versions.atom",false).items[0].title.content.gsub(gem_name,'').tr('()', '')
   end
 
-  def self.get_latest_version(gem_name)
+  def self.get_latest_version(gem_name) # check cache for dependency version, otherwise call rubygems
     begin
       $h = Hash.new if $h.nil?
       if  $h[gem_name].nil? or ((Time.now.to_i - $h[gem_name][1].to_i)> MsgConstants::TIMEOUT)

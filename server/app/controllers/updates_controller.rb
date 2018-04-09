@@ -13,7 +13,7 @@ def_param_group :project_and_scan do
 
   api :POST, '/projects/:project_id/scans/:scan_id/updates/:type', 'Request an Update'
   param_group :project_and_scan
-  param :type, ['safe','latest','manual'], :required => true
+  param :type, %w(safe latest manual), :required => true
   def create
     case params[:id]
       when 'latest'
