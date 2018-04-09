@@ -1,6 +1,7 @@
 
 class LatestVersion
 
+  # Code to call relevant latest version method
   def self.get_latest(language, dep_name)
     case language
       when 'Ruby'

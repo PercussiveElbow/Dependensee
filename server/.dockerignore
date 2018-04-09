@@ -1,6 +1,7 @@
 .git*
 log/*
 Dockerfile
+coverage/*
 db/*.sqlite3
 db/*.sqlite3-journal
 .README.md

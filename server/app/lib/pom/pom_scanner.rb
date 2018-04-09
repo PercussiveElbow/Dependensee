@@ -7,7 +7,7 @@ class PomScanner < BaseScanner
     super(deps)
   end
 
-  def scan
+  def scan # scan java dependencies for any vulnerabilities
     $maven_pip_db.update?
     vuln_hash = {}
     @deps.each do |dep|

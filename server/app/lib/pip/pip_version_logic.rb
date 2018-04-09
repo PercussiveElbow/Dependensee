@@ -21,11 +21,11 @@ class PipVersionLogic
     return vuln
   end
 
-  def self.query_pypi(dep_name)
+  def self.query_pypi(dep_name) # Query pypi to get latest version for a dependency
       return JSON.parse( Net::HTTP.get(URI("https://pypi.python.org/pypi/#{dep_name}/json")))['info']['version']
   end
 
-  def self.get_latest_version(dep_name)
+  def self.get_latest_version(dep_name) # Check cache for latest version, if non existing call pypi
     begin
       $py = Hash.new if $py.nil?
       if  $py[dep_name].nil? or ((Time.now.to_i - $py[dep_name][1].to_i)> MsgConstants::TIMEOUT)

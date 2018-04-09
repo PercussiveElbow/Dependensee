@@ -18,7 +18,7 @@ class PipParser < BaseParser
     @dependencies
   end
 
-  def parse_deps
+  def parse_deps # Parse the dependencies found in the requirements.txt file body
     deps = Array.new
     @pipfile.each_line do |line|
       line = line.gsub("\n",'')

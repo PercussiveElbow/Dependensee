@@ -18,7 +18,7 @@ class PomParser < BaseParser
     @dependencies
   end
 
-  def parse_deps
+  def parse_deps # Parse the dependencies found in pomfile body
     deps = Array.new
     Nokogiri::XML(@pomfile).css('dependency').each do  |dep|
       deps.push({'groupId'=>dep.at_css('groupId').content,'artifactId'=>dep.at_css('artifactId').content,'version'=>dep.at_css('version').content})

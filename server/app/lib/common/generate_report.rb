@@ -1,10 +1,10 @@
-require_relative '../msg_constants'
 require_relative 'base_report'
 require_relative 'latest_version'
 
 class GenerateReport < BaseReport
 
-  def self.gen_txt(project_name, vuln_list,project_language)
+  # PLAINTEXT GENERATION METHODS
+  def self.gen_txt(project_name, vuln_list,project_language) # Method to generate text report
     filename =  self.add_dir_return_filename + '.txt'
     open(filename, 'a') { |file|
       file.puts(GenerateReport::get_title(project_name) + "\n")
@@ -18,7 +18,7 @@ class GenerateReport < BaseReport
     filename
   end
 
-  def self.gen_txt_insert_cves(file,vulns,project_language)
+  def self.gen_txt_insert_cves(file,vulns,project_language) # Txt helper method to insert CVEs
     file.puts(MsgConstants::TEXT_REPORT_CVE)
     file.puts(MsgConstants::TEXT_REPORT_LINE)
     for vuln in vulns['cves'] do
@@ -31,7 +31,10 @@ class GenerateReport < BaseReport
     file.puts(MsgConstants::TEXT_REPORT_LINE)
   end
 
-  def self.gen_pdf(project_name,vuln_list,project_language)
+
+
+  # PDF GENERATION
+  def self.gen_pdf(project_name,vuln_list,project_language) # Method to generate PDF report
     filename = self.add_dir_return_filename + '.pdf'
     Prawn::Document.generate(filename) do |pdf|
       pdf.draw_text GenerateReport::get_title(project_name), :at => [10, 700], :size => 26
@@ -45,9 +48,9 @@ class GenerateReport < BaseReport
     filename
   end
 
-  def self.gen_pdf_insert_score(pdf,cve_info)
+  def self.gen_pdf_insert_score(pdf,cve_info) # Method to write score to pdf with correct color
     cve_score= cve_info.cvss2
-    cve_color = GenerateReport::get_color(cve_score)
+    cve_color = GenerateReport::gen_pdf_get_color(cve_score)
 
     if cve_score.nil?;
       pdf.text MsgConstants::SCORE + MsgConstants::NO_CVE_SCORE, :color => MsgConstants::GREY, :indent_paragraphs => 40
@@ -56,7 +59,7 @@ class GenerateReport < BaseReport
     end
   end
 
-  def self.gen_pdf_insert_cves(pdf,vulns,project_language)
+  def self.gen_pdf_insert_cves(pdf,vulns,project_language) # Method to write CVEs to pdf
     for vuln in vulns['cves'] do
       pdf.text 'CVE ' + vuln.cve, :indent_paragraphs => 20, :size => 18
       cve_info = GenerateReport::get_cve_info(project_language, vuln)
@@ -67,14 +70,14 @@ class GenerateReport < BaseReport
     end
   end
 
-  def self.gen_pdf_insert_versions(pdf,vulns,dep,project_language)
+  def self.gen_pdf_insert_versions(pdf,vulns,dep,project_language) # Method to write relevant version info to pdf
     pdf.text dep ,:size => 25
     pdf.text MsgConstants::CURRENT_VER + vulns['cves'][0].instance_variable_get('@our_version') +"\n", :size => 16, :color => MsgConstants::RED
     pdf.text MsgConstants::OVERALL_SAFE_VER + vulns['overall_patch'] +"\n", :size => 16, :color => MsgConstants::GREEN
     pdf.text MsgConstants::LATEST_VER + ' ' + LatestVersion::get_latest(project_language,dep) + "\n\n", :size => 16
   end
 
-  def self.gen_pdf_insert_patched_vers(pdf,vuln)
+  def self.gen_pdf_insert_patched_vers(pdf,vuln) # Method to write patched version info to pdf
     pdf.text MsgConstants::VERSIONS, :indent_paragraphs => 40, :size => 16
     if !vuln.patched_version.nil?
       vuln.patched_version.each do |patched_ver_index|
@@ -87,7 +90,19 @@ class GenerateReport < BaseReport
     end
   end
 
-  def self.gen_html(project_name,vuln_list,lang)
+  def self.gen_pdf_get_color(cve_score) # Method to get correct color
+    if cve_score.to_f >= 5.0 and cve_score.to_f <7.5
+      return MsgConstants::YELLOW
+    elsif cve_score.to_f >= 7.0
+      return MsgConstants::RED
+    else
+      return MsgConstants::DEFAULT
+    end
+  end
+
+
+  # HTML GENERATION
+  def self.gen_html(project_name,vuln_list,lang) # Method to generate HTML report
     template = ERB.new(File.open(Rails.root.join('app','views','reports','reports.html.erb')).read)
     a = binding
     a.local_variable_set(:lang,lang)
@@ -97,7 +112,7 @@ class GenerateReport < BaseReport
     template.result(a)
     end
 
-    def self.gen_html_cve_info(lang,vuln_list)
+    def self.gen_html_cve_info(lang,vuln_list) # Method to get CVE info for HTML report
       vuln_list.each do |dep,vulns|
         vulns['latest_ver'] = LatestVersion::get_latest(lang,dep)
         i =0
@@ -111,30 +126,5 @@ class GenerateReport < BaseReport
       end
       vuln_list
     end
-
-  def self.get_cve_info(language, vuln)
-    case language
-      when 'Java'
-        return JavaCve.where(['cve_id = ?', vuln.cve.to_s]).first
-      when 'Ruby'
-        return RubyCve.where(['cve_id = ?', vuln.cve.to_s]).first
-      when 'Python'
-         return PythonCve.where(['cve_id = ?', vuln.cve.to_s]).first
-    end
-  end
-
-  def self.get_color(cve_score)
-    if cve_score.to_f >= 5.0 and cve_score.to_f <7.5
-      return MsgConstants::YELLOW
-    elsif cve_score.to_f >= 7.0
-      return MsgConstants::RED
-    else
-      return MsgConstants::DEFAULT
-    end
-  end
-
-  def self.get_title(project)
-    return project + ' ' +  MsgConstants::TITLE + DateTime.now.strftime('%d/%m/%Y  %H:%M')
-  end
 
 end

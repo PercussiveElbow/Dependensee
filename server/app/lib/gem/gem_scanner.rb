@@ -41,8 +41,7 @@ class GemScanner < BaseScanner
     unless gem_version.nil? or patched_versions.nil?
       patched_versions.each do |patched_version|
 
-        if patched_version.to_s.include?(',')
-          # TODO add fix for weird case with commas in .yml resulting in array
+        if patched_version.to_s.include?(',') # for weird case where there is a comma present in versioning
           return nil
         end
 

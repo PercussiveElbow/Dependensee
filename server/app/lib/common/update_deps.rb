@@ -1,5 +1,4 @@
 
-
 class UpdateDeps
 
   def self.get_vulns(project,scan)

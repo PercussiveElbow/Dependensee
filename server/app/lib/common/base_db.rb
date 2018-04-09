@@ -3,6 +3,7 @@ require 'yaml'
 require 'fileutils'
 
 class BaseDB
+  # Base DB class for extending. Used for cloning git DBs
   GIT_TIMEOUT = 150000
 
   @log_name = ''
@@ -27,7 +28,7 @@ class BaseDB
     @db_location=root_location + '/' + db_name + '/'
   end
 
-  def update?
+  def update? # check if update is needed
     needs_save = false
     if $git_timestamp.nil? or ((Time.now.to_i - $git_timestamp) > GIT_TIMEOUT)
       Logger.new(STDOUT).info(MsgConstants::UPDATING + @log_name)
