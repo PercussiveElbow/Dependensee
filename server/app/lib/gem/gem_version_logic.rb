@@ -4,12 +4,13 @@ require 'open-uri'
 class GemVersionLogic
 
   def self.is_above_patched_ver(gem_ver, patch_ver)
-    if patch_ver.include? '>='
-      return Gem::Version.new(gem_ver) >= Gem::Version.new(patch_ver.gsub('>=', '').gsub(' ',''))
-    elsif patch_ver.include? '~>'
-      return Gem::Dependency.new('', patch_ver).match?('', gem_ver)
-    else #todo check how semantics work here
-      return false
+    case patch_ver
+      when />=/
+        return Gem::Version.new(gem_ver) >= Gem::Version.new(patch_ver.gsub('>=', '').gsub(' ',''))
+      when /~>/
+        return Gem::Dependency.new('', patch_ver).match?('', gem_ver)
+      else
+        return false
     end
   end
 
@@ -17,20 +18,23 @@ class GemVersionLogic
     if safe_ver.include? ','
       safe_ver_split = safe_ver.split(',')
       for ver in safe_ver_split
-        if GemVersionLogic::unaffected?(gem_ver,ver)
-          return true
-        end
+        return true if GemVersionLogic::unaffected?(gem_ver,ver)
       end
       return false
     end
-    if safe_ver.include? '<'
-      if safe_ver.include? '<='; return (Gem::Version.new(gem_ver) < Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))) | (Gem::Version.new(gem_ver) == Gem::Version.new(safe_ver.gsub(/[^0-9.]/, '')))
-      else return Gem::Version.new(gem_ver) < Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))
-      end
-    elsif safe_ver.include? '>'
-      if safe_ver.include? '>='; return (Gem::Version.new(gem_ver) > Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))) | (Gem::Version.new(gem_ver) == Gem::Version.new(safe_ver.gsub(/[^0-9.]/, '')))
-      else; return is_within_minor_ver(gem_ver,safe_ver) && Gem::Version.new(gem_ver) > Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))
-      end
+    GemVersionLogic::unaffected_logic(gem_ver,safe_ver)
+  end
+
+  def self.unaffected_logic(gem_ver,safe_ver)
+    case safe_ver
+      when /<=/
+        return (Gem::Version.new(gem_ver) < Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))) | (Gem::Version.new(gem_ver) == Gem::Version.new(safe_ver.gsub(/[^0-9.]/, '')))
+      when /</
+        return Gem::Version.new(gem_ver) < Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))
+      when />=/
+        return (Gem::Version.new(gem_ver) > Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))) | (Gem::Version.new(gem_ver) == Gem::Version.new(safe_ver.gsub(/[^0-9.]/, '')))
+      when />/
+        return is_within_minor_ver(gem_ver,safe_ver) && Gem::Version.new(gem_ver) > Gem::Version.new(safe_ver.gsub(/[^0-9.]/, ''))
     end
   end
 
