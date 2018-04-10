@@ -14,7 +14,6 @@ class Client
     client = self.new
     client.auth_key = auth_key
     client.project_id=project_id
-
     #default config if no project id specified
     ##########################################
     client.auto_scan=true
@@ -175,9 +174,7 @@ class Client
     print "=========UPDATE INFORMATION========\n"
     resp = get_request(SERVER_URL + '/projects/' + @project_id + '/scans/' + @scan_id + '/dependencies')
     for dep in JSON.parse(resp.body) do
-      if !dep['update_to'].nil? and dep['update_to'] != 'null'
-        update_dep(dep['name'],dep['update_to'])
-      end
+        update_dep(dep['name'],dep['update_to']) if !dep['update_to'].nil? and dep['update_to'] != 'null'
     end
     print "===================================\n"
   end
@@ -199,11 +196,7 @@ class Client
       FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/' + @search_loc + '/Gemfile.lock'), dir)
       FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/' + @search_loc + '/Gemfile'), dir)
       if @overwrite 
-        if search_loc.length > 1
-          print %x{cd #{search_loc} && bundle update #{dep_name}}
-        else
-          print %x{bundle update #{dep_name}}
-        end
+        search_loc.length > 1 ? print(%x{cd #{search_loc} && bundle update #{dep_name}}) : print(%x{bundle update #{dep_name}})
       else
         print %x{cd #{dir} && bundle update #{dep_name}}
       end
@@ -221,11 +214,7 @@ class Client
             node.elements['version'].text = update_version
           end
       end
-    if @overwrite
-      xmldoc.write(File.open(original_filename, "w"))
-    else
-      xmldoc.write(File.open(dir + "/pom.xml", "w"))
-    end
+    @overwrite ? xmldoc.write(File.open(original_filename, "w")) : xmldoc.write(File.open(dir + "/pom.xml", "w"))
     pom_update_successful?
   end
 

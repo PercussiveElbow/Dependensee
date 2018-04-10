@@ -75,12 +75,14 @@ class TestClient < Test::Unit::TestCase
 
 	def test_scan
 		@client = Client.setup(@client.auth_key,create_project('Java'))
+		pre_scan
 		@client.scan
 		assert_not_nil(@client.scan_id)
 	end
 
 	def test_needs_update
 		@client = Client.setup(@client.auth_key,create_project('Java'))
+		pre_scan
 		@client.scan
 		assert_equal(true,@client.needs_update?(@client.scan_id))
 	end
