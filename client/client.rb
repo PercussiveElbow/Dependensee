@@ -10,10 +10,11 @@ class Client
   SERVER_URL = 'http://127.0.0.1:3000/api/v1'  
   attr_accessor :project_id, :auto_scan, :auto_update, :timeout, :needs_update, :lang, :scan_id, :config_check_timeout, :auth_key, :search_loc, :overwrite
 
-  def self.setup(auth_key,project_id)
+  def self.setup(auth_key,project_id,overwrite)
     client = self.new
     client.auth_key = auth_key
     client.project_id=project_id
+    client.overwrite=overwrite
     #default config if no project id specified
     ##########################################
     client.auto_scan=true
@@ -180,7 +181,7 @@ class Client
   end
 
   def update_dep(dep_name,update_version)
-    dir = "backup/#{Time.now.to_i}"
+    dir = "dependensee_backup/#{Time.now.to_i}"
     FileUtils.mkdir_p dir
     case @lang
       when 'Java'
@@ -232,7 +233,7 @@ class Client
   def python_update(dep_name,version,dir)
     original_filename = File.expand_path(File.dirname(__FILE__) + @search_loc + '/requirements.txt')
     FileUtils.cp(original_filename, dir)
-    filename = @overwrite ? original_filename : "backup/#{Time.now.to_i}/requirements.txt"
+    filename = @overwrite ? original_filename : "dependensee_backup/#{Time.now.to_i}/requirements.txt"
     File.open(filename, "r") do |file_handle|
           file_handle.each_line do |line|
               if line.include? dep_name
@@ -263,6 +264,7 @@ class Client
       counter = 0
       while counter <= @timeout
         check_config(@scan_id)
+        exit if !@auto_scan
         print "\nChecking latest config in #{@config_check_timeout} seconds. Time til next scan is is #{@timeout-counter}s\n\n"
         sleep @config_check_timeout
         counter += @config_check_timeout
@@ -274,5 +276,6 @@ end
 
 if __FILE__ == $0 
   project_id = ARGV[0].nil? ?  '' : ARGV[0]
-  Client.setup(ENV['DEPENDENSEE_API_KEY'],project_id).scan_loop
+  overwrite = ARGV[1].nil? ? true : false
+  Client.setup(ENV['DEPENDENSEE_API_KEY'],project_id,overwrite).scan_loop
 end

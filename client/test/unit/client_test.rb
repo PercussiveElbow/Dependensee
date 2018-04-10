@@ -1,5 +1,5 @@
 require 'test/unit'
-require_relative '../client'
+require_relative '../../client'
 
 class TestClient < Test::Unit::TestCase
 	@@previous_project_id = ''
@@ -7,7 +7,7 @@ class TestClient < Test::Unit::TestCase
 	def setup
 		@client = Client.new
 		@client.auth_key= ENV['DEPENDENSEE_API_TEST_KEY']
-		@client.search_loc = '/test/resources/'
+		@client.search_loc = '/test/unit/resources/'
 		@client.overwrite = false
 	end
 
@@ -15,7 +15,7 @@ class TestClient < Test::Unit::TestCase
 		client = Client.new
 		client.auth_key = @client.auth_key
 		client.overwrite = false
-		client.search_loc = '/test/resources/'
+		client.search_loc = '/test/unit/resources/'
 		client.lang=lang
 		client.timeout = 9999
 		client.auto_scan = true
@@ -26,22 +26,22 @@ class TestClient < Test::Unit::TestCase
 
 	def pre_scan
 		@client.overwrite = false
-		@client.search_loc = '/test/resources/'
+		@client.search_loc = '/test/unit/resources/'
 	end
 
 	def test_pom_project
 		assert_equal(false,@client.pom_project?('Gemfile.lock.test'))
-		assert_equal(true,@client.pom_project?('/test/resources/pom.xml'))
+		assert_equal(true,@client.pom_project?('/test/unit/resources/pom.xml'))
 	end
 
 	def test_pip_project
 		assert_equal(false,@client.pip_project?('requirements.txt.test'))
-		assert_equal(true,@client.pip_project?('/test/resources/requirements.txt'))
+		assert_equal(true,@client.pip_project?('/test/unit/resources/requirements.txt'))
 	end
 
 	def test_gem_project
 		assert_equal(false,@client.gem_project?('Gemfile.lock.test'))
-		assert_equal(true,@client.gem_project?('/test/resources/Gemfile.lock'))
+		assert_equal(true,@client.gem_project?('/test/unit/resources/Gemfile.lock'))
 	end
 
 	def test_lang_check
@@ -74,21 +74,21 @@ class TestClient < Test::Unit::TestCase
 	end
 
 	def test_scan
-		@client = Client.setup(@client.auth_key,create_project('Java'))
+		@client = Client.setup(@client.auth_key,create_project('Java'),false)
 		pre_scan
 		@client.scan
 		assert_not_nil(@client.scan_id)
 	end
 
 	def test_needs_update
-		@client = Client.setup(@client.auth_key,create_project('Java'))
+		@client = Client.setup(@client.auth_key,create_project('Java'),false)
 		pre_scan
 		@client.scan
 		assert_equal(true,@client.needs_update?(@client.scan_id))
 	end
 
 	def test_java_update
-		@client = Client.setup(@client.auth_key,create_project('Java'))
+		@client = Client.setup(@client.auth_key,create_project('Java'),false)
 		pre_scan
 		@client.scan
 		assert_equal(true,@client.needs_update?(@client.scan_id))
@@ -96,7 +96,7 @@ class TestClient < Test::Unit::TestCase
 	end
 
 	def test_python_update
-		@client = Client.setup(@client.auth_key,create_project('Python'))
+		@client = Client.setup(@client.auth_key,create_project('Python'),false)
 		pre_scan
 		@client.scan
 		assert_equal(true,@client.needs_update?(@client.scan_id))
@@ -105,7 +105,7 @@ class TestClient < Test::Unit::TestCase
 
 
 	def test_ruby_update
-		@client = Client.setup(@client.auth_key,create_project('Ruby'))
+		@client = Client.setup(@client.auth_key,create_project('Ruby'),false)
 		pre_scan
 		@client.scan
 		assert_equal(true,@client.needs_update?(@client.scan_id))

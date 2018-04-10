@@ -6,15 +6,15 @@ require 'rexml/document'
 include REXML
 
 class Client
-  SERVER_URL = 'https://dependensee.tech/api/v1'
-  #SERVER_URL = 'http://127.0.0.1:3000/api/v1'  
-  attr_accessor :project_id, :auto_scan, :auto_update, :timeout, :needs_update, :lang, :scan_id, :config_check_timeout, :auth_key, :search_loc
+  #SERVER_URL = 'https://dependensee.tech/api/v1'
+  SERVER_URL = 'http://127.0.0.1:3000/api/v1'  
+  attr_accessor :project_id, :auto_scan, :auto_update, :timeout, :needs_update, :lang, :scan_id, :config_check_timeout, :auth_key, :search_loc, :overwrite
 
-  def self.setup(auth_key,project_id)
+  def self.setup(auth_key,project_id,overwrite)
     client = self.new
     client.auth_key = auth_key
     client.project_id=project_id
-
+    client.overwrite=overwrite
     #default config if no project id specified
     ##########################################
     client.auto_scan=true
@@ -22,7 +22,6 @@ class Client
     client.config_check_timeout=60
     client.auto_update=false
     #########################################
-
     if !client.project_id.nil? and !client.project_id.empty?
       client.get_existing_project
     else
@@ -34,7 +33,8 @@ class Client
 
   def initialize
     @lang = ''
-    @search_loc = '/test/resources/'
+    @search_loc = '/'
+    @overwrite = true
   end
 
   def get_existing_project
@@ -69,19 +69,19 @@ class Client
       else
         raise StandardError.new "Language: #{@lang} not supported. Exiting."; exit 1
     end
-    body = [] << File.read(File.expand_path File.dirname(__FILE__) + @search_loc +  loc)
+    body = [] << File.read(File.expand_path (File.dirname(__FILE__) + '/' + @search_loc +  loc))
     post_upload(body)
   end
 
-  def pom_project?(loc=@search_loc+'pom.xml')
+  def pom_project?(loc='/'+@search_loc+'pom.xml')
     file_exists?(loc) and (@lang.empty? or @lang=='Java')
   end
 
-  def gem_project?(loc=@search_loc+'Gemfile.lock')
+  def gem_project?(loc='/'+ @search_loc+'Gemfile.lock')
     file_exists?(loc) and (@lang.empty? or @lang=='Ruby')
   end
 
-  def pip_project?(loc=@search_loc+'requirements.txt')
+  def pip_project?(loc='/'+ @search_loc+'requirements.txt')
     file_exists?(loc) and (@lang.empty? or @lang=='Python')
   end
 
@@ -128,9 +128,11 @@ class Client
     print "Dependencies found: #{JSON[resp.body]['dependencies']}\n"
     print "Vulnerabilities found: #{JSON[resp.body]['vunerability_count']}\n"
     print "Vulnerabilities: \n"
-    for dependency,vulns in JSON.parse(JSON[resp.body]['vulnerabilities'])
-      for cve in vulns['cves']
-        print "             Dependency #{dependency} has vulnerability. CVE ID: #{cve['cve']}  Minimum safe version: #{vulns['overall_patch']}\n"
+    if !JSON[resp.body]['vulnerabilities'].nil?
+      for dependency,vulns in JSON.parse(JSON[resp.body]['vulnerabilities'])
+        for cve in vulns['cves']
+          print "             Dependency #{dependency} has vulnerability. CVE ID: #{cve['cve']}  Minimum safe version: #{vulns['overall_patch']}\n"
+        end
       end
     end
     print "================================\n\n"
@@ -173,15 +175,13 @@ class Client
     print "=========UPDATE INFORMATION========\n"
     resp = get_request(SERVER_URL + '/projects/' + @project_id + '/scans/' + @scan_id + '/dependencies')
     for dep in JSON.parse(resp.body) do
-      if !dep['update_to'].nil? and dep['update_to'] != 'null'
-        update_dep(dep['name'],dep['update_to'])
-      end
+        update_dep(dep['name'],dep['update_to']) if !dep['update_to'].nil? and dep['update_to'] != 'null'
     end
     print "===================================\n"
   end
 
   def update_dep(dep_name,update_version)
-    dir = "backup/#{Time.now.to_i}"
+    dir = "dependensee_backup/#{Time.now.to_i}"
     FileUtils.mkdir_p dir
     case @lang
       when 'Java'
@@ -194,8 +194,13 @@ class Client
   end
 
   def ruby_update(dep_name,update_version,dir)
-      FileUtils.cp(File.expand_path(File.dirname(__FILE__) + @search_loc + '/Gemfile.lock'), dir)
-      # code = system("bundle exec rails")
+      FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/' + @search_loc + '/Gemfile.lock'), dir)
+      FileUtils.cp(File.expand_path(File.dirname(__FILE__) + '/' + @search_loc + '/Gemfile'), dir)
+      if @overwrite 
+        search_loc.length > 1 ? print(%x{cd #{search_loc} && bundle update #{dep_name}}) : print(%x{bundle update #{dep_name}})
+      else
+        print %x{cd #{dir} && bundle update #{dep_name}}
+      end
   end
 
   def java_update(dep_name,update_version,dir)
@@ -210,7 +215,7 @@ class Client
             node.elements['version'].text = update_version
           end
       end
-    xmldoc.write(File.open(dir + "/pom.xml", "w"))
+    @overwrite ? xmldoc.write(File.open(original_filename, "w")) : xmldoc.write(File.open(dir + "/pom.xml", "w"))
     pom_update_successful?
   end
 
@@ -226,8 +231,9 @@ class Client
   end
 
   def python_update(dep_name,version,dir)
-    FileUtils.cp(File.expand_path(File.dirname(__FILE__) + @search_loc + '/requirements.txt'), dir)
-    filename = "backup/#{Time.now.to_i}/requirements.txt.test"
+    original_filename = File.expand_path(File.dirname(__FILE__) + @search_loc + '/requirements.txt')
+    FileUtils.cp(original_filename, dir)
+    filename = @overwrite ? original_filename : "dependensee_backup/#{Time.now.to_i}/requirements.txt"
     File.open(filename, "r") do |file_handle|
           file_handle.each_line do |line|
               if line.include? dep_name
@@ -258,6 +264,7 @@ class Client
       counter = 0
       while counter <= @timeout
         check_config(@scan_id)
+        exit if !@auto_scan
         print "\nChecking latest config in #{@config_check_timeout} seconds. Time til next scan is is #{@timeout-counter}s\n\n"
         sleep @config_check_timeout
         counter += @config_check_timeout
@@ -269,5 +276,6 @@ end
 
 if __FILE__ == $0 
   project_id = ARGV[0].nil? ?  '' : ARGV[0]
-  Client.setup(ENV['DEPENDENSEE_API_KEY'],project_id).scan_loop
+  overwrite = ARGV[1].nil? ? true : false
+  Client.setup(ENV['DEPENDENSEE_API_KEY'],project_id,overwrite).scan_loop
 end
