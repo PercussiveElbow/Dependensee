@@ -25,9 +25,9 @@ docker-compose -f dependensee_release.yml up
 ```
 
 ## API Documentation
-https://dependensee.tech/doc
+https://dependensee.tech/docs
 
-Or when you're running the server simply hit localhost:3000/doc
+Or when you're running the server simply hit localhost:3000/docs
 
 ## Sources
 https://github.com/rubysec/ruby-advisory-db

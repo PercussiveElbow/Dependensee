@@ -112,19 +112,19 @@ class GenerateReport < BaseReport
     template.result(a)
     end
 
-    def self.gen_html_cve_info(lang,vuln_list) # Method to get CVE info for HTML report
-      vuln_list.each do |dep,vulns|
-        vulns['latest_ver'] = LatestVersion::get_latest(lang,dep)
-        i =0
-        while i < vulns['cves'].length
-          cve_info = GenerateReport::get_cve_info(lang,vulns['cves'][i])
-          vulns['cves'][i] = vulns['cves'][i].as_json
-          vulns['cves'][i]['score'] unless cve_info.cvss2.nil?
-          vulns['cves'][i]['desc'] = cve_info.desc unless cve_info.desc.nil?
-          i = i+1
-        end
+  def self.gen_html_cve_info(lang,vuln_list) # Method to get CVE info for HTML report
+    vuln_list.each do |dep,vulns|
+      vulns['latest_ver'] = LatestVersion::get_latest(lang,dep)
+      i =0
+      while i < vulns['cves'].length
+        cve_info = GenerateReport::get_cve_info(lang,vulns['cves'][i])
+        vulns['cves'][i] = vulns['cves'][i].as_json
+        vulns['cves'][i]['score'] unless cve_info.cvss2.nil?
+        vulns['cves'][i]['desc'] = cve_info.desc unless cve_info.desc.nil?
+        i = i+1
       end
-      vuln_list
     end
+    vuln_list
+  end
 
 end

@@ -26,7 +26,7 @@ cd server/
 docker-compose build .
 docker-compose up
 ```
-Then access on localhost:3000
+Then access on localhost:3000/api/v1/
 
 ### Frontend
 ```bash

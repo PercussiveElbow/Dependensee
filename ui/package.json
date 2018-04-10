@@ -1,7 +1,7 @@
 {
-  "name": "app",
+  "name": "Dependensee UI",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "Dependensee UI",
   "author": "Percussive Elbow <PercussiveElbow@users.noreply.github.com>",
   "private": true,
   "scripts": {
