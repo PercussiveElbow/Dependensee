@@ -27,6 +27,9 @@ docker-compose -f dependensee_release.yml up
 ```
 The API can then be hit on localhost:3000, or alternatively the UI can be accessed on localhost:80
 
+## Development Setup
+<a href="https://github.com/PercussiveElbow/Dependensee/blob/master/DEVSETUP.md"> Development Setup can be found here </a>
+
 ## API Documentation
 https://dependensee.tech/docs
 
