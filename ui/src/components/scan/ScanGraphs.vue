@@ -1,7 +1,7 @@
 <template>
 	<div id='graphthing' responsive: true >
-       <h1>Vulnerable vs Safe Dependencies</h1> <pie-chart :chart-data="pieData"></pie-chart></br>
-       <h1>Vulnerability Severity</h1> <bar-chart :chart-data="graphData" :options="graphOptions"></bar-chart>
+       <h1>Vulnerable vs Safe Dependencies</h1> <pie-chart :height="200" :chart-data="pieData"></pie-chart></br>
+       <h1>Vulnerability Severity</h1> <bar-chart :height="200" :chart-data="graphData" :options="graphOptions"></bar-chart>
     </div>
 </template>
 

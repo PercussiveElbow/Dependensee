@@ -1,10 +1,11 @@
 var axios = require('axios')
 
-const API_URL = 'https://dependensee.tech/api/v1/'
-const WEB_URL = 'https://ui.dependensee.tech/'
-//const ADDRESS  = 'http://127.0.0.1';
-//const API_URL = ADDRESS + ':3000/api/v1/'
-//const WEB_URL = ADDRESS + ':8080/'
+//const API_URL = 'https://dependensee.tech/api/v1/'
+//const WEB_URL = 'https://ui.dependensee.tech/'
+var ADDRESS  = 'http://' + window.location.hostname
+const API_URL = ADDRESS + ':3000/api/v1/'
+const API_URL_NO_VER = ADDRESS + ':3000/'
+const WEB_URL = ADDRESS + ':8080/'
 
 const LOGIN_URL = API_URL + 'login/';
 const SIGNUP_URL = API_URL + 'signup/';
@@ -32,7 +33,7 @@ export{apiLogin,apiSignUp,saveToken,clearToken,getToken,isValidToken,getProfile,
 	getExploit,getExploitPlain,canExploit,
 	getCve,
 	getQr,saveTokenQR,
-	getClientDownload,getClientLinux};
+	getClientDownload,getClientLinux,getClientWindows};
 
 //AUTH
 function apiLogin(params) {
@@ -193,10 +194,14 @@ function getQr(){
 }
 
 function getClientLinux(){
-	return 'wget ' + WEB_URL + 'static/quickclient.rb' + ' && ruby quickclient.rb'
+	return 'wget ' + WEB_URL + 'static/quickclient.rb' + ' && ruby quickclient.rb ' + API_URL_NO_VER
+}
+
+function getClientWindows(){
+	return 'ruby quickclient.rb ' + API_URL_NO_VER
 }
 function getClientDownload(){
-	return WEB_URL + 'static/quickclient.rb'
+	return WEB_URL + 'static/quickclient.rb '
 }
 
 function common_get(get_string){

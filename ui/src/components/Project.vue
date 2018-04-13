@@ -49,11 +49,13 @@
         </md-tab>
         <md-tab id="tab-client" md-label="Setup Client" to="/components/tabs/client">
           <h2>Quickly setup your code for scanning</h2>
+          <h4>First export "DEPENDENSEE_API_KEY" to your shell. Your API key is: </h4>
+          <h6> {{token}}</h6>
           <h3>Linux/MacOS</h3>
           <pre v-highlightjs="clientLinux"><code class="bash"></code></pre>
           <h3>Windows</h3>
           <a v-bind:href="clientDownload">Download client</a>
-          <p> Then run: </p>
+          <span> and run: </span></br>
           <pre v-highlightjs="clientWindows"><code class="bash"></code></pre>
         </md-tab>
         <md-tab id="tab-options" md-label="Options" to="/components/tabs/options">
@@ -87,7 +89,7 @@
 </template>
 
 <script>
-  import {getToken,getProject,getScans,getDependencies,upload,getJsonReport,deleteScan,getClientLinux,getClientDownload,editProject} from '../utils/api.js';
+  import {getToken,getProject,getScans,getClientWindows,getDependencies,upload,getJsonReport,deleteScan,getClientLinux,getClientDownload,editProject} from '../utils/api.js';
   import Sidebar from './Sidebar'
   import LineChart from '../utils/LineChart'
   import CVESearch from './CveSearch'
@@ -119,7 +121,8 @@
           timeout: 3600,
           auto_update: false
         },
-        intervalKill : ''
+        intervalKill : '',
+        token : ''
        }
     },
     created() {
@@ -142,7 +145,8 @@
             this.settings.timeout = response.timeout;
             this.clientLinux = getClientLinux() + ' ' + this.project.id;
             this.clientDownload = getClientDownload();
-            this.clientWindows = 'ruby quickclient.rb ' + this.project.id;
+            this.clientWindows = getClientWindows() + this.project.id;
+            this.token = getToken()
           });},
       get_scans() {
           getScans(this.$route.params.id).then(response =>  {
@@ -218,8 +222,6 @@
           var aScan = locScans[a];
           this.process_graph(self,data,values,labels,locScans[a])
           }
-
-    
       },
       process_graph(self,data,values,labels,aScan){
           getDependencies(this.$route.params.id,aScan.id).then(response =>  {

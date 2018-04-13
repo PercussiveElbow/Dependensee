@@ -6,12 +6,10 @@ require 'rexml/document'
 include REXML
 
 class Client
-  #SERVER_URL = 'https://dependensee.tech/api/v1'
-  SERVER_URL = 'http://127.0.0.1:3000/api/v1'  
-  attr_accessor :project_id, :auto_scan, :auto_update, :timeout, :needs_update, :lang, :scan_id, :config_check_timeout, :auth_key, :search_loc, :overwrite
+  attr_accessor :server_url,:project_id, :auto_scan, :auto_update, :timeout, :needs_update, :lang, :scan_id, :config_check_timeout, :auth_key, :search_loc, :overwrite
 
-  def self.setup(auth_key,project_id,overwrite)
-    client = self.new
+  def self.setup(auth_key,server_url,project_id,overwrite)
+    client = self.new(server_url)
     client.auth_key = auth_key
     client.project_id=project_id
     client.overwrite=overwrite
@@ -31,14 +29,16 @@ class Client
     client
   end
 
-  def initialize
+  def initialize(server_url)
+    @server_url = server_url + '/api/v1'
     @lang = ''
     @search_loc = '/'
     @overwrite = true
   end
 
   def get_existing_project
-      resp = get_request(SERVER_URL + '/projects/' + @project_id)
+      puts @server_url
+      resp = get_request(@server_url + '/projects/' + @project_id)
       @lang = JSON[resp.body]['language']
       @timeout = JSON[resp.body]['timeout']
   end
@@ -91,7 +91,7 @@ class Client
 
   def create_new_project
     print "=======CREATING NEW PROJECT======\n"
-    uri = URI.parse(SERVER_URL + '/projects/')
+    uri = URI.parse(@server_url + '/projects/')
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Post.new(uri.request_uri)
     request['Authorization'] = @auth_key
@@ -110,7 +110,7 @@ class Client
 
   def post_upload(body)
     print "Uploading dependency file.\n"
-    uri = URI.parse(SERVER_URL + '/projects/' + @project_id + '/upload')
+    uri = URI.parse(@server_url + '/projects/' + @project_id + '/upload')
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Post.new(uri.request_uri)
     request.body = body.join
@@ -156,14 +156,14 @@ class Client
   end
 
   def needs_update?(scan_id)
-    @needs_update = JSON[get_request(SERVER_URL + '/projects/' + @project_id + '/scans/' + scan_id).body]['needs_update']
+    @needs_update = JSON[get_request(@server_url + '/projects/' + @project_id + '/scans/' + scan_id).body]['needs_update']
     print 'Checking if scan needs update...: ' + "#{@needs_update}\n"
     return @needs_update
   end
 
   def check_config_project
     print "==========UPDATING CONFIG==========\n"
-    resp = get_request(SERVER_URL + '/projects/' + @project_id)
+    resp = get_request(@server_url + '/projects/' + @project_id)
     @auto_scan = JSON[resp.body]['auto_scan'];
     @timeout = JSON[resp.body]['timeout'] 
     print 'Checking if auto-scan is turned on...: ' + @auto_scan.to_s + "\n"
@@ -173,7 +173,7 @@ class Client
 
   def get_dependencies
     print "=========UPDATE INFORMATION========\n"
-    resp = get_request(SERVER_URL + '/projects/' + @project_id + '/scans/' + @scan_id + '/dependencies')
+    resp = get_request(@server_url + '/projects/' + @project_id + '/scans/' + @scan_id + '/dependencies')
     for dep in JSON.parse(resp.body) do
         update_dep(dep['name'],dep['update_to']) if !dep['update_to'].nil? and dep['update_to'] != 'null'
     end
@@ -275,7 +275,8 @@ class Client
 end
 
 if __FILE__ == $0 
-  project_id = ARGV[0].nil? ?  '' : ARGV[0]
-  overwrite = ARGV[1].nil? ? true : false
-  Client.setup(ENV['DEPENDENSEE_API_KEY'],project_id,overwrite).scan_loop
+  server_url = ARGV[0].nil? ?  'http://127.0.0.1:3000' : ARGV[0]
+  project_id = ARGV[1].nil? ?  '' : ARGV[1]
+  overwrite = ARGV[2].nil? ? true : false
+  Client.setup(ENV['DEPENDENSEE_API_KEY'],server_url,project_id,overwrite).scan_loop
 end

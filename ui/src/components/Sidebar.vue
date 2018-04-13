@@ -17,7 +17,6 @@
     </md-toolbar>
     <md-list>
       <md-list-item @click="$router.push('/Projects')"><md-icon>folder</md-icon> <span>Projects</span></md-list-item>
-      <md-list-item @click="$refs.bsidebar.toggle()"><md-icon>file_upload</md-icon> <span>Quick Scan</span></md-list-item>
       <md-list-item @click= "show()"><md-icon>search</md-icon> <span>CVE Search</span></md-list-item>
       <md-list-item @click= "show()"><md-icon>warning</md-icon> <span>Exploit Search</span></md-list-item>
     </md-list>
@@ -26,6 +25,7 @@
       <md-subheader> Other Platforms </md-subheader>
       <md-list-item @click= "$router.push('/qr/')"><md-icon>smartphone</md-icon> <span>Smartphone UI</span></md-list-item>
       <md-list-item @click= "$router.push('/desktop/')"><md-icon>laptop</md-icon> <span>Desktop UI</span></md-list-item>
+      <md-list-item @click=" redirectGit()"><md-icon>code</md-icon> <span>Github</span></md-list-item>
     </md-list>
   </md-sidenav>
 </template>
@@ -51,6 +51,9 @@ import {clearToken,getProfile,isValidToken} from '../utils/api.js';
       handleLogout() {
         clearToken();
         this.$router.push('/login');
+      },
+      redirectGit(){
+        window.location.href= 'https://github.com/PercussiveElbow/Dependensee/'
       },
       show(){this.$modal.show('cve-search');}
     }

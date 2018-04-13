@@ -3,16 +3,17 @@ require_relative '../../client'
 
 class TestClient < Test::Unit::TestCase
 	@@previous_project_id = ''
+	@@server_url = 'http://127.0.0.1:3000'
 
 	def setup
-		@client = Client.new
+		@client = Client.new(@@server_url)
 		@client.auth_key= ENV['DEPENDENSEE_API_TEST_KEY']
 		@client.search_loc = '/test/unit/resources/'
 		@client.overwrite = false
 	end
 
 	def create_project(lang)
-		client = Client.new
+		client = Client.new(@@server_url)
 		client.auth_key = @client.auth_key
 		client.overwrite = false
 		client.search_loc = '/test/unit/resources/'
@@ -74,21 +75,21 @@ class TestClient < Test::Unit::TestCase
 	end
 
 	def test_scan
-		@client = Client.setup(@client.auth_key,create_project('Java'),false)
+		@client = Client.setup(@client.auth_key,@@server_url,create_project('Java'),false)
 		pre_scan
 		@client.scan
 		assert_not_nil(@client.scan_id)
 	end
 
 	def test_needs_update
-		@client = Client.setup(@client.auth_key,create_project('Java'),false)
+		@client = Client.setup(@client.auth_key,@@server_url,create_project('Java'),false)
 		pre_scan
 		@client.scan
 		assert_equal(true,@client.needs_update?(@client.scan_id))
 	end
 
 	def test_java_update
-		@client = Client.setup(@client.auth_key,create_project('Java'),false)
+		@client = Client.setup(@client.auth_key,@@server_url,create_project('Java'),false)
 		pre_scan
 		@client.scan
 		assert_equal(true,@client.needs_update?(@client.scan_id))
@@ -96,7 +97,7 @@ class TestClient < Test::Unit::TestCase
 	end
 
 	def test_python_update
-		@client = Client.setup(@client.auth_key,create_project('Python'),false)
+		@client = Client.setup(@client.auth_key,@@server_url, create_project('Python'),false)
 		pre_scan
 		@client.scan
 		assert_equal(true,@client.needs_update?(@client.scan_id))
@@ -105,7 +106,7 @@ class TestClient < Test::Unit::TestCase
 
 
 	def test_ruby_update
-		@client = Client.setup(@client.auth_key,create_project('Ruby'),false)
+		@client = Client.setup(@client.auth_key,@@server_url,create_project('Ruby'),false)
 		pre_scan
 		@client.scan
 		assert_equal(true,@client.needs_update?(@client.scan_id))

@@ -8,6 +8,7 @@ class IntegrationTest < Test::Unit::TestCase
  extend Test::Unit::Assertions
 
 	SERVER_URL = 'http://127.0.0.1:3000/api/v1/'
+	SERVER_URL_NO_VER = 'http://127.0.0.1:3000/'
 	UI_URL = 'http://127.0.0.1:8080/'
 
 	def self.full
@@ -48,26 +49,8 @@ class IntegrationTest < Test::Unit::TestCase
 
 
 		IO.copy_stream(open(UI_URL + 'static/quickclient.rb'), 'quickclient.rb')
-		print %x{export DEPENDENSEE_API_KEY=#{@auth_key} && ruby quickclient.rb #{@project_id} }
+		print %x{export DEPENDENSEE_API_KEY=#{@auth_key} && ruby quickclient.rb #{SERVER_URL_NO_VER} #{@project_id} }
 		File.delete("quickclient.rb")
-
-		# uri = URI.parse(SERVER_URL + '/projects/' + @project_id + '/upload')
-		# http = Net::HTTP.new(uri.host, uri.port)
-		# request = Net::HTTP::Post.new(uri.request_uri)
-		# body = [] << File.read(File.expand_path File.dirname(__FILE__) + '/resources/pom.xml')
-		# request.body = body.join
-		# request['Authorization'] = @auth_key
-		# resp = http.request(request)
-		# print "Scan completed. Scan id: #{JSON[resp.body]['scan_id']}\n"
-  # 		print "Scan completed. Dependencies found: #{JSON[resp.body]['dependencies']}\n"
-  # 		assert_equal("1 Vulnerabilities found",JSON[resp.body]['vunerability_count'].to_s)
-  # 		print "Scan completed. Vulnerabilities found: #{JSON[resp.body]['vunerability_count']}\n"
-		# print "Scan completed. Vulnerabilities: \n"
-		# for dependency,vulns in JSON.parse(JSON[resp.body]['vulnerabilities'])
-  #       	for cve in vulns['cves']
-  #         		print "             Dependency #{dependency} has vulnerability. CVE ID: #{cve['cve']}  Minimum safe version: #{vulns['overall_patch']}\n"
-  #       	end
-  #     	end
 	end
 
 end
