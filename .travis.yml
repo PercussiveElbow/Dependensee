@@ -1,4 +1,4 @@
-before_install: cd server
+before_script: cd server
 script: 
   - docker-compose build
   - docker-compose up -d postgres
