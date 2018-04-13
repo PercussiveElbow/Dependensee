@@ -78,7 +78,7 @@
     </div>
     <modal name="upload"         :height="200" :adaptive="true">
         <div style="padding: 30px; text-align: center">
-              <h2 v-if="project.language == 'Ruby' " >Upload Gemfile</h2>
+              <h2 v-if="project.language == 'Ruby' " >Upload Gemfile.lock</h2>
               <h2 v-if="project.language  === 'Java' " >Upload Pomfile</h2>
               <h2 v-if="project.language  === 'Python' " >Upload Requirements.txt</h2>
         <form enctype="multipart/form-data"><input type="file" @change="handle_upload_file"></form>
