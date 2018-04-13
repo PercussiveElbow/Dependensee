@@ -13,7 +13,7 @@ class UsersController < ApplicationController
       # param! :name, String, required: true, format: /A-Za-z+/
       param! :email, String, required: true, format: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
       param! :password, String, required: true
-      raise StandardError.new('Password too short') if params[:password].length < 8
+      raise StandardError.new('Password too short') if params[:password].length < 8 or params[:password].length > 256
     rescue StandardError => e
       raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
     end
