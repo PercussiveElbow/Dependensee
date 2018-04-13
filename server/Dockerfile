@@ -1,6 +1,12 @@
-FROM ruby
+FROM ruby:alpine
 MAINTAINER amackey01@qub.ac.uk
-RUN apt-get update
+RUN apk add --update \
+  build-base \
+  tzdata \
+  postgresql-dev \
+  git \
+  bash \
+  && rm -rf /var/cache/apk/*
 RUN mkdir -p /dependensee
 WORKDIR /dependensee
 COPY Gemfile Gemfile.lock ./
