@@ -23,9 +23,9 @@
     <md-list>
       <md-divider class="md-inset"></md-divider>
       <md-subheader> Other Platforms </md-subheader>
-      <md-list-item @click= "$router.push('/qr/')"><md-icon>smartphone</md-icon> <span>Smartphone UI</span></md-list-item>
-      <md-list-item @click= "$router.push('/desktop/')"><md-icon>laptop</md-icon> <span>Desktop UI</span></md-list-item>
-      <md-list-item @click=" redirectGit()"><md-icon>code</md-icon> <span>Github</span></md-list-item>
+      <md-list-item @click="$router.push('/qr/')"><md-icon>smartphone</md-icon> <span>Smartphone UI</span></md-list-item>
+      <md-list-item @click="redirectGitReleases()"><md-icon>laptop</md-icon> <span>Desktop UI</span></md-list-item>
+      <md-list-item @click="redirectGit()"><md-icon>code</md-icon> <span>Github</span></md-list-item>
     </md-list>
   </md-sidenav>
 </template>
@@ -54,6 +54,9 @@ import {clearToken,getProfile,isValidToken} from '../utils/api.js';
       },
       redirectGit(){
         window.location.href= 'https://github.com/PercussiveElbow/Dependensee/'
+      },
+      redirectGitReleases(){
+        window.location.href= 'https://github.com/PercussiveElbow/Dependensee/releases'
       },
       show(){this.$modal.show('cve-search');}
     }

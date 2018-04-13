@@ -16,7 +16,7 @@ class ReportsController < ProjectAndScanValidatorController
     handle_report
   end
 
-  def get_vuln_list
+  def get_vuln_list # method to get vuln list for scan
     case @project.language
       when 'Ruby'
         @vuln_list = GemScanner::new(Dependency.where(['scan_id = ?', @scan.id])).scan

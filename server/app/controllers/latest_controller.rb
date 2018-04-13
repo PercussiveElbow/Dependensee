@@ -27,7 +27,7 @@ class LatestController < ProjectAndScanValidatorController
   end
 
   private
-  def set_project_dependency
+  def set_project_dependency #method to get dependency
     begin
       param! :dependency_id, String, required: true, format:  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
     rescue

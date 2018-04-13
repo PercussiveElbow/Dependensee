@@ -5,9 +5,10 @@ require_relative '../msg_constants'
 
 class BaseReport
   # Base Report class for report utilities
-  def self.add_dir_return_filename(reports_dir = MsgConstants::BASE_REPORT)
+
+  def self.add_dir_return_filename(reports_dir = MsgConstants::BASE_REPORT) # Get a filename
     FileUtils::mkdir_p(reports_dir) unless Dir.exists?(reports_dir)
-    reports_dir + 'Scan_' + DateTime.now.strftime(MsgConstants::TIMESTAMP)  +' ' + SecureRandom.random_number(100000).to_s
+    reports_dir + 'Scan_' + DateTime.now.strftime(MsgConstants::TIMESTAMP)  +' ' + SecureRandom.random_number(100000).to_s #based on timestamp, but add random number to be safe incase we could overwrite
   end
 
   def self.get_cve_info(language, vuln) # Generic method to get CVE info depending on language
@@ -21,7 +22,7 @@ class BaseReport
     end
   end
 
-  def self.get_title(project) # Get title (projectnmae)
+  def self.get_title(project) # Get title (project name and time)
     return project + ' ' +  MsgConstants::TITLE + DateTime.now.strftime('%d/%m/%Y  %H:%M')
   end
 

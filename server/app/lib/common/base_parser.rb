@@ -1,5 +1,6 @@
 
 class BaseParser
+  # Base class for extending on Parser logic
 
   def initialize
     @dependencies=nil

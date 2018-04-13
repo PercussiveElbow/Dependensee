@@ -11,7 +11,7 @@ class GemDB < BaseDB
 
   def update?
    save_into_db if super
-   end
+  end
 
   def save_into_db # save the CVES to DB
       Dir.glob(@db_location + '/gems/' + '**/*.{yml,YML}') do |file|

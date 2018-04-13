@@ -1,11 +1,11 @@
 class GenericVersionLogic
 
   # Generic version logic methods that are not language specific
-  def self.vuln_cleanup(vuln_list)
+  def self.vuln_cleanup(vuln_list) # Helper method to delete empty cve entries in the hash provided
     vuln_list.delete_if { |_, v| v['cves'].empty? }
   end
 
-  def self.overall_version(vuln_list)
+  def self.overall_version(vuln_list) # Method to calculate the overall version needed for each dependency
     vuln_list.each do |_,vh|
       overall_patch = '0.0.0'
       vh['cves'].each do |cve| overall_patch = GenericVersionLogic::handle_patched_ver_loop(cve,overall_patch) end
@@ -35,7 +35,7 @@ class GenericVersionLogic
     overall_patch
   end
 
-  def self.check_replace(patch_ver,overall_patch)
+  def self.check_replace(patch_ver,overall_patch) # Check if the overall patch version needs replaced
     ver = Gem::Version.new(patch_ver.gsub('>', '').gsub(' ','').gsub('=','').gsub('~',''))
     overall_patch = patch_ver if ver >= Gem::Version.new(overall_patch.gsub('>', '').gsub(' ', '').gsub('=', '').gsub('~', ''))
     overall_patch

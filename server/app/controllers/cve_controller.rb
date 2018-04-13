@@ -17,7 +17,7 @@ class CveController < ApplicationController
   end
 
   private
-  def has_found_cve(resp)
+  def has_found_cve(resp) # method to handle if found cve or 404
     unless resp[0].empty?
       resp = resp[0]
       resp['language'] = @language unless @language.nil?
@@ -25,7 +25,7 @@ class CveController < ApplicationController
     resp
   end
 
-  def find_cve_by_id
+  def find_cve_by_id #method to grab correct cve
       param_validate
       @cve = RubyCve.where(['cve_id = ?', params[:id]])
       unless set_lang?('Ruby')

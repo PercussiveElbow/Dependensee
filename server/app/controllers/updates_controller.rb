@@ -14,7 +14,7 @@ def_param_group :project_and_scan do
   api :POST, '/projects/:project_id/scans/:scan_id/updates/:type', 'Request an Update'
   param_group :project_and_scan
   param :type, %w(safe latest manual), :required => true
-  def create
+  def create # method to call update logic and return response
     case params[:id]
       when 'latest'
         json_response(UpdateDeps::handle_latest(@project,@scan), :ok)

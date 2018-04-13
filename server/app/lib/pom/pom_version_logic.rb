@@ -5,7 +5,7 @@ require 'json'
 
 class PomVersionLogic
 
-  def self.is_vuln?(dep_ver,vuln_ver,fixed_in)
+  def self.is_vuln?(dep_ver,vuln_ver,fixed_in) # method to check if given dependency ver is vuln
     vuln = false
     vuln_ver.each { |ver|
       if self.affected?(ver, dep_ver)

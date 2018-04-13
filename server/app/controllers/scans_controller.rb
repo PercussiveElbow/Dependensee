@@ -69,7 +69,6 @@ class ScansController < ApplicationController
     rescue
       raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
     end
-
     begin
       @scan = @project.scans.find(params[:id]) if @project
     rescue

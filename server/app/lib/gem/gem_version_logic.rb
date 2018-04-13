@@ -2,7 +2,7 @@ require 'rss'
 
 class GemVersionLogic
 
-  def self.is_above_patched_ver(gem_ver, patch_ver)
+  def self.is_above_patched_ver(gem_ver, patch_ver) # Check if the version is above patched
     case patch_ver
       when />=/
         return Gem::Version.new(gem_ver) >= Gem::Version.new(patch_ver.gsub('>=', '').gsub(' ',''))
@@ -13,7 +13,7 @@ class GemVersionLogic
     end
   end
 
-  def self.unaffected?(gem_ver, safe_ver)
+  def self.unaffected?(gem_ver, safe_ver) # Check if the version is unaffected
     if safe_ver.include? ','
       safe_ver.split(',').each { |ver|
         return true if GemVersionLogic::unaffected?(gem_ver, ver)

@@ -21,7 +21,7 @@ class GemScanner < BaseScanner
     GenericVersionLogic::finish_version_logic(vuln_hash)
   end
 
-  def scan_cves(spec_name,gem_ver,vuln_hash)
+  def scan_cves(spec_name,gem_ver,vuln_hash) # search ruby cves for entries of this name, return in hash if vuln
     RubyCve.where(['dependency_name = ?', spec_name]).each do |cve|
       unless check_unaffected_vers(gem_ver,cve.unaffected_versions)
         needed_patches = get_needed_patches(gem_ver, cve.patched_versions)
@@ -36,7 +36,7 @@ class GemScanner < BaseScanner
     vuln_hash
   end
 
-  def get_needed_patches(gem_version, patched_versions) # get any pathes needed
+  def get_needed_patches(gem_version, patched_versions) # get any patches needed
     needed_patches = Array.new
     unless gem_version.nil? or patched_versions.nil?
       patched_versions.each do |patched_version|
@@ -53,7 +53,7 @@ class GemScanner < BaseScanner
     needed_patches
   end
 
-  def check_unaffected_vers(gem_version, unaffected_vers)
+  def check_unaffected_vers(gem_version, unaffected_vers) # check if the ver is included in unaffected vers
     unless unaffected_vers.nil? or gem_version.nil?
       unaffected_vers.each do |safe_ver| return true if GemVersionLogic::unaffected?(gem_version, safe_ver) end
     end

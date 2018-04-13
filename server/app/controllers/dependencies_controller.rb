@@ -64,7 +64,6 @@ class DependenciesController < ProjectAndScanValidatorController
     rescue
       raise CustomException::ValidationError, MsgConstants::VALIDATION_ERROR
     end
-
     begin
       @dependency = @scan.dependencies.find(params[:id]) if @scan
     rescue

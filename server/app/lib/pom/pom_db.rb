@@ -10,7 +10,7 @@ class MavenAndPipDB < BaseDB
   end
 
   def update?
-    #save_into_db if super
+    save_into_db if super
   end
 
   def save_into_db # iterate over yaml files and persist information to DB

@@ -4,7 +4,7 @@ require_relative '../pom/pom_version_logic'
 
 class PipVersionLogic
 
-  def self.is_vuln?(dep_ver,vuln_ver,fixed_in)
+  def self.is_vuln?(dep_ver,vuln_ver,fixed_in) # method to return if vuln or not
     vuln = false
     vuln_ver.each { |ver|
       if PomVersionLogic::affected?(ver, dep_ver.gsub(/[^0-9.]/, ''))
@@ -18,7 +18,7 @@ class PipVersionLogic
         end
       }
     end
-    return vuln
+    vuln
   end
 
   def self.query_pypi(dep_name) # Query pypi to get latest version for a dependency
