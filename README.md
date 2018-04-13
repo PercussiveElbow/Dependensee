@@ -3,7 +3,9 @@
 
 Dependensee is an open source patch/vulnerability manager for third party libraries
 
-It keeps track of libraries used in your projects and reports any CVEs they are vulnerable to, providing links, CVE information, reports and PoC exploits where avaliable.
+It can keep track of libraries used in your projects and will report any CVEs those libraries are vulnerable to, providing links, CVE information, reports and PoC exploits where avaliable.
+
+Dependency files can be uploaded by either the API, or by using the UI.
 
 Current language support:
 <a href="https://img.shields.io/badge/language-ruby-red.svg"><img src="https://img.shields.io/badge/language-ruby-red.svg"/></a>
@@ -11,23 +13,27 @@ Current language support:
 <a href="https://img.shields.io/badge/language-python-green.svg"><img src="https://img.shields.io/badge/language-python-green.svg"/></a>
 
 It consists of three parts:
-- Rails server to store/manage your dependencies. This exposes a REST API
-- *(Optional)* Ruby client to automatically scan projects.
+- Rails server to store and manage your dependencies. This exposes a REST API
+- *(Optional)* Ruby client to automatically scan projects on disk.
 - *(Optional)* UI powered by VueJS
 
 ## Demo
 https://dependensee.tech
 
 ## Run it yourself (Requires Docker+Docker Compose)
-Download latest release and export a RAILS_SECRET to your shell
+Download latest <a href="https://github.com/PercussiveElbow/Dependensee/releases" >release</a> and export a RAILS_SECRET to your shell (must contain both letters and numbers). Then run:
 ```bash
 docker-compose -f dependensee_release.yml up
 ```
+The API can then be hit on localhost:3000, or alternatively the UI can be accessed on localhost:80
+
+## Development Setup
+<a href="https://github.com/PercussiveElbow/Dependensee/blob/master/DEVSETUP.md"> Development Setup can be found here </a>
 
 ## API Documentation
 https://dependensee.tech/docs
 
-Or when you're running the server simply hit localhost:3000/docs
+Or when you're running the server locally simply hit localhost:3000/docs
 
 ## Sources
 https://github.com/rubysec/ruby-advisory-db
