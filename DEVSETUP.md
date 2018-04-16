@@ -5,7 +5,7 @@
 - Bundler
 - *(Optional)* Your own PostgreSQL DB
 - *(Optional)* Docker + Docker-Compose
-#### Frontend
+#### UI
 - NodeJS
 - NPM
 #### Client
@@ -23,14 +23,13 @@ rails s
 ### Server (automatically spin up PostgreSQL DB)
 ```bash
 cd server/
-docker-compose build .
 docker-compose up
 ```
 Then access on localhost:3000/api/v1/
 
-### Frontend
+### UI
 ```bash
-cd frontend
+cd ui
 npm install
 npm run dev
 ```
@@ -38,4 +37,3 @@ Then access on localhost:8080
 
 ### Client
 Setup your JWT auth key environment variable 'DEPENDENSEE_API_KEY'.
-Run 'ruby client.rb' with a projectID as an optional first argument.
