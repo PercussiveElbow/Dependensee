@@ -145,7 +145,7 @@
             this.settings.timeout = response.timeout;
             this.clientLinux = getClientLinux() + ' ' + this.project.id;
             this.clientDownload = getClientDownload();
-            this.clientWindows = getClientWindows() + this.project.id;
+            this.clientWindows = getClientWindows() + ' ' + this.project.id;
             this.token = getToken()
           });},
       get_scans() {
