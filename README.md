@@ -17,8 +17,15 @@ It consists of three parts:
 - *(Optional)* Ruby client to automatically scan projects on disk.
 - *(Optional)* UI powered by VueJS
 
-## Demo
-https://dependensee.tech
+## Demo (Demo site disabled now)
+~~https://dependensee.tech~~
+
+## Demo Videos
+https://gfycat.com/terrificweechameleon
+
+https://gfycat.com/LeadingCelebratedFlyingfox
+
+https://gfycat.com/HappyNauticalGenet
 
 ## Run it yourself (Requires Docker+Docker Compose)
 Download latest <a href="https://github.com/PercussiveElbow/Dependensee/releases" >release</a> and export a RAILS_SECRET to your shell (must contain both letters and numbers). Then run:
